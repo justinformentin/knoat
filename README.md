@@ -6,7 +6,7 @@ Simple Gmail client built using [React](https://github.com/facebook/react) and [
 
 ## How it works
 
-**Authentication** - entirely handled by Gmail's for security
+**Authentication** - entirely handled by Gmail for security
 
 **Data** - Knoat doesn't store or persist any user or account data. The application only fetches the data from Gmail's API.
 
@@ -22,9 +22,9 @@ Simple Gmail client built using [React](https://github.com/facebook/react) and [
 
 ## Usage
 
-**API Keys** - All requests from Gmail's API require an OAuth 2.0 Client ID as well as an API Key. You can follow create a project and get these credentials from [Google's Cloud Platform](https://console.cloud.google.com/apis) or read more and follow the links in Google's [Node.js Quickstart Guide](https://developers.google.com/gmail/api/quickstart/nodejs).
+**API Keys** - All requests from Gmail's API require an OAuth 2.0 Client ID as well as an API Key. You can create a project and get these credentials from [Google's Cloud Platform](https://console.cloud.google.com/apis) or read more and follow the links in Google's [Node.js Quickstart Guide](https://developers.google.com/gmail/api/quickstart/nodejs).
 
-Store the two vcredential values in an `.env` file in the root directory. How it should be set up can be found in `.envsample`.
+Store the two credential values in an `.env` file in the root directory. An example of this can be found in `.envsample`.
 
 
 
@@ -59,3 +59,5 @@ To-do:
 - [ ] Add internationalization
 
 - [ ] Change Logo
+
+- [ ] Convert to Hooks

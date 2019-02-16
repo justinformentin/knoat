@@ -2,8 +2,7 @@ import React, { PureComponent } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import MessageRow from "./message-row/MessageRow";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Loader from '../../loader/Loader';
 
 import ListToolbar from "./list-toolbar/ListToolbar";
 import ListFooter from "./list-footer/ListFooter";
@@ -65,12 +64,12 @@ export class MessageList extends PureComponent {
   onSelectionChange(selected, msgId) {
     this.props.toggleSelected([msgId], selected);
   }
-  
+
 
   renderSpinner() {
     return (
       <div className="d-flex h-100 justify-content-center align-items-center  ">
-        <FontAwesomeIcon icon={faSpinner} spin size="5x" />
+        <Loader />
       </div>
     );
   }
@@ -144,7 +143,7 @@ export class MessageList extends PureComponent {
   render() {
     const { messagesResult } = this.props;
     const messagesTotal = messagesResult.label ? messagesResult.label.result.messagesTotal : 0;
-    const { nextToken, prevToken } = this.getPageTokens();    
+    const { nextToken, prevToken } = this.getPageTokens();
     return (
       <React.Fragment>
         <ListToolbar
@@ -159,7 +158,7 @@ export class MessageList extends PureComponent {
         <ListFooter messagesTotal={messagesTotal} />
       </React.Fragment>
     );
-  }  
+  }
 }
 
 export default MessageList;

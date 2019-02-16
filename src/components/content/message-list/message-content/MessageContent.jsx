@@ -7,10 +7,9 @@ import {
   modifyMessages
 } from "../actions/message-list.actions";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Loader from '../../../loader/Loader';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import MessageToolbar from "../message-toolbar/MessageToolbar";
 
 import "./messageContent.scss";
@@ -57,7 +56,7 @@ export class MessageContent extends Component {
   renderSpinner() {
     return (
       <div className="d-flex h-100 justify-content-center align-items-center  ">
-        <FontAwesomeIcon icon={faSpinner} spin size="5x" />
+        <Loader />
       </div>
     );
   }
@@ -83,8 +82,8 @@ export class MessageContent extends Component {
 
     return (
       <React.Fragment>
-        <MessageToolbar 
-          onClick={this.modifyMessage} 
+        <MessageToolbar
+          onClick={this.modifyMessage}
           messageResult={this.props.emailMessageResult}
         />
         <div className="d-flex justify-content-center align-items-center message-content">

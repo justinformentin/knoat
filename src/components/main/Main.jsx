@@ -25,8 +25,7 @@ import {
 import {selectLabel} from '../sidebar/sidebar.actions';
 import {signOut} from '../../api/authentication';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Loader from '../loader/Loader';
 
 
 export class Main extends Component {
@@ -44,8 +43,8 @@ export class Main extends Component {
   }
 
   componentDidMount() {
-    /* Label list is fetched from here 
-    so that we can declare Routes by labelId 
+    /* Label list is fetched from here
+    so that we can declare Routes by labelId
     before rendering anything else */
     this.getLabelList();
   }
@@ -64,12 +63,12 @@ export class Main extends Component {
     if (!selectedLabel) {
       if (labelPathMatch && this.props.searchQuery === "") {
         this.props.selectLabel(labelPathMatch.id);
-      }      
+      }
     }
     else {
       if (labelPathMatch && selectedLabel.id !== labelPathMatch.id) {
         this.props.selectLabel(labelPathMatch.id);
-      } 
+      }
     }
   }
 
@@ -89,7 +88,7 @@ export class Main extends Component {
   loadLabelMessages(label) {
     const currentSearchQuery = this.props.searchQuery;
     this.props.clearPageTokens();
-    this.props.selectLabel(label.id);    
+    this.props.selectLabel(label.id);
 
     const newPathToPush = `/${label.id.toLowerCase()}`;
 
@@ -104,14 +103,14 @@ export class Main extends Component {
 
     this.props.history.push(`/${label.id.toLowerCase()}`);
   }
-  
+
 
   getLabelList() {
     this.props.getLabels();
   }
 
   getLabelMessages({labelIds, q, pageToken}) {
-    this.props.emptyLabelMessages();    
+    this.props.emptyLabelMessages();
     this.props.getLabelMessages({labelIds, q, pageToken});
   }
 
@@ -126,7 +125,7 @@ export class Main extends Component {
         key={el.id + '_route'}
         exact
         path={"/" + el.id}
-        render={props => {          
+        render={props => {
           const that = this;
           return (
             <MessageList
@@ -144,13 +143,13 @@ export class Main extends Component {
           )
         }}
       />
-    ));    
+    ));
   }
 
   renderSpinner() {
     return (
       <div className="d-flex h-100 align-items-center justify-content-center">
-        <FontAwesomeIcon icon={faSpinner} spin size="5x" />
+        <Loader />
       </div>
     )
   }
@@ -171,10 +170,10 @@ export class Main extends Component {
 
     return (
       <Fragment>
-        <Header googleUser={this.props.googleUser} 
-          onSignout={this.onSignout} 
+        <Header googleUser={this.props.googleUser}
+          onSignout={this.onSignout}
           setSearchQuery={this.props.setSearchQuery}
-          getLabelMessages={this.getLabelMessages} 
+          getLabelMessages={this.getLabelMessages}
           searchQuery={this.props.searchQuery}
         />
         <section className="main hbox space-between">

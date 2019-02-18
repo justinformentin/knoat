@@ -10,8 +10,6 @@ import MessageContent from "../content/message-list/message-content/MessageConte
 
 import { Route, Switch, withRouter } from "react-router-dom";
 
-import { getLabels } from "../sidebar/sidebar.actions";
-
 import {
   getLabelMessages,
   emptyLabelMessages,
@@ -20,9 +18,10 @@ import {
   addInitialPageToken,
   clearPageTokens,
   setSearchQuery
-} from "../content/message-list/actions/message-list.actions";
+} from "../../redux/messagelist/actions";
 
-import {selectLabel} from '../sidebar/sidebar.actions';
+import { getLabels } from "../../redux/sidebar/actions";
+import {selectLabel} from '../../redux/sidebar/actions';
 import {signOut} from '../../api/authentication';
 
 import Loader from '../loader/Loader';

@@ -12,7 +12,7 @@ import {
   CLEAR_PAGE_TOKENS,
   MODIFY_MESSAGES_SUCCESS,
   SET_SEARCH_QUERY
-} from "../actions/message-list.actions";
+} from "./actions";
 
 const defaultMessagesState = {
   messages: [],

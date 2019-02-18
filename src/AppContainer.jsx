@@ -14,7 +14,7 @@ import {
   AUTH_SUCCESS,
   AUTH_FAIL,
   AUTH_IN_PROGRESS
-} from "./constants";
+} from "./redux/auth/constants";
 
 export class AppContainer extends Component {
 

@@ -5,7 +5,7 @@ import { bindActionCreators, compose } from "redux";
 import {
   getEmailMessage,
   modifyMessages
-} from "../actions/message-list.actions";
+} from "../../../../redux/messagelist/actions";
 
 import Loader from '../../../loader/Loader';
 

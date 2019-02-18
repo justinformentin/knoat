@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import {
   toggleSelected,
   modifyMessages
-} from "../actions/message-list.actions";
+} from "../../../../redux/messagelist/actions";
 import Pager from "../pager-buttons/PagerButtons";
 import ListActionButtons from "./ListActionButtons";
 

@@ -1,4 +1,4 @@
-import { GET_LABELS, SELECT_LABEL } from "./sidebar.actions";
+import { GET_LABELS, SELECT_LABEL } from "./actions";
 
 const defaultLabelState = {
     labels: []
@@ -14,16 +14,16 @@ export const labelsResult = (state = defaultLabelState, action) => {
       };
     case SELECT_LABEL:
       return {
-        ...state, 
+        ...state,
         labels: state.labels.map(el => {
           if (el.id === action.payload) {
             return {
-              ...el, 
+              ...el,
               selected: true
             }
           }
           return {
-            ...el, 
+            ...el,
             selected: false
           };
         })

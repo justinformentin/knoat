@@ -5,7 +5,7 @@ import {
   AUTH_FAIL,
   AUTH_IN_PROGRESS,
   AUTH_SIGNED_OUT
-} from "../constants";
+} from "./constants";
 
 export const signedOutReducer = (state = {}, action) => {
   switch (action.type) {

@@ -1,5 +1,6 @@
-import { MAX_RESULTS } from "../constants";
 import {getBody, isHTML} from './utils';
+
+const MAX_RESULTS = 20;
 
 const getLabelDetailPromise = labelId => {
   return new Promise((resolve, reject) => {
@@ -152,7 +153,7 @@ export const getMessage = messageId => {
       .then(response => {
         const { result } = response;
 
-        let body = getBody(result.payload, "text/html");        
+        let body = getBody(result.payload, "text/html");
 
         if (body === "") {
           body = getBody(result.payload, "text/plain");
@@ -162,7 +163,7 @@ export const getMessage = messageId => {
         if (body !== "" && !isHTML(body)) {
           body = body.replace(/(\r\n)+/g, '<div data-break="rn-1" style="margin-bottom:10px"></div>').replace(/[\n\r]+/g, '<br data-break="nr">');
         }
-          
+
         resolve({
           body,
           headers: response.headers,

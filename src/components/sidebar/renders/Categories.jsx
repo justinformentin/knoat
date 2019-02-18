@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { Fragment } from "react";
 import {
   faInbox,
   faUsers,
@@ -7,10 +6,10 @@ import {
   faComments,
   faTag
 } from "@fortawesome/free-solid-svg-icons";
-
 import LabelItem from "../LabelItem";
 
-export const RenderCategories = ({labels}, props) => {
+export const Categories = ({labels, navigateToList}) => {
+
   const catPersonal = {
     ...labels.find(el => el.id === "CATEGORY_PERSONAL"),
     name: "Personal",
@@ -40,7 +39,7 @@ export const RenderCategories = ({labels}, props) => {
   const categories = [catPersonal, catSocial, catPromotions, catUpdates, catForums];
 
   return (
-    <React.Fragment>
+    <Fragment>
       <li key="olders-nav-title" className="pl-2 nav-title">
         Categories
       </li>
@@ -49,7 +48,7 @@ export const RenderCategories = ({labels}, props) => {
         return (
           <LabelItem
             key={el.id + "_label"}
-            onClick={props.navigateToList}
+            onClick={navigateToList}
             name={el.name}
             id={el.id}
             messagesUnread={el.messagesUnread}
@@ -58,6 +57,6 @@ export const RenderCategories = ({labels}, props) => {
           />
         );
       })}
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import {
   faCircle
@@ -6,9 +6,9 @@ import {
 
 import LabelItem from "../LabelItem";
 
-export const RenderLabels = ({labels}, props) => {
+export const Labels = ({labels, navigateToList}) => {
   return (
-    <React.Fragment>
+    <Fragment>
       <li key="olders-nav-title" className="pl-2 nav-title">
         Labels
       </li>
@@ -21,7 +21,7 @@ export const RenderLabels = ({labels}, props) => {
         return (
           <LabelItem
             key={el.id + "_label"}
-            onClick={props.navigateToList}
+            onClick={navigateToList}
             name={el.name}
             id={el.id}
             messagesUnread={el.messagesUnread}
@@ -30,6 +30,6 @@ export const RenderLabels = ({labels}, props) => {
           />
         );
       })}
-    </React.Fragment>
+    </Fragment>
   );
 }

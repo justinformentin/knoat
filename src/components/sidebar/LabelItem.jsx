@@ -5,9 +5,7 @@ export class LabelItem extends PureComponent {
 
   constructor(props) {
     super(props);
-
     this.onClick = this.onClick.bind(this);
-
   }
 
   onClick(evt) {

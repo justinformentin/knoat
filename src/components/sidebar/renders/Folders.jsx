@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import {
   faInbox,
@@ -9,7 +9,7 @@ import {
 
 import LabelItem from "../LabelItem";
 
-export const RenderFolders = ({labels}, props) => {
+export const Folders = ({labels, navigateToList}) => {
   const inboxLabel = {
     ...labels.find(el => el.id === "INBOX"),
     name: "Inbox",
@@ -36,7 +36,7 @@ export const RenderFolders = ({labels}, props) => {
   const folders = [inboxLabel, sentLabel, trashLabel, spamLabel];
 
   return (
-    <React.Fragment>
+    <Fragment>
       <li key="olders-nav-title" className="pl-2 nav-title">
         Folders
       </li>
@@ -45,7 +45,7 @@ export const RenderFolders = ({labels}, props) => {
         return (
           <LabelItem
             key={el.id + "_label"}
-            onClick={props.navigateToList}
+            onClick={navigateToList}
             name={el.name}
             id={el.id}
             messagesUnread={el.messagesUnread}
@@ -54,6 +54,6 @@ export const RenderFolders = ({labels}, props) => {
           />
         );
       })}
-    </React.Fragment>
+    </Fragment>
   );
 }

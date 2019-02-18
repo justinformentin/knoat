@@ -4,15 +4,10 @@ import { infoNotify } from '../notifications/notify'
 import ComposeMessage from "../compose-message/ComposeMessage";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { ToastContainer } from 'react-toastify';
-
-import groupBy from "lodash/groupBy";
-import sortBy from "lodash/sortBy";
+import { RenderItems } from './renders/RenderItems'
 
 import "../notifications/notify.scss"
 import "./sidebar.scss";
-import { RenderCategories } from "./renders/RenderCategories";
-import { RenderFolders } from "./renders/RenderFolders";
-import { RenderLabels } from "./renders/RenderLabels";
 
 export class Sidebar extends PureComponent {
   constructor(props) {
@@ -28,43 +23,6 @@ export class Sidebar extends PureComponent {
   navigateToList(evt, labelId) {
     const label = this.props.labelsResult.labels.find(el => el.id === labelId);
     this.props.onLabelClick(label || { id: "" });
-  }
-
-  renderItems(labelList) {
-    if (labelList.length === 0) {
-      return <div />;
-    }
-
-    const labels = labelList.reduce((acc, el) => {
-      acc.push(el);
-      return acc;
-    }, []);
-
-    const labelGroups = groupBy(labels, "type");
-
-    const visibleLabels = labelGroups.user.filter(
-      el =>
-        !el.labelListVisibility || true
-    );
-
-    const sortedLabels = sortBy(visibleLabels, "name");
-
-    return (
-      <React.Fragment>
-        <RenderFolders
-          labels={labelGroups.system}
-          navigateToList={this.navigateToList}
-        />
-        <RenderCategories
-          labels={labelGroups.system}
-          navigateToList={this.navigateToList}
-        />
-        <RenderLabels
-          labels={sortedLabels}
-          navigateToList={this.navigateToList}
-        />
-      </React.Fragment>
-    );
   }
 
   successNotification = () => {
@@ -91,7 +49,11 @@ export class Sidebar extends PureComponent {
           component="ul"
           className="d-flex flex-column border-0 m-0 sidebar"
         >
-          {this.renderItems(this.props.labelsResult.labels)}
+          {/* {this.renderItems(this.props.labelsResult.labels)} */}
+          <RenderItems
+            labelList={this.props.labelsResult.labels}
+            navigateToList={this.navigateToList}
+          />
           <ToastContainer />
         </PerfectScrollbar>
       </nav>

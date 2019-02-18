@@ -8,22 +8,11 @@ import { ToastContainer } from 'react-toastify';
 import groupBy from "lodash/groupBy";
 import sortBy from "lodash/sortBy";
 
-import {
-  faInbox,
-  faEnvelope,
-  faTrash,
-  faCircle,
-  faExclamationCircle,
-  faUsers,
-  faInfoCircle,
-  faComments,
-  faTag
-} from "@fortawesome/free-solid-svg-icons";
-
-import LabelItem from "./LabelItem";
-
 import "../notifications/notify.scss"
 import "./sidebar.scss";
+import { RenderCategories } from "./renders/RenderCategories";
+import { RenderFolders } from "./renders/RenderFolders";
+import { RenderLabels } from "./renders/RenderLabels";
 
 export class Sidebar extends PureComponent {
   constructor(props) {
@@ -33,14 +22,7 @@ export class Sidebar extends PureComponent {
       selectedLabel: props.pathname
     };
 
-    //this.renderLabels = this.renderLabels.bind(this);
     this.navigateToList = this.navigateToList.bind(this);
-  }
-
-  componentDidMount() {
-    //this.props.getLabelList(); //.then(labels => {});
-    /*  */
-    //this.props.getLabelMessages();
   }
 
   navigateToList(evt, labelId) {
@@ -62,8 +44,6 @@ export class Sidebar extends PureComponent {
 
     const visibleLabels = labelGroups.user.filter(
       el =>
-        //el.labelListVisibility === "labelShow" ||
-        //el.labelListVisibility === "labelShowIfUnread" ||
         !el.labelListVisibility || true
     );
 
@@ -71,138 +51,18 @@ export class Sidebar extends PureComponent {
 
     return (
       <React.Fragment>
-        {this.renderFolders(labelGroups.system)}
-        {this.renderCategories(labelGroups.system)}
-        {this.renderLabels(sortedLabels)}
-      </React.Fragment>
-    );
-  }
-
-  renderFolders(labels) {
-    const inboxLabel = {
-      ...labels.find(el => el.id === "INBOX"),
-      name: "Inbox",
-      icon: faInbox
-    };
-    const sentLabel = {
-      ...labels.find(el => el.id === "SENT"),
-      messagesUnread: 0,
-      name: "Sent",
-      icon: faEnvelope
-    };
-    const trashLabel = {
-      ...labels.find(el => el.id === "TRASH"),
-      messagesUnread: 0,
-      name: "Trash",
-      icon: faTrash
-    };
-    const spamLabel = {
-      ...labels.find(el => el.id === "SPAM"),
-      name: "Spam",
-      icon: faExclamationCircle
-    };
-
-    const folders = [inboxLabel, sentLabel, trashLabel, spamLabel];
-
-    return (
-      <React.Fragment>
-        <li key="olders-nav-title" className="pl-2 nav-title">
-          Folders
-        </li>
-        {folders.map(el => {
-          const iconProps = { icon: el.icon, size: "lg" };
-          return (
-            <LabelItem
-              key={el.id + "_label"}
-              onClick={this.navigateToList}
-              name={el.name}
-              id={el.id}
-              messagesUnread={el.messagesUnread}
-              iconProps={iconProps}
-              selected={el.selected}
-            />
-          );
-        })}
-      </React.Fragment>
-    );
-  }
-
-  renderCategories(labels){
-    const catPersonal = {
-      ...labels.find(el => el.id === "CATEGORY_PERSONAL"),
-      name: "Personal",
-      icon: faInbox
-    };
-    const catSocial = {
-      ...labels.find(el => el.id === "CATEGORY_SOCIAL"),
-      name: "Social",
-      icon: faUsers
-    };
-    const catPromotions = {
-      ...labels.find(el => el.id === "CATEGORY_PROMOTIONS"),
-      name: "Promotions",
-      icon: faTag
-    };
-    const catUpdates = {
-      ...labels.find(el => el.id === "CATEGORY_UPDATES"),
-      name: "Updates",
-      icon: faInfoCircle
-    };
-    const catForums = {
-      ...labels.find(el => el.id === "CATEGORY_FORUMS"),
-      name: "Forums",
-      icon: faComments
-    };
-
-    const categories = [catPersonal, catSocial, catPromotions, catUpdates, catForums];
-
-    return (
-      <React.Fragment>
-        <li key="olders-nav-title" className="pl-2 nav-title">
-          Categories
-        </li>
-        {categories.map(el => {
-          const iconProps = { icon: el.icon, size: "lg" };
-          return (
-            <LabelItem
-              key={el.id + "_label"}
-              onClick={this.navigateToList}
-              name={el.name}
-              id={el.id}
-              messagesUnread={el.messagesUnread}
-              iconProps={iconProps}
-              selected={el.selected}
-            />
-          );
-        })}
-      </React.Fragment>
-    );
-  }
-
-  renderLabels(labels) {
-    return (
-      <React.Fragment>
-        <li key="olders-nav-title" className="pl-2 nav-title">
-          Labels
-        </li>
-        {labels.map(el => {
-          const iconProps = {
-            icon: faCircle,
-            color: el.color ? el.color.backgroundColor : "gainsboro",
-            size: "sm"
-          };
-          return (
-            <LabelItem
-              key={el.id + "_label"}
-              onClick={this.navigateToList}
-              name={el.name}
-              id={el.id}
-              messagesUnread={el.messagesUnread}
-              iconProps={iconProps}
-              selected={el.selected}
-            />
-          );
-        })}
+        <RenderFolders
+          labels={labelGroups.system}
+          navigateToList={this.navigateToList}
+        />
+        <RenderCategories
+          labels={labelGroups.system}
+          navigateToList={this.navigateToList}
+        />
+        <RenderLabels
+          labels={sortedLabels}
+          navigateToList={this.navigateToList}
+        />
       </React.Fragment>
     );
   }

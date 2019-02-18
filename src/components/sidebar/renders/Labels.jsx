@@ -4,9 +4,9 @@ import {
   faCircle
 } from "@fortawesome/free-solid-svg-icons";
 
-import LabelItem from "../LabelItem";
+import LabelItem from "./LabelItem";
 
-export const Labels = ({labels, navigateToList}) => {
+const Labels = ({labels, navigateToList}) => {
   return (
     <Fragment>
       <li key="olders-nav-title" className="pl-2 nav-title">
@@ -33,3 +33,5 @@ export const Labels = ({labels, navigateToList}) => {
     </Fragment>
   );
 }
+
+export default Labels;

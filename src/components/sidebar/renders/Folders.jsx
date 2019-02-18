@@ -7,9 +7,9 @@ import {
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-import LabelItem from "../LabelItem";
+import LabelItem from "./LabelItem";
 
-export const Folders = ({labels, navigateToList}) => {
+const Folders = ({labels, navigateToList}) => {
   const inboxLabel = {
     ...labels.find(el => el.id === "INBOX"),
     name: "Inbox",
@@ -57,3 +57,5 @@ export const Folders = ({labels, navigateToList}) => {
     </Fragment>
   );
 }
+
+export default Folders;

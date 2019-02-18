@@ -4,7 +4,7 @@ import { infoNotify } from '../notifications/notify'
 import ComposeMessage from "../compose-message/ComposeMessage";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { ToastContainer } from 'react-toastify';
-import { RenderItems } from './renders/RenderItems'
+import { RenderItems } from './RenderItems'
 
 import "../notifications/notify.scss"
 import "./sidebar.scss";
@@ -49,7 +49,6 @@ export class Sidebar extends PureComponent {
           component="ul"
           className="d-flex flex-column border-0 m-0 sidebar"
         >
-          {/* {this.renderItems(this.props.labelsResult.labels)} */}
           <RenderItems
             labelList={this.props.labelsResult.labels}
             navigateToList={this.navigateToList}

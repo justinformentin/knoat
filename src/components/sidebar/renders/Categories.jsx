@@ -6,9 +6,9 @@ import {
   faComments,
   faTag
 } from "@fortawesome/free-solid-svg-icons";
-import LabelItem from "../LabelItem";
+import LabelItem from "./LabelItem";
 
-export const Categories = ({labels, navigateToList}) => {
+const Categories = ({labels, navigateToList}) => {
 
   const catPersonal = {
     ...labels.find(el => el.id === "CATEGORY_PERSONAL"),
@@ -60,3 +60,5 @@ export const Categories = ({labels, navigateToList}) => {
     </Fragment>
   );
 }
+
+export default Categories;

@@ -3,9 +3,7 @@ import React from 'react';
 import groupBy from "lodash/groupBy";
 import sortBy from "lodash/sortBy";
 
-import { Categories } from "./Categories";
-import { Folders } from "./Folders";
-import { Labels } from "./Labels";
+import { Categories, Folders, Labels } from "./renders";
 
 export const RenderItems = ({labelList, navigateToList}) => {
   if (labelList.length === 0) {

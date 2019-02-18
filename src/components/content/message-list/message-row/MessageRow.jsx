@@ -69,7 +69,7 @@ export class MessageItem extends PureComponent {
         />
         <div
           onClick={this.getMessage}
-          className={`table-row px-2 py-3${unread}`}
+          className={`table-row px-2 py-10 ${unread}`}
         >
           <NameSubjectFields fromName={fromName} subject={subject} />
           <AttachmentDateFields

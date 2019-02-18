@@ -33,12 +33,19 @@
     width: 100%;
     //background-color: #f8f9fa;
     //padding: 15px 5px;
-    color: #242a30;
+    color: #202124;
+
+  }
+
+  .py-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
 
+
  // Wrappers around cells
- .wrapper {
+  .wrapper {
    display: flex;           display: -webkit-flex;
    flex-direction: row;     -webkit-flex-direction: row;
    flex-grow: 0;            -webkit-flex-grow: 0;

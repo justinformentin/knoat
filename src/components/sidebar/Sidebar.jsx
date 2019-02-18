@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
+import { successNotify } from '../notifications/notify'
 
 import ComposeMessage from "../compose-message/ComposeMessage";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { ToastContainer } from 'react-toastify';
 
 import groupBy from "lodash/groupBy";
 import sortBy from "lodash/sortBy";
@@ -20,6 +22,7 @@ import {
 
 import LabelItem from "./LabelItem";
 
+import "../notifications/notify.scss"
 import "./sidebar.scss";
 
 export class Sidebar extends PureComponent {
@@ -204,12 +207,17 @@ export class Sidebar extends PureComponent {
     );
   }
 
+  successNotification = () => {
+    successNotify();
+  }
+
   render() {
     return (
       <nav className="d-flex flex-column text-truncate left-panel">
         <div className="compose-panel">
           <div className="d-flex justify-content-center p-2 compose-btn">
             <ComposeMessage
+              successNotification={this.successNotification}
               subject=""
               to=""
             >
@@ -224,6 +232,7 @@ export class Sidebar extends PureComponent {
           className="d-flex flex-column border-0 m-0 sidebar"
         >
           {this.renderItems(this.props.labelsResult.labels)}
+          <ToastContainer />
         </PerfectScrollbar>
       </nav>
     );

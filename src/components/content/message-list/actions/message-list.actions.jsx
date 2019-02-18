@@ -2,6 +2,7 @@ import { getMessageList } from "../../../../api";
 import { getMessage } from "../../../../api";
 import { batchModify } from "../../../../api";
 import { selectLabel } from "../../../sidebar/sidebar.actions";
+import { deleteNotify } from "../../../notifications/notify";
 
 export const GET_MESSAGES = "GET_MESSAGES";
 export const GET_MESSAGES_LOAD_IN_PROGRESS = "GET_MESSAGES_LOAD_IN_PROGRESS";
@@ -41,7 +42,7 @@ export const getLabelMessages = ({
     dispatch(setPageTokens({
       nextPageToken: response.nextPageToken || ""
     }));
-    
+
   }).catch(err => {
     dispatch({
       type: GET_MESSAGES_FAILED,
@@ -112,7 +113,8 @@ export const modifyMessages = ({ids, addLabelIds = [], removeLabelIds = []}) => 
       dispatch({
        type: MODIFY_MESSAGES_SUCCESS,
        payload: {modifiedIds, addLabelIds, removeLabelIds}
-      })
+      });
+      deleteNotify();
     })
     .catch(error => {
       dispatch({
@@ -120,4 +122,3 @@ export const modifyMessages = ({ids, addLabelIds = [], removeLabelIds = []}) => 
       })
     })
 }
-

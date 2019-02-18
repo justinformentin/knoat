@@ -85,12 +85,13 @@ export class Compose extends PureComponent {
     sendMessage({
       headers,
       body: this.state.content
-    }).then(_ => {      
+    }).then(_ => {
       this.closeModal();
       this.resetFields();
     });
 
     this.closeModal();
+    this.props.successNotification();
   }
 
   resetFields() {
@@ -106,7 +107,7 @@ export class Compose extends PureComponent {
   setField(field, trimValue = true) {
     return evt => {
       this.setState({
-        [field]: trimValue ? evt.target.value.trim() : evt.target.value 
+        [field]: trimValue ? evt.target.value.trim() : evt.target.value
       });
     };
   }
@@ -116,7 +117,7 @@ export class Compose extends PureComponent {
     return fieldValue.length > 0 && !getValidEmails(fieldValue).length;
   }
 
-  
+
   render() {
     return (
       <React.Fragment>

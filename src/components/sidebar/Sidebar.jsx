@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { successNotify } from '../notifications/notify'
+import { infoNotify } from '../notifications/notify'
 
 import ComposeMessage from "../compose-message/ComposeMessage";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -208,7 +208,7 @@ export class Sidebar extends PureComponent {
   }
 
   successNotification = () => {
-    successNotify();
+    infoNotify();
   }
 
   render() {

@@ -1,17 +1,17 @@
 import { toast, Slide } from 'react-toastify';
 
 const options = {
-  position: "bottom-center",
+  position: "bottom-left",
   hideProgressBar: true,
   transition: Slide,
   pauseOnHover: false,
 }
 
-// const successNotify = () => {
-//   toast.success("Email Sent!", {
-//     ...options
-//   });
-// }
+const successNotify = () => {
+  toast.success("Email Sent!", {
+    ...options
+  });
+}
 
 const warnNotify = () => {
   toast.warn("Warning!", {
@@ -31,7 +31,7 @@ const deleteNotify = () => {
   });
 }
 
-const successNotify = () => {
+const infoNotify = () => {
   toast.info("Email Sent!", {
     ...options});
 }
@@ -41,5 +41,5 @@ export {
   warnNotify,
   errorNotify,
   deleteNotify,
-  // infoNotify
+  infoNotify
 }

@@ -1,5 +1,5 @@
 import { getLabelList } from "../../api";
-import { setSearchQuery } from "../content/message-list/actions/message-list.actions";
+// import { setSearchQuery } from "../content/message-list/actions/message-list.actions";
 
 export const GET_LABELS = "GET_LABELS";
 export const SELECT_LABEL = "SELECT_LABEL";

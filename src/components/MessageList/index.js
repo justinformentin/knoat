@@ -2,8 +2,8 @@ import React, { PureComponent } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { Loader } from "../Loader";
 import ListFooter from "./ListFooter";
-import MessageListToolbar from "./MessageListToolbar";
-import MessageRow from "./MessageRow";
+import MessageListToolbar from "../MessageListToolbar";
+import MessageRow from "../MessageRow";
 
 const ViewMode = {
   LIST: 1,

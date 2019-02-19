@@ -2,7 +2,7 @@ import { getMessageList } from "../../api";
 import { getMessage } from "../../api";
 import { batchModify } from "../../api";
 import { selectLabel } from "../sidebar/actions";
-import { deleteNotify } from "../../components/notifications/notify";
+import { deleteNotify } from "../../utils/notify";
 
 export const GET_MESSAGES = "GET_MESSAGES";
 export const GET_MESSAGES_LOAD_IN_PROGRESS = "GET_MESSAGES_LOAD_IN_PROGRESS";

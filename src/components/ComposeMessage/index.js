@@ -19,8 +19,6 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 
-// import "./composeMessage.scss";
-
 export class ComposeMessage extends PureComponent {
   constructor(props) {
     super(props);

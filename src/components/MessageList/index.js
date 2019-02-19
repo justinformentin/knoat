@@ -2,11 +2,8 @@ import React, { PureComponent } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { Loader } from "../Loader";
 import ListFooter from "./ListFooter";
-import MessageToolbar from "./MessageToolbar";
+import MessageListToolbar from "./MessageListToolbar";
 import MessageRow from "./MessageRow";
-
-
-// import "./messageList.scss";
 
 const ViewMode = {
   LIST: 1,
@@ -145,7 +142,7 @@ export class MessageList extends PureComponent {
     const { nextToken, prevToken } = this.getPageTokens();
     return (
       <React.Fragment>
-        <MessageToolbar
+        <MessageListToolbar
           nextToken={nextToken}
           prevToken={prevToken}
           navigateToNextPage={this.props.navigateToNextPage}

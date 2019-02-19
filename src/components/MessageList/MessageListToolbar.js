@@ -11,7 +11,7 @@ import { Checkbox } from "../Checkbox";
 import { PagerButtons } from "./PagerButtons";
 import { ListActionButtons } from "./ListActionButtons";
 
-export class MessageToolbar extends PureComponent {
+export class MessageListToolbar extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -113,4 +113,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MessageToolbar);
+)(MessageListToolbar);

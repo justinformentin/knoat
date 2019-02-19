@@ -5,9 +5,6 @@ import { ComposeMessage } from "../ComposeMessage";
 import { ToastContainer } from 'react-toastify';
 import { RenderItems } from './RenderItems'
 
-// import "../notifications/notify.scss"
-// import "./sidebar.scss";
-
 export class Sidebar extends PureComponent {
   constructor(props) {
     super(props);

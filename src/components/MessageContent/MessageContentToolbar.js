@@ -5,9 +5,7 @@ import moment from "moment";
 import { getNameEmail } from "../../utils/getNameEmail";
 import { ComposeMessage } from "../ComposeMessage";
 
-// import "./messageToolbar.scss";
-
-export class MessageToolbar extends PureComponent {
+export class MessageContentToolbar extends PureComponent {
   constructor(props) {
     super(props);
     this.trashHandler = this.getClickHandler(["TRASH"]);

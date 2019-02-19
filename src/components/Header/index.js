@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import debounce from "lodash/debounce";
 import { Signout } from "../Signout";
 
-import "./header.scss";
 import logo from '../../logo.png'
 
 export class Header extends PureComponent {

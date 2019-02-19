@@ -2,8 +2,6 @@ import React, { PureComponent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-// import './listToolbar.scss';
-
 export class ListActionButtons extends PureComponent {
   constructor(props) {
     super(props);

@@ -8,13 +8,8 @@ import {
   modifyMessages
 } from "../../redux/messagelist/actions";
 
-import { MessageToolbar } from "./MessageToolbar";
+import { MessageContentToolbar } from "./MessageContentToolbar";
 import { Loader } from '../Loader';
-
-// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-
-
-// import "./messageContent.scss";
 
 export class MessageContent extends Component {
   constructor(props) {
@@ -84,7 +79,7 @@ export class MessageContent extends Component {
 
     return (
       <React.Fragment>
-        <MessageToolbar
+        <MessageContentToolbar
           onClick={this.modifyMessage}
           messageResult={this.props.emailMessageResult}
         />

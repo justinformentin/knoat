@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { Loader } from "../Loader";
+import { Loader } from "../../utils/loader";
 import ListFooter from "./ListFooter";
 import MessageListToolbar from "../MessageListToolbar";
 import MessageRow from "../MessageRow";

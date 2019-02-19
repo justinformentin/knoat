@@ -15,7 +15,7 @@ import {
 import { getLabels, selectLabel } from "../../redux/sidebar/actions";
 import { signOut } from '../../api/authentication';
 
-import { Loader } from '../Loader';
+import { Loader } from '../../utils/loader';
 import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import { NotFound } from "../NotFound";

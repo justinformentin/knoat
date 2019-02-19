@@ -9,7 +9,7 @@ import {
 } from "../../redux/messagelist/actions";
 
 import { MessageContentToolbar } from "./MessageContentToolbar";
-import { Loader } from '../Loader';
+import { Loader } from '../../utils/loader';
 
 export class MessageContent extends Component {
   constructor(props) {

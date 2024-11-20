@@ -1,6 +1,5 @@
 import { serverClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import Sidebar from "./_components/sidebar";
 import NoteArea from "./_components/note-area";
 
 export default async function ProtectedPage() {
@@ -16,7 +15,6 @@ export default async function ProtectedPage() {
 
   return (
     <div className="">
-        <Sidebar />
         <NoteArea />
     </div>
   );

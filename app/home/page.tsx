@@ -1,6 +1,5 @@
-import { serverClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import NoteArea from "./_components/note-area";
+import { serverClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
 export default async function ProtectedPage() {
   const supabase = await serverClient();
@@ -10,12 +9,6 @@ export default async function ProtectedPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/sign-in");
-  }
-
-  return (
-    <div className="">
-        <NoteArea user={user} />
-    </div>
-  );
+    return redirect('/sign-in');
+  } else return redirect('/notes');
 }

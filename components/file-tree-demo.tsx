@@ -72,7 +72,7 @@ export function FileTreeDemo({
   const renderDirectory = (item: any) => {
     if (item.fileName) {
       return (
-        <Link href={'/home/notes/' + item.fullPath} key={item.id}>
+        <Link href={'/notes/' + item.fullPath} key={item.id}>
           <File value={item.id}>
             <p>{item.fileName}</p>
           </File>

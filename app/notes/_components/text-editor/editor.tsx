@@ -13,7 +13,7 @@ import './styles.css';
 
 const placeholder = 'Enter some text...';
 
-export default function Editor({ user, note }: { user: any; note: any }) {
+export default function Editor({ user, note }: { user: any; note?: any }) {
   function onChange(editorState: any) {
     console.log('edit', editorState);
   }

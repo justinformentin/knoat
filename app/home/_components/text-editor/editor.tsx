@@ -18,9 +18,11 @@ export default function Editor({ user, note }: { user: any; note: any }) {
     console.log('edit', editorState);
   }
 
+  const initialState = note && note.content || null;
+  const noteId = note && note.id || null;
   return (
     <LexicalComposer
-      initialConfig={{ ...editorConfig, editorState: note.content }}
+      initialConfig={{ ...editorConfig, editorState: initialState }}
     >
       <div className="editor-container">
         <ToolbarPlugin />
@@ -44,7 +46,7 @@ export default function Editor({ user, note }: { user: any; note: any }) {
             ignoreHistoryMergeTagChange={false}
             ignoreSelectionChange={true}
           />
-          <ActionsPlugin noteId={note.id} user={user} />
+          <ActionsPlugin noteId={noteId} user={user} />
         </div>
       </div>
     </LexicalComposer>

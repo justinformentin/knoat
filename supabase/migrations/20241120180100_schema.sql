@@ -129,21 +129,45 @@ to authenticated, service_role;
 
 alter table public.users enable row level security;
 -- Create Notes Table
-create table if not exists public.notes_paths (
+create table if not exists public.notes (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users (id),
+  full_path text not null,
+  label text not null,
+  content jsonb not null default '{}',
   created_at varchar default date_display_tz(now()) not null,
   updated_at varchar default date_display_tz(now()) not null
 );
 -- Revoke all on accounts table from authenticated and service_role
-revoke all on public.notes_paths
+revoke all on public.notes
 from
   authenticated,
   service_role;
 
 -- Open up access to accounts
 grant select, insert, update, delete 
-on table public.notes_paths 
+on table public.notes 
 to authenticated, service_role;
 
-alter table public.notes_paths enable row level security;
+alter table public.notes enable row level security;
+
+create policy notes_read on public.notes for
+select
+  to authenticated using (
+    user_id = ( select auth.uid ())
+  );
+
+create policy notes_insert on public.notes for
+insert
+  to authenticated with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );
+
+create policy notes_update on public.notes for
+update
+  to authenticated
+    using (
+      (user_id = ( SELECT auth.uid() AS uid))
+    ) with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );

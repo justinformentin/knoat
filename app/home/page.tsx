@@ -15,7 +15,7 @@ export default async function ProtectedPage() {
 
   return (
     <div className="">
-        <NoteArea />
+        <NoteArea user={user} />
     </div>
   );
 }

@@ -1,27 +1,22 @@
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
-  } from "@/components/ui/sidebar"
-import { FileTreeDemo } from "./file-tree-demo"
-import { TreeView, TreeDataItem } from '@/components/ui/tree-view';
-  
-  export function AppSidebar({notes}: {notes:any}) {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  // SidebarGroup,
+  SidebarHeader,
+} from '@/components/ui/sidebar';
+import { FileTreeDemo } from './file-tree-demo';
 
-
-    return (
-      <Sidebar>
-        <SidebarHeader />
-        <SidebarContent>
-          {/* <SidebarGroup /> */}
-          {/* <TreeView data={data} /> */}
-          <FileTreeDemo notes={notes} />
-          {/* <SidebarGroup /> */}
-        </SidebarContent>
-        <SidebarFooter />
-      </Sidebar>
-    )
-  }
-  
+export function AppSidebar({ notes, noteList }: { notes: any; noteList: any }) {
+  return (
+    <Sidebar>
+      <SidebarHeader />
+      <SidebarContent>
+        {/* <SidebarGroup /> */}
+        <FileTreeDemo notes={notes} noteList={noteList} />
+        {/* <SidebarGroup /> */}
+      </SidebarContent>
+      <SidebarFooter />
+    </Sidebar>
+  );
+}

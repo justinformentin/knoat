@@ -100,7 +100,10 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
           currentElement: TreeViewElement,
           currentPath: string[] = []
         ) => {
-          const isSelectable = currentElement.isSelectable ?? true;
+          // const isSelectable = currentElement.isSelectable ?? true;
+          //  Setting this as true because I don't want to have to add the isSelectable prop to all notes
+          // I'm just assuming that will always be the case and we can go from there in the future 
+          const isSelectable = true;
           const newPath = [...currentPath, currentElement.id];
           if (currentElement.id === selectId) {
             if (isSelectable) {

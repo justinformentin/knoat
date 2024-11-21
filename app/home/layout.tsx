@@ -139,7 +139,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <AppSidebar notes={directories} />
+      <AppSidebar noteList={directories} notes={flatNotes} />
       <div className="w-full">
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
           <SidebarTrigger />

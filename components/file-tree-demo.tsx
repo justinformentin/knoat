@@ -1,6 +1,6 @@
 'use client';
 import { File, Folder, Tree } from '@/components/ui/file-tree';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation'
 
 export interface ListItem {
@@ -16,10 +16,10 @@ export interface FileType extends ListItem {
 }
 export type ListType = Array<FolderType | FileType>;
 
-export function FileTreeDemo({notes}:{notes: any}) {
+export function FileTreeDemo({notes, noteList}:{notes: any, noteList: any}) {
 
 
-  const [list, setList] = useState(notes);
+  const [list, setList] = useState(noteList);
 
   const addFile = (path: string) => {
     const listCopy = [...list];
@@ -103,86 +103,27 @@ export function FileTreeDemo({notes}:{notes: any}) {
     return null;
   };
 
+  const [initialSelectedId, setInitialSelectedId] = useState<string | undefined>();
+  const params = useParams()
+
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '')
+    if (hash) {
+      const found = notes.find((note:any) => note.fullPath === hash)
+      found && found.id !== initialSelectedId && setInitialSelectedId(found.id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params])
+
   return (
     <div className="relative flex flex-col items-center justify-center overflow-hidden bg-background">
       <Tree
         className="p-2 overflow-hidden rounded-md bg-background"
-        initialSelectedId="2"
-        initialExpandedItems={
-          [
-            //   '1',
-            //   '2',
-            //   '3',
-            //   '4',
-            //   '5',
-            //   '6',
-            //   '7',
-            //   '8',
-            //   '9',
-            //   '10',
-            //   '11',
-          ]
-        }
-        elements={ELEMENTS}
+        initialSelectedId={initialSelectedId}
+        elements={list}
       >
         {list.map(renderDirectory)}
       </Tree>
     </div>
   );
 }
-
-const ELEMENTS = [
-  {
-    id: '1',
-    isSelectable: true,
-    name: 'src',
-    children: [
-      {
-        id: '2',
-        isSelectable: true,
-        name: 'app',
-        children: [
-          {
-            id: '3',
-            isSelectable: true,
-            name: 'layout.tsx',
-          },
-          {
-            id: '4',
-            isSelectable: true,
-            name: 'page.tsx',
-          },
-        ],
-      },
-      {
-        id: '5',
-        isSelectable: true,
-        name: 'components',
-        children: [
-          {
-            id: '6',
-            isSelectable: true,
-            name: 'header.tsx',
-          },
-          {
-            id: '7',
-            isSelectable: true,
-            name: 'footer.tsx',
-          },
-        ],
-      },
-      {
-        id: '8',
-        isSelectable: true,
-        name: 'lib',
-        children: [
-          {
-            id: '9',
-            isSelectable: true,
-            name: 'utils.ts',
-          },
-        ],
-      },
-    ],
-  },
-];

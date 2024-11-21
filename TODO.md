@@ -9,3 +9,7 @@
     7a. Tree view - can create any number of directories and files inside
 8. Allows saving images?
 9. Resizable area
+10. Allow changing file and dir name
+11. Add AI chat
+    11a. Maybe a sidebar with optional copy/paste output into note
+12. Note path should change browser path to allow for linking notes from other notes

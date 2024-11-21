@@ -209,8 +209,8 @@ type FolderProps = {
   element: string;
   isSelectable?: boolean;
   isSelect?: boolean;
-  newDirClick?: any;
-  newFileClick?: any;
+  newDirClick?: () => void;
+  newFileClick?: () => void;
 } & FolderComponentProps;
 
 const Folder = forwardRef<
@@ -332,7 +332,10 @@ const File = forwardRef<
             isSelectable ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
             className
           )}
-          onClick={() => selectItem(value)}
+          onClick={() => {
+            selectItem(value);
+            handleSelect && handleSelect(value)
+          }}
         >
           {fileIcon ?? <FileIcon className="size-4" />}
           {children}

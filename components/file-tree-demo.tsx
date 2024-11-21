@@ -1,6 +1,7 @@
 'use client';
 import { File, Folder, Tree } from '@/components/ui/file-tree';
 import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation'
 
 export interface ListItem {
   id: string;
@@ -15,56 +16,10 @@ export interface FileType extends ListItem {
 }
 export type ListType = Array<FolderType | FileType>;
 
-export function FileTreeDemo() {
-  const initialList = [
-    {
-      id: '1',
-      label: 'notes-one',
-      fullPath: 'notes-one',
-      children: [
-        {
-          id: '2',
-          fullPath: 'notes-one/inner-notes-1',
-          label: 'inner-notes-1',
-          children: [
-            {
-              id: '4',
-              label: 'todo.md',
-              fileName: 'todo.md',
-              fullPath: 'notes-one/inner-notes/inner-todo.md',
-            },
-            {
-              id: '5',
-              label: 'tasks.md',
-              fileName: 'tasks.md',
-              fullPath: 'notes-one/inner-notes/inner-tasks.md',
-            },
-          ],
-        },
-        {
-          id: '3',
-          label: 'todo.md',
-          fileName: 'todo.md',
-          fullPath: 'notes-one/todo.md',
-        },
-      ],
-    },
-    {
-      id: '6',
-      label: 'notes-two',
-      fullPath: 'notes-two',
-      children: [
-        {
-          id: '7',
-          label: 'other-note.md',
-          fileName: 'other-note.md',
-          fullPath: 'notes-two/other-note.md',
-        },
-      ],
-    },
-  ];
+export function FileTreeDemo({notes}:{notes: any}) {
 
-  const [list, setList] = useState(initialList);
+
+  const [list, setList] = useState(notes);
 
   const addFile = (path: string) => {
     const listCopy = [...list];
@@ -83,7 +38,7 @@ export function FileTreeDemo() {
             id: new Date().toISOString(),
             label: fileName,
             fileName,
-            fullPath: path + fileName,
+            fullPath: `${path}/${fileName}`,
           });
           setList(listCopy);
         }
@@ -119,12 +74,16 @@ export function FileTreeDemo() {
     const pathSplit = path.split('/');
     findPath(pathSplit, listCopy);
   };
+  const router = useRouter()
 
-  console.log('list', list);
+ const fileClick = (item:any) => {
+    router.push(`#${item.fullPath}`)
+ }
+
   const renderDirectory = (item: any) => {
     if (item.fileName) {
       return (
-        <File value={item.id} key={item.id}>
+        <File value={item.id} key={item.id} handleSelect={()=>fileClick(item)}>
           <p>{item.fileName}</p>
         </File>
       );

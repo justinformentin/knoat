@@ -131,7 +131,7 @@ alter table public.users enable row level security;
 -- Create Notes Table
 create table if not exists public.notes (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id),
+  user_id uuid not null references auth.users (id),
   full_path text not null,
   label text not null,
   content jsonb not null default '{}',
@@ -164,6 +164,49 @@ insert
     );
 
 create policy notes_update on public.notes for
+update
+  to authenticated
+    using (
+      (user_id = ( SELECT auth.uid() AS uid))
+    ) with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );
+
+-- Directories
+create table if not exists public.directories (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id),
+  full_path text not null,
+  label text not null,
+  created_at varchar default date_display_tz(now()) not null
+);
+
+-- Revoke all on accounts table from authenticated and service_role
+revoke all on public.directories
+from
+  authenticated,
+  service_role;
+
+-- Open up access to accounts
+grant select, insert, update, delete 
+on table public.directories 
+to authenticated, service_role;
+
+alter table public.directories enable row level security;
+
+create policy directoriess_read on public.directories for
+select
+  to authenticated using (
+    user_id = ( select auth.uid ())
+  );
+
+create policy directories_insert on public.directories for
+insert
+  to authenticated with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );
+
+create policy directories_update on public.directories for
 update
   to authenticated
     using (

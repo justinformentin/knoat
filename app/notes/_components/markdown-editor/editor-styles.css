@@ -1,0 +1,32 @@
+
+.mdxeditor-root-contenteditable {
+    height: calc(100% - 41px);
+}
+.mdxeditor-root-contenteditable > div {
+    height: 100%;
+}
+.mdxeditor ol {
+    margin-left: 1rem;
+}
+.mdxeditor li:not([role="checkbox"]) {
+    list-style-type: auto;
+}
+.mdxeditor ul li {
+    margin-left: 1rem;
+}
+.mdxeditor li[role="checkbox"]::before {
+    top: 6px;
+}
+.mdxeditor .custom-ce {
+    color: hsl(var(--foreground)) !important;
+}
+.mdxeditor .custom-toolbar {
+    background-color: hsl(var(--muted)) !important;
+    background: hsl(var(--muted)) !important;
+ }
+.mdxeditor .custom-toolbar svg {
+   color: hsl(var(--foreground)) !important;
+}
+.mdxeditor .custom-toolbar button[role="combobox"] {
+    background-color: hsl(var(--popover)) !important;
+}

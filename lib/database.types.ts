@@ -74,7 +74,7 @@ export type Database = {
           user_id: string;
           full_path: string;
           label: string;
-          content: JSON;
+          content: string;
         };
         Insert: {
             created_at?: string;
@@ -83,7 +83,7 @@ export type Database = {
             user_id?: string;
             full_path?: string;
             label?: string;
-            content?: JSON;
+            content?: string;
         };
         Update: {
             created_at?: string;
@@ -92,7 +92,7 @@ export type Database = {
             user_id?: string;
             full_path?: string;
             label?: string;
-            content?: JSON;
+            content?: string;
         };
         Relationships: [
           {

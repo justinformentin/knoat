@@ -1,6 +1,6 @@
 import { serverClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import Editor from '../_components/text-editor/editor';
+import { ForwardRefEditor } from '../_components/markdown-editor/editor';
 
 export default async function NotePage(props: any) {
   const client = await serverClient();
@@ -20,5 +20,10 @@ export default async function NotePage(props: any) {
     .eq('user_id', user.id)
     .single();
 
-  return <Editor user={user} note={note.data} />;
+  return (
+    <ForwardRefEditor
+      noteId={note?.data?.id}
+      markdown={note?.data?.content || ''}
+    />
+  );
 }

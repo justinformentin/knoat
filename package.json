@@ -8,7 +8,7 @@
     "supabase:start": "supabase status || supabase start"
   },
   "dependencies": {
-    "@lexical/react": "^0.20.0",
+    "@mdxeditor/editor": "^3.19.2",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -24,7 +24,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "geist": "^1.2.1",
-    "lexical": "^0.20.0",
     "lucide-react": "^0.456.0",
     "next": "latest",
     "next-themes": "^0.4.3",

@@ -1,9 +1,11 @@
 'use client';
 import { File, Folder, Tree } from '@/components/ui/file-tree';
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { browserClient } from '@/utils/supabase/client';
+import { FolderPlus } from 'lucide-react';
+import PopoverView from './popover-view';
 
 export interface ListItem {
   id: string;
@@ -21,15 +23,20 @@ export type ListType = Array<FolderType | FileType>;
 export function FileTreeDemo({
   user,
   notes,
-  noteList,
+  initialTreeView,
 }: {
   user: any;
   notes: any;
-  noteList: any;
+  initialTreeView: any;
 }) {
   const params = useParams();
+  const router = useRouter();
+  const [noteList, setNoteList] = useState(notes);
+  const [treeView, setTreeView] = useState(initialTreeView);
 
-  const [list, setList] = useState(noteList);
+  const [initialSelectedId, setInitialSelectedId] = useState<
+    string | undefined
+  >();
 
   const addResource = (path: string, listCopy: any) => {
     const findPath = (paths: string[], dir: any): any => {
@@ -49,51 +56,54 @@ export function FileTreeDemo({
 
   const createNote = async (fileName: string, fullPath: string) => {
     const client = browserClient();
-    const dir = await client
+    const note = await client
       .from('notes')
-      .insert({ user_id: user.id, label: fileName, full_path: fullPath });
-    console.log('create dir', dir);
+      .insert({ user_id: user.id, label: fileName, full_path: fullPath })
+      .select('*')
+      .single();
+    console.log('create note', note);
+    return note.data;
   };
 
-  const addFile = (path: string) => {
-    const listCopy = [...list];
-    const foundDir = addResource(path, listCopy);
-
-    const time = String(new Date().getTime()).slice(-5);
-    const fileName = 'new-file' + time + '.md';
+  const addFile = async (path: string, itemName: string) => {
+    const noteListCopy = [...noteList];
+    const treeViewCopy = [...treeView];
+    const foundDir = addResource(path, treeViewCopy);
+    const fileName = `${itemName}.md`;
     const fullPath = `${path}/${fileName}`;
-    foundDir.children.push({
-      id: new Date().toISOString(),
-      label: fileName,
-      fileName,
-      fullPath,
-    });
-    setList(listCopy);
-    createNote(fileName, fullPath);
+    const note = await createNote(fileName, fullPath);
+    foundDir.children.push(note);
+    setTreeView(treeViewCopy);
+    noteListCopy.push(note);
+    setNoteList(noteListCopy);
+    router.push('/notes/' + fullPath);
   };
 
   const createDirectory = async (fileName: string, fullPath: string) => {
     const client = browserClient();
     const dir = await client
       .from('directories')
-      .insert({ user_id: user.id, label: fileName, full_path: fullPath });
+      .insert({ user_id: user.id, label: fileName, full_path: fullPath })
+      .select('*')
+      .single();
     console.log('create dir', dir);
+    return dir.data;
   };
 
-  const addDirectory = (path: string) => {
-    const listCopy = [...list];
-    const foundDir = addResource(path, listCopy);
-    const time = String(new Date().getTime()).slice(-5);
-    const fileName = 'new-directory' + time;
+  const addDirectory = async (path: string, fileName: string) => {
+    const treeViewCopy = [...treeView];
+    const foundDir = addResource(path, treeViewCopy);
     const fullPath = `${path}/${fileName}`;
-    foundDir.children.push({
-      id: new Date().toISOString(),
-      label: fileName,
-      fullPath,
-      children: [],
-    });
-    setList(listCopy);
-    createDirectory(fileName, fullPath);
+    const dir = await createDirectory(fileName, fullPath);
+    foundDir.children.push({ ...dir, children: [] });
+    setTreeView(treeViewCopy);
+  };
+
+  const addRootDirectory = async (name: string) => {
+    const dir = await createDirectory(name, name);
+    const treeViewCopy = [...treeView];
+    treeViewCopy.push({ ...dir, children: [] });
+    setTreeView(treeViewCopy);
   };
 
   const renderDirectory = (item: any) => {
@@ -103,8 +113,12 @@ export function FileTreeDemo({
           key={item.id}
           value={item.id}
           element={item.label}
-          newDirClick={() => addDirectory(item.full_path)}
-          newFileClick={() => addFile(item.full_path)}
+          newFolderCallback={(itemName: string) => {
+            addDirectory(item.full_path, itemName);
+          }}
+          newNoteCallback={(itemName: string) => {
+            addFile(item.full_path, itemName);
+          }}
         >
           {item.children.map(renderDirectory)}
         </Folder>
@@ -112,7 +126,7 @@ export function FileTreeDemo({
     } else {
       return (
         <Link href={'/notes/' + item.full_path} key={item.id}>
-          <File value={item.id}>
+          <File value={item.id} isSelect={item.id === initialSelectedId}>
             <p>{item.label}</p>
           </File>
         </Link>
@@ -120,11 +134,6 @@ export function FileTreeDemo({
     }
   };
 
-  const [initialSelectedId, setInitialSelectedId] = useState<
-    string | undefined
-  >();
-
-  console.log('file tree params', params);
   useEffect(() => {
     if (
       params.notePath &&
@@ -132,22 +141,26 @@ export function FileTreeDemo({
       Array.isArray(params.notePath)
     ) {
       const notePath: string[] = params.notePath;
-      const found = notes.find(
+      const found = noteList.find(
         (note: any) => note.full_path === notePath.join('/')
       );
       found && found.id !== initialSelectedId && setInitialSelectedId(found.id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [params, router]);
 
   return (
     <div className="relative flex flex-col items-center justify-center overflow-hidden bg-background">
+      <div className="justify-end flex w-full mr-12">
+        <PopoverView text="Directory" confirmCallback={addRootDirectory}>
+          <FolderPlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+        </PopoverView>
+      </div>
       <Tree
         className="p-2 overflow-hidden rounded-md bg-background"
         initialSelectedId={initialSelectedId}
-        elements={list}
+        elements={treeView}
       >
-        {list.map(renderDirectory)}
+        {treeView.map(renderDirectory)}
       </Tree>
     </div>
   );

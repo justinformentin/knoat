@@ -17,8 +17,7 @@ export default function Editor({ user, note }: { user: any; note?: any }) {
   function onChange(editorState: any) {
     console.log('edit', editorState);
   }
-
-  const initialState = (note && note.content) || null;
+  const initialState = (note && note.content && JSON.stringify(note.content) !== '{}') ? note.content : null;
   const noteId = (note && note.id) || null;
   return (
     <LexicalComposer

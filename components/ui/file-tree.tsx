@@ -9,11 +9,18 @@ import React, {
   useState,
 } from 'react';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
-import { FileIcon, FilePlus, FilePlus2, FolderIcon, FolderOpenIcon, FolderPlus, Plus } from 'lucide-react';
+import {
+  FileIcon,
+  FilePlus,
+  FolderIcon,
+  FolderOpenIcon,
+  FolderPlus,
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { ScrollArea } from './scroll-area';
+import PopoverView from '../popover-view';
 
 type TreeViewElement = {
   id: string;
@@ -102,7 +109,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
         ) => {
           // const isSelectable = currentElement.isSelectable ?? true;
           //  Setting this as true because I don't want to have to add the isSelectable prop to all notes
-          // I'm just assuming that will always be the case and we can go from there in the future 
+          // I'm just assuming that will always be the case and we can go from there in the future
           const isSelectable = true;
           const newPath = [...currentPath, currentElement.id];
           if (currentElement.id === selectId) {
@@ -212,8 +219,8 @@ type FolderProps = {
   element: string;
   isSelectable?: boolean;
   isSelect?: boolean;
-  newDirClick?: () => void;
-  newFileClick?: () => void;
+  newFolderCallback?: any;
+  newNoteCallback?: any;
 } & FolderComponentProps;
 
 const Folder = forwardRef<
@@ -228,8 +235,8 @@ const Folder = forwardRef<
       isSelectable = true,
       isSelect,
       children,
-      newDirClick,
-      newFileClick,
+      newFolderCallback,
+      newNoteCallback,
       ...props
     },
     ref
@@ -267,9 +274,13 @@ const Folder = forwardRef<
               <span>{element}</span>
             </div>
           </AccordionPrimitive.Trigger>
-          <div className="self-center ml-4 flex space-x-2" >
-            <FolderPlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" onClick={newDirClick} />
-            <FilePlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" onClick={newFileClick} />
+          <div className="self-center ml-4 flex space-x-2">
+            <PopoverView text="Directory" confirmCallback={newFolderCallback}>
+              <FolderPlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+            </PopoverView>
+            <PopoverView text="Note" confirmCallback={newNoteCallback}>
+              <FilePlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+            </PopoverView>
           </div>
         </div>
         <AccordionPrimitive.Content className="text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down relative overflow-hidden h-full">
@@ -298,7 +309,6 @@ const File = forwardRef<
   HTMLButtonElement,
   {
     value: string;
-    handleSelect?: (id: string) => void;
     isSelectable?: boolean;
     isSelect?: boolean;
     fileIcon?: React.ReactNode;
@@ -308,7 +318,6 @@ const File = forwardRef<
     {
       value,
       className,
-      handleSelect,
       isSelectable = true,
       isSelect,
       fileIcon,
@@ -335,10 +344,7 @@ const File = forwardRef<
             isSelectable ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
             className
           )}
-          onClick={() => {
-            selectItem(value);
-            handleSelect && handleSelect(value)
-          }}
+          onClick={() => selectItem(value)}
         >
           {fileIcon ?? <FileIcon className="size-4" />}
           {children}

@@ -1,6 +1,6 @@
 import { serverClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import Editor from '../../home/_components/text-editor/editor';
+import Editor from '../_components/text-editor/editor';
 
 export default async function NotePage(props: any) {
   const client = await serverClient();

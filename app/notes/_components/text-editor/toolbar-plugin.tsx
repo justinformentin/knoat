@@ -88,7 +88,7 @@ export default function ToolbarPlugin() {
   }, [editor, $updateToolbar]);
 
   return (
-    <div className="toolbar" ref={toolbarRef}>
+    <div className="flex justify-center p-2 toolbar" ref={toolbarRef}>
       <button
         disabled={!canUndo}
         onClick={() => {

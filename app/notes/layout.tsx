@@ -140,10 +140,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar noteList={directories} notes={flatNotes} />
-      <div className="w-full">
-        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-          <SidebarTrigger />
-          <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
+      <div className="w-full h-full">
+        <nav className="w-full flex justify-center border-b border-b-foreground/10">
+          <SidebarTrigger className="self-center ml-2" />
+          <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
             <div className="flex gap-5 items-center font-semibold">
               <Link href={'/'}>Knoat</Link>
             </div>

@@ -19,15 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
-      <body className="bg-background text-foreground">
+    <html lang="en" className={"h-[100vh] " + GeistSans.className} suppressHydrationWarning>
+      <body className="bg-background text-foreground overflow-hidden h-full">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex flex-col items-center">
+          <main className="min-h-screen h-full flex flex-col items-center">
             {children}
           </main>
         </ThemeProvider>

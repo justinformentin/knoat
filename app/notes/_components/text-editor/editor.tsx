@@ -18,19 +18,20 @@ export default function Editor({ user, note }: { user: any; note?: any }) {
     console.log('edit', editorState);
   }
 
-  const initialState = note && note.content || null;
-  const noteId = note && note.id || null;
+  const initialState = (note && note.content) || null;
+  const noteId = (note && note.id) || null;
   return (
     <LexicalComposer
       initialConfig={{ ...editorConfig, editorState: initialState }}
     >
-      <div className="editor-container">
+      <div className="relative h-[calc(100%-48px)]">
         <ToolbarPlugin />
-        <div className="editor-inner">
+        <ActionsPlugin noteId={noteId} user={user} />
+        <div className="relative overflow-auto h-[calc(100%-48px)] p-4">
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="editor-input"
+                className="h-full outline-none"
                 aria-placeholder={placeholder}
                 placeholder={
                   <div className="editor-placeholder">{placeholder}</div>
@@ -46,7 +47,6 @@ export default function Editor({ user, note }: { user: any; note?: any }) {
             ignoreHistoryMergeTagChange={false}
             ignoreSelectionChange={true}
           />
-          <ActionsPlugin noteId={noteId} user={user} />
         </div>
       </div>
     </LexicalComposer>

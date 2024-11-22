@@ -29,7 +29,7 @@ export default function ActionsPlugin({
   };
 
   return (
-    <div className="actions">
+    <div className="absolute top-4 left-4">
       <button
         className="action-button export"
         onClick={saveFile}

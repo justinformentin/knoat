@@ -10,7 +10,7 @@ import { cn } from '../../lib/utils';
 import { Button } from './button';
 import { Input } from './input';
 import { Separator } from './separator';
-import { Sheet, SheetContent } from './sheet';
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from './sheet';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -187,6 +187,7 @@ const Sidebar = React.forwardRef<
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
           <SheetContent
+            aria-describedby="Notes Tree View Sidebar"
             data-sidebar="sidebar"
             data-mobile="true"
             className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
@@ -197,7 +198,13 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <SheetDescription className="sr-only">
+              Notes Tree View Sidebar
+            </SheetDescription>
+            <SheetTitle className="sr-only">Notes Tree View Sidebar</SheetTitle>
+            <div className="flex h-full w-full flex-col bg-background">
+              {children}
+            </div>
           </SheetContent>
         </Sheet>
       );

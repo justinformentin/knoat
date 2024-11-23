@@ -134,7 +134,7 @@ create table if not exists public.notes (
   user_id uuid not null references auth.users (id),
   full_path text not null,
   label text not null,
-  content jsonb not null default '{}',
+  content text,
   created_at varchar default date_display_tz(now()) not null,
   updated_at varchar default date_display_tz(now()) not null
 );

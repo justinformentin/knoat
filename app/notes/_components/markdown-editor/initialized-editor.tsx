@@ -35,6 +35,7 @@ import {
 import '@mdxeditor/editor/style.css';
 import SavePlugin from './save-plugin';
 import './editor-styles.css';
+import { CustomToolbar } from './custom-toolbar';
 // Only import this to the next file
 export default function InitializedMDXEditor({
   editorRef,
@@ -99,7 +100,8 @@ export default function App() {
                 <InsertCodeBlock />
                 <InsertThematicBreak />
                 <InsertTable /> */}
-              <KitchenSinkToolbar />
+              {/* <KitchenSinkToolbar /> */}
+              <CustomToolbar />
             </>
           ),
         }),

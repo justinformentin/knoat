@@ -29,4 +29,5 @@
 }
 .mdxeditor .custom-toolbar button[role="combobox"] {
     background-color: hsl(var(--popover)) !important;
+    max-width: 6.5rem !important;
 }

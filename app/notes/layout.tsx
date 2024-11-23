@@ -18,7 +18,7 @@ type Directory = {
 export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <AppSidebar  />
       <div className="w-full h-full">
         <AppHeader />

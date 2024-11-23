@@ -21,6 +21,7 @@ import {
   ShowSandpackInfo,
   UndoRedo,
   CreateLink,
+  DiffSourceToggleWrapper,
 } from '@mdxeditor/editor';
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
@@ -39,8 +40,10 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
  * You'll probably want to create your own toolbar component that includes only the buttons that you need.
  * @group Toolbar Components
  */
-export const KitchenSinkToolbar: React.FC = () => {
+export const CustomToolbar: React.FC = () => {
   return (
+    <DiffSourceToggleWrapper>
+
     <ConditionalContents
       options={[
         {
@@ -53,61 +56,67 @@ export const KitchenSinkToolbar: React.FC = () => {
         },
         {
           fallback: () => (
-            <>
-              <UndoRedo />
-              <Separator />
-              <BoldItalicUnderlineToggles />
-              <CodeToggle />
-              <Separator />
-              <StrikeThroughSupSubToggles />
-              <Separator />
-              <ListsToggle />
-              <Separator />
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex">
+                <UndoRedo />
+                <Separator />
+                <BoldItalicUnderlineToggles />
+                <CodeToggle />
+                <Separator />
+                <StrikeThroughSupSubToggles />
+                <Separator />
+                <ListsToggle />
+                <Separator />
 
-              <ConditionalContents
-                options={[
-                  {
-                    when: whenInAdmonition,
-                    contents: () => <ChangeAdmonitionType />,
-                  },
-                  { fallback: () => <BlockTypeSelect /> },
-                ]}
-              />
+                <ConditionalContents
+                  options={[
+                    {
+                      when: whenInAdmonition,
+                      contents: () => <ChangeAdmonitionType />,
+                    },
+                    { fallback: () => <BlockTypeSelect /> },
+                  ]}
+                />
+              </div>
+              <div className="flex">
+                <Separator />
 
-              <Separator />
+                <CreateLink />
+                <InsertImage />
 
-              <CreateLink />
-              <InsertImage />
+                <Separator />
 
-              <Separator />
+                <InsertTable />
+                <InsertThematicBreak />
 
-              <InsertTable />
-              <InsertThematicBreak />
+                <Separator />
+                <InsertCodeBlock />
+                <InsertSandpack />
 
-              <Separator />
-              <InsertCodeBlock />
-              <InsertSandpack />
+                <ConditionalContents
+                  options={[
+                    {
+                      when: (editorInFocus) => !whenInAdmonition(editorInFocus),
+                      contents: () => (
+                        <>
+                          <Separator />
+                          <InsertAdmonition />
+                        </>
+                      ),
+                    },
+                  ]}
+                />
 
-              <ConditionalContents
-                options={[
-                  {
-                    when: (editorInFocus) => !whenInAdmonition(editorInFocus),
-                    contents: () => (
-                      <>
-                        <Separator />
-                        <InsertAdmonition />
-                      </>
-                    ),
-                  },
-                ]}
-              />
-
-              <Separator />
-              <InsertFrontmatter />
-            </>
+                <Separator />
+                <InsertFrontmatter />
+              </div>
+            </div>
+            
           ),
         },
       ]}
     />
+    </DiffSourceToggleWrapper>
+
   );
 };

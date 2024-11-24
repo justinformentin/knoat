@@ -22,7 +22,7 @@ export default async function NotePage(props: any) {
 
   return (
     <ForwardRefEditor
-      noteId={note?.data?.id}
+      note={note?.data}
       markdown={note?.data?.content || ''}
     />
   );

@@ -1,21 +1,22 @@
-import { Highlighter, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
+// import { update } from '@/server/dbAdapter';
 import { browserClient } from '@/utils/supabase/client';
 
 export default function SavePlugin({
   editorRef,
-  noteId,
+  note,
 }: {
   editorRef: any;
-  noteId: any;
+  note: any;
 }): JSX.Element {
-  console.log('editorRef', editorRef);
+  const client = browserClient();
   const saveFile = async () => {
-    const client = browserClient();
-
     const content = editorRef.current?.getMarkdown();
-    console.log('content', content);
-    if (noteId) {
-      await client.from('notes').update({ content }).eq('id', noteId);
+    if (note.id) {
+      await client.from('notes').update({ content }).eq('id', note.id);
+      // const updated = (await indexDb).update('notes', {...note, content})
+      // const updated = await update('notes', { ...note, content });
+      // console.log('updated', updated);
     }
   };
 

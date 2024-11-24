@@ -10,40 +10,31 @@ import {
   MDXEditor,
   diffSourcePlugin,
   AdmonitionDirectiveDescriptor,
-  DirectiveDescriptor,
   directivesPlugin,
   frontmatterPlugin,
   imagePlugin,
   SandpackConfig,
   codeMirrorPlugin,
   sandpackPlugin,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
   toolbarPlugin,
   type MDXEditorMethods,
   type MDXEditorProps,
   tablePlugin,
-  InsertTable,
-  ListsToggle,
-  InsertThematicBreak,
-  InsertCodeBlock,
   codeBlockPlugin,
-  KitchenSinkToolbar,
-  StrikeThroughSupSubToggles,
   linkDialogPlugin,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import SavePlugin from './save-plugin';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
+
 // Only import this to the next file
 export default function InitializedMDXEditor({
   editorRef,
   ...props
-}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps & {noteId?: string}) {
-  console.log('props', props);
-  console.log('1 editorRef', editorRef);
-
+}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps & {
+    note?: any;
+  }) {
   const defaultSnippetContent = `
 export default function App() {
   return (
@@ -83,8 +74,10 @@ export default function App() {
 
   return (
     <MDXEditor
-    readOnly={!props.noteId}
-    placeholder={!props.noteId ? 'Open a note to start editing' : 'Enter text...'}
+      readOnly={!props.note.id}
+      placeholder={
+        !props.note.id ? 'Open a note to start editing' : 'Enter text...'
+      }
       className="h-[calc(100%-48px)] relative"
       contentEditableClassName="custom-ce relative overflow-auto h-full p-4 text-foreground"
       plugins={[
@@ -92,15 +85,7 @@ export default function App() {
           toolbarClassName: 'custom-toolbar',
           toolbarContents: () => (
             <>
-              <SavePlugin editorRef={editorRef} noteId={props.noteId} />
-              {/* <UndoRedo />
-                <BoldItalicUnderlineToggles />
-                <ListsToggle />
-                <StrikeThroughSupSubToggles />
-                <InsertCodeBlock />
-                <InsertThematicBreak />
-                <InsertTable /> */}
-              {/* <KitchenSinkToolbar /> */}
+              <SavePlugin editorRef={editorRef} note={props.note} />
               <CustomToolbar />
             </>
           ),

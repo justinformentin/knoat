@@ -24,7 +24,7 @@ import PopoverView from '../popover-view';
 
 type TreeViewElement = {
   id: string;
-  name: string;
+//   name: string;
   isSelectable?: boolean;
   children?: TreeViewElement[];
 };

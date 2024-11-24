@@ -17,12 +17,12 @@ import {
   InsertSandpack,
   InsertTable,
   InsertThematicBreak,
-  ListsToggle,
   ShowSandpackInfo,
   UndoRedo,
   CreateLink,
-  DiffSourceToggleWrapper,
 } from '@mdxeditor/editor';
+import { SourceTogglePlugin } from './source-toggle-plugin';
+import { CustomListsToggle } from './list-toggle';
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
   if (!node || node.getType() !== 'directive') {
@@ -42,8 +42,6 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
  */
 export const CustomToolbar: React.FC = () => {
   return (
-    <DiffSourceToggleWrapper>
-
     <ConditionalContents
       options={[
         {
@@ -65,7 +63,8 @@ export const CustomToolbar: React.FC = () => {
                 <Separator />
                 <StrikeThroughSupSubToggles />
                 <Separator />
-                <ListsToggle />
+                <CustomListsToggle />
+                {/* <ListsToggle /> */}
                 <Separator />
 
                 <ConditionalContents
@@ -109,14 +108,12 @@ export const CustomToolbar: React.FC = () => {
 
                 <Separator />
                 <InsertFrontmatter />
+                <SourceTogglePlugin />
               </div>
             </div>
-            
           ),
         },
       ]}
     />
-    </DiffSourceToggleWrapper>
-
   );
 };

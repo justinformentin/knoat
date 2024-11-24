@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import HeaderAuth from '@/components/header-auth';
 import { ThemeSwitcher } from '@/components/theme-switcher';
-import { hasEnvVars } from '@/utils/supabase/check-env-vars';
-import { EnvVarWarning } from '@/components/env-var-warning';
 import { Logo } from './logo';
 
 export default function AppHeader({ children }: any) {
@@ -17,7 +15,7 @@ export default function AppHeader({ children }: any) {
           <Link href={'/'}>Knoat</Link>
         </div>
         <ThemeSwitcher />
-        {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+        <HeaderAuth />
       </div>
     </nav>
   );

@@ -1,4 +1,9 @@
-
+.mdxeditor-diff-source-wrapper {
+    height: 100%;
+}
+.mdxeditor-rich-text-editor{
+    height: 100%
+}
 .mdxeditor-root-contenteditable {
     height: calc(100% - 41px);
 }

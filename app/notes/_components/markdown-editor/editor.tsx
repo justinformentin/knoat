@@ -12,7 +12,7 @@ const MDXE = dynamic(() => import('./initialized-editor'), {
 // to accept other props, including a ref.
 export const ForwardRefEditor = forwardRef<
   MDXEditorMethods,
-  MDXEditorProps & { noteId?: string }
+  MDXEditorProps & { note?: any }
 >((props, ref) => {
   const mdxEditorRef = useRef<MDXEditorMethods>(null);
   return <MDXE {...props} editorRef={mdxEditorRef} />;

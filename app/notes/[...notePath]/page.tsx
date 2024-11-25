@@ -13,17 +13,15 @@ export default async function NotePage(props: any) {
 
   const { notePath } = await props.params;
 
-  const note = await client
-    .from('notes')
-    .select('*')
-    .eq('full_path', notePath.join('/'))
-    .eq('user_id', user.id)
-    .single();
+  // const note = await client
+  //   .from('notes')
+  //   .select('*')
+  //   .eq('full_path', notePath.join('/'))
+  //   .eq('user_id', user.id)
+  //   .single();
 
   return (
-    <ForwardRefEditor
-      note={note?.data}
-      markdown={note?.data?.content || ''}
-    />
+    //@ts-ignore - Will be fixed when changing the location of data loading and subsequent prop passing is fixed
+    <ForwardRefEditor notePath={notePath} userId={user.id} />
   );
 }

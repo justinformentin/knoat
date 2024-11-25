@@ -1,5 +1,5 @@
 'use client';
-import type { ForwardedRef } from 'react';
+import { useEffect, useState, type ForwardedRef } from 'react';
 import {
   headingsPlugin,
   listsPlugin,
@@ -27,14 +27,17 @@ import '@mdxeditor/editor/style.css';
 import SavePlugin from './save-plugin';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
+import { getOne } from '@/server/dbAdapter';
+import { Note } from '@/server/types';
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
   editorRef,
   ...props
-}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps & {
-    note?: any;
-  }) {
+}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & {
+  notePath: string[];
+  userId: string;
+}) {
   const defaultSnippetContent = `
 export default function App() {
   return (
@@ -72,12 +75,28 @@ export default function App() {
     ],
   };
 
+  const [note, setNote] = useState<Note>();
+  useEffect(() => {
+    const getNote = async () => {
+      const n = await getOne({
+        tableName: 'notes',
+        queries: {
+          full_path: props.notePath.join('/'),
+          user_id: props.userId,
+        },
+        queryId: props.notePath.join('/'),
+      });
+      setNote(n);
+    };
+    getNote();
+  }, []);
+
+  if (!note) return;
   return (
     <MDXEditor
-      readOnly={!props.note.id}
-      placeholder={
-        !props.note.id ? 'Open a note to start editing' : 'Enter text...'
-      }
+      readOnly={!note.id}
+      placeholder={!note.id ? 'Open a note to start editing' : 'Enter text...'}
+      markdown={note?.content || ''}
       className="h-[calc(100%-48px)] relative"
       contentEditableClassName="custom-ce relative overflow-auto h-full p-4 text-foreground"
       plugins={[
@@ -85,7 +104,7 @@ export default function App() {
           toolbarClassName: 'custom-toolbar',
           toolbarContents: () => (
             <>
-              <SavePlugin editorRef={editorRef} note={props.note} />
+              <SavePlugin editorRef={editorRef} note={note} />
               <CustomToolbar />
             </>
           ),

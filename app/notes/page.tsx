@@ -11,5 +11,5 @@ export default async function NotePage() {
 
   if (!user) return redirect('/sign-in');
 
-  return <ForwardRefEditor markdown={''} />;
+  return <ForwardRefEditor />;
 }

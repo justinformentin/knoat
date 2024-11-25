@@ -1,6 +1,5 @@
 import { Save } from 'lucide-react';
-// import { update } from '@/server/dbAdapter';
-import { browserClient } from '@/utils/supabase/client';
+import { update } from '@/server/dbAdapter';
 
 export default function SavePlugin({
   editorRef,
@@ -9,14 +8,13 @@ export default function SavePlugin({
   editorRef: any;
   note: any;
 }): JSX.Element {
-  const client = browserClient();
   const saveFile = async () => {
     const content = editorRef.current?.getMarkdown();
     if (note.id) {
-      await client.from('notes').update({ content }).eq('id', note.id);
+      // await client.from('notes').update({ content }).eq('id', note.id);
       // const updated = (await indexDb).update('notes', {...note, content})
-      // const updated = await update('notes', { ...note, content });
-      // console.log('updated', updated);
+      const updated = await update('notes', { ...note, content });
+      console.log('updated', updated);
     }
   };
 

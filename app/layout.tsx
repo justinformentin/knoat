@@ -36,7 +36,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Knoat" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="bg-background text-foreground overflow-hidden h-full">
+      <body className="bg-background text-foreground md:overflow-hidden h-full">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -153,7 +153,7 @@ export const useDbAdapter = () => {
       // Fix types - right now everything is conditional and doesn't have definitive typing
       const inserted: any = await supabaseAdapter.insert(tableName, data);
       console.log('online inserted', inserted);
-      const idbReturn = await idbInsert(inserted?.id);
+      const idbReturn = await idbInsert(inserted);
       console.log('online idbReturn insert', idbReturn);
       return inserted;
     } else {

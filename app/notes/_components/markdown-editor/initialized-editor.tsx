@@ -82,11 +82,11 @@ export default function App() {
       readOnly={!props.note?.id}
       placeholder={!props.note?.id ? 'Open a note to start editing' : 'Enter text...'}
       markdown={props.note?.content || ''}
-      className="h-[calc(100%-48px)] relative"
-      contentEditableClassName="custom-ce relative overflow-auto h-full p-4 text-foreground"
+      className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
+      contentEditableClassName="custom-ce fixed top-[7.75rem] h-[calc(100%-8rem)] md:top-0 md:relative md:h-full overflow-auto w-full p-4 text-foreground"
       plugins={[
         toolbarPlugin({
-          toolbarClassName: 'custom-toolbar',
+          toolbarClassName: 'custom-toolbar fixed top-12 md:top-0 md:relative',
           toolbarContents: () => (
             <>
               <SavePlugin editorRef={editorRef} note={props.note} />

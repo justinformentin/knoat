@@ -113,6 +113,8 @@ export default function FileTree({
     return note;
   };
 
+  const { isMobile, setOpenMobile } = useSidebar();
+
   const addFile = async (path: string, itemName: string) => {
     const noteListCopy = [...noteList];
     const treeViewCopy = [...treeView];
@@ -126,6 +128,7 @@ export default function FileTree({
     noteListCopy.push(note);
     setNoteList(noteListCopy);
     router.push('/notes/' + fullPath);
+    isMobile && setOpenMobile(false)
   };
 
   const createDirectory = async (fileName: string, fullPath: string) => {
@@ -156,7 +159,6 @@ export default function FileTree({
     setTreeView(treeViewCopy);
   };
 
-  const { isMobile, setOpenMobile } = useSidebar();
 
   const renderDirectory = (item: any) => {
     if (item.children) {
@@ -199,9 +201,7 @@ export default function FileTree({
       const np = params.notePath.join('/');
 
       if (noteList?.length && notePath !== np) {
-        console.log('INSIDE FILE TREE UE IF()');
         const found = noteList.find((note: any) => note.full_path === np);
-
         found &&
           found.id !== initialSelectedId &&
           setInitialSelectedId(found.id);

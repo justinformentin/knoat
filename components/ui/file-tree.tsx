@@ -288,7 +288,7 @@ const Folder = forwardRef<
           <AccordionPrimitive.Root
             dir={direction}
             type="multiple"
-            className="flex flex-col gap-1 py-1 ml-5 rtl:mr-5 "
+            className="flex flex-col gap-1 py-1 ml-4 rtl:mr-5 "
             defaultValue={expandedItems}
             value={expandedItems}
             onValueChange={(value) => {
@@ -337,7 +337,7 @@ const File = forwardRef<
           disabled={!isSelectable}
           aria-label="File"
           className={cn(
-            'flex items-center gap-1 cursor-pointer text-lg md:text-sm pr-1 rtl:pl-1 rtl:pr-0 rounded-md  duration-200 ease-in-out',
+            'flex items-center gap-1 cursor-pointer text-lg md:text-sm pr-1 rtl:pl-1 rtl:pr-0 rounded-md duration-200 ease-in-out px-[1px] py-[4px]',
             {
               'bg-muted': isSelected && isSelectable,
             },

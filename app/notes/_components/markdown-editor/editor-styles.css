@@ -10,6 +10,9 @@
 .mdxeditor-root-contenteditable > div {
     height: 100%;
 }
+.mdxeditor-popup-container {
+    height: unset !important;
+}
 .mdxeditor ol {
     margin-left: 1rem;
 }
@@ -26,6 +29,8 @@
     color: hsl(var(--foreground)) !important;
 }
 .mdxeditor .custom-toolbar {
+    position: sticky;
+    top: 3rem;
     background-color: hsl(var(--muted)) !important;
     background: hsl(var(--muted)) !important;
  }

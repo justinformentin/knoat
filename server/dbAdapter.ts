@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { indexDb } from './indexDbAdapter';
+import { useIdb } from './indexDbAdapter';
 import { supabaseAdapter } from './supabaseAdapter';
 import {
   Directory,
@@ -26,7 +26,7 @@ export const useDbAdapter = () => {
   const [offlineCache, setOfflineCache] = useState<OfflineCacheMap>(new Map());
   const [navigatorStatus, setNavigatorStatus] = useState<boolean | undefined>();
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>();
-
+  const idb = useIdb();
   const getLocalStorage = () => {
     const lsMap = localStorage.getItem('knoat-map');
     return lsMap && lsMap !== '{}' ? JSON.parse(lsMap) : null;
@@ -123,7 +123,7 @@ export const useDbAdapter = () => {
   };
 
   const update = async (tableName: Tables, data: Note | Directory) => {
-    const idbUpdate = async () => (await indexDb).update(tableName, data);
+    const idbUpdate = () => idb.update(tableName, data);
 
     if (navigator.onLine) {
       const idbReturn = await idbUpdate();
@@ -147,8 +147,7 @@ export const useDbAdapter = () => {
     // When offline, we need to create an id ourselves.
     // We also want the online/offline version to match, so if we're online,
     // we need to wait for the postgres await to complete to put auto generated id in indexeddb
-    const idbInsert = async (appendedIdData: any) =>
-      (await indexDb).insert(tableName, appendedIdData);
+    const idbInsert = (appendedIdData: any) => idb.insert(tableName, appendedIdData);
 
     if (navigator.onLine) {
       // Fix types - right now everything is conditional and doesn't have definitive typing

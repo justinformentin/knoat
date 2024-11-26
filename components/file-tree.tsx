@@ -9,7 +9,7 @@ import { Directory, Note } from '@/server/types';
 import { useDbAdapter } from '@/server/dbAdapter';
 import { useSidebar } from './ui/sidebar';
 import { combineDirectoriesAndNotes } from '@/lib/combine-note-dir';
-import { indexDb } from '@/server/indexDbAdapter';
+import { useIdb } from '@/server/indexDbAdapter';
 
 export interface ListItem {
   id: string;
@@ -50,13 +50,15 @@ export default function FileTree({
   const [noteList, setNoteList] = useState<Note[] | []>(notes);
   const [notePath, setNotePath] = useState<string>('');
 
+  const idb = useIdb();
   // TODO: Offline backup. If this component loads with no notes or directories,
   // try getting them from indexeddb
   const getData = async () => {
     console.log('getData shouldnt run');
-    const notes = await (await indexDb).getAllUserNotes(user.id);
-    const directories = await (await indexDb).getAllUserDirectories(user.id);
+    const notes = await idb.getAllUserNotes(user.id);
+    const directories = await idb.getAllUserDirectories(user.id);
     // const directories = await getAll('directories', 'user_id', user.id);
+    //@ts-ignore
     const treeView = combineDirectoriesAndNotes(notes, directories);
     //@ts-ignore
     setNoteList(notes);
@@ -65,7 +67,7 @@ export default function FileTree({
   };
 
   const syncData = async({notes, directories, user}:any) => {
-    (await indexDb).syncToIdb(directories, notes, user);
+    await idb.syncToIdb(directories, notes, user);
   }
   useEffect(() => {
     console.log('FTW UE notes, dir', { notes, directories });

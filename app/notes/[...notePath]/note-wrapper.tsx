@@ -2,11 +2,13 @@
 import { useEffect, useState } from 'react';
 import { ForwardRefEditor } from '../_components/markdown-editor/editor';
 import { type Note } from '@/server/types';
-import { indexDb } from '@/server/indexDbAdapter';
+import { useIdb } from '@/server/indexDbAdapter';
 
 export default function NoteWrapper({ notePath, note, userId }: any) {
   console.log('noteWrapper note', note)
   const [noteData, setNoteData] = useState<Note | undefined>(note);
+
+  const idb = useIdb();
 
   useEffect(() => {
     const isNotePath =
@@ -14,7 +16,7 @@ export default function NoteWrapper({ notePath, note, userId }: any) {
 
     const getNote = async () => {
       const fullPath = notePath.join('/');
-      const n = await (await indexDb).getOneUserNote(userId, fullPath)
+      const n = await idb.getOneUserNote(userId, fullPath)
       console.log('getNote n', n);
       setNoteData(n);
     };

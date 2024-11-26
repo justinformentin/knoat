@@ -45,6 +45,8 @@ async function createStoresInDB() {
 }
 
 const indexDbBase = async () => {
+
+  if(typeof indexedDB === 'undefined')return;
   const db = await createStoresInDB();
 
   const getOneUserNote = async (userId: string, fullPath: string) => {

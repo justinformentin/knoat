@@ -10,27 +10,6 @@ import {
 } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-const isOnline = () => {
-  //   if (typeof window !== 'undefined' && window.navigator) {
-  return navigator.onLine;
-  //   } else {
-  //     return fetch('http://localhost:3000/api/health')
-  //       .then((r) => {
-  //         console.log('r', r);
-  //         return r.json();
-  //       })
-  //       .then((res) => {
-  //         console.log('HEALTH CHECK RES', res);
-  //         return res;
-  //       });
-  //   }
-};
-
-// const offlineCache: {
-//   tableName: Tables;
-//   action: 'insert' | 'update';
-//   data: Note | Directory;
-// }[] = [];
 type OfflineCacheValue = {
   tableName: Tables;
   action: 'insert' | 'update';
@@ -83,11 +62,9 @@ export const getOne = async ({
   queryKey,
   queryId,
 }: GetOneProps) => {
-  const online = isOnline();
-  console.log('is online', online);
   const idbGetOne = async () => (await indexDb).getOne(tableName, queryId);
 
-  if (online) {
+  if (navigator.onLine) {
     const args: GetOneProps = { tableName, queryId };
     if (queries) {
       args.queries = queries;
@@ -106,11 +83,8 @@ export const getAll = async (
   queryKey: string,
   queryId: string
 ) => {
-  const online = isOnline();
-  console.log('is online', online);
   const idbGetAll = async () => (await indexDb).getAll(tableName, queryId);
-
-  if (online) {
+  if (navigator.onLine) {
     const idbReturn = await idbGetAll();
     console.log('idbReturn', idbReturn);
     return supabaseAdapter.getAll(tableName, queryKey, queryId);
@@ -120,13 +94,11 @@ export const getAll = async (
 export const update = async (tableName: Tables, data: Note | Directory) => {
   const idbUpdate = async () => (await indexDb).update(tableName, data);
 
-  const online = isOnline();
-
-  if (online) {
+  if (navigator.onLine) {
     const idbReturn = await idbUpdate();
     console.log('online idbReturn update', idbReturn);
     const updated = await supabaseAdapter.update(tableName, data);
-    console.log('supabae updated', updated)
+    console.log('supabae updated', updated);
     return updated;
   } else {
     updateOfflineCache(tableName, 'update', data);
@@ -147,9 +119,7 @@ export const insert = async (
   const idbInsert = async (appendedIdData: any) =>
     (await indexDb).insert(tableName, appendedIdData);
 
-  const online = isOnline();
-
-  if (online) {
+  if (navigator.onLine) {
     // Fix types - right now everything is conditional and doesn't have definitive typing
     const inserted: any = await supabaseAdapter.insert(tableName, data);
     console.log('online inserted', inserted);

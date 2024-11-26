@@ -7,9 +7,10 @@ import {
   NoteInsert,
   Tables,
 } from './types';
+import { SupabaseClient } from '@supabase/supabase-js';
 
-export const supabaseAdapterFunc = () => {
-  const client = browserClient();
+export const supabaseAdapterFunc = (supabaseClient?: SupabaseClient) => {
+  const client = supabaseClient || browserClient();
 
   const getOne = async ({
     tableName,

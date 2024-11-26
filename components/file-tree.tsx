@@ -1,14 +1,14 @@
 'use client';
 import { File, Folder, Tree } from '@/components/ui/file-tree';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { browserClient } from '@/utils/supabase/client';
 import { FolderPlus } from 'lucide-react';
 import PopoverView from './popover-view';
-import { indexDb } from '@/server/indexDbAdapter';
 import { Directory, Note } from '@/server/types';
 import { getAll, insert } from '@/server/dbAdapter';
+import { useSidebar } from './ui/sidebar';
+import { combineDirectoriesAndNotes } from '@/lib/combine-note-dir';
 
 export interface ListItem {
   id: string;
@@ -25,84 +25,47 @@ export type ListType = Array<FolderType | FileType>;
 
 type TreeViewDirectory = Directory & { children?: Directory[] | Note[] };
 
-function FileTree({
+export default function FileTree({
   user,
-  //   notes,
-  //   directories,
-  //   initialTreeView,
+  notes,
+  directories,
+  initialTreeView,
 }: {
   user: any;
-  //   notes: any;
-  //   directories: any;
-  //   initialTreeView: any;
+  notes: any;
+  directories: any;
+  initialTreeView: any;
 }) {
+  console.log('=====FILE TREE====');
   const params = useParams();
   const router = useRouter();
 
   const [initialSelectedId, setInitialSelectedId] = useState<
     string | undefined
   >();
-  const [treeView, setTreeView] = useState<TreeViewDirectory[] | []>([]);
-  const [notePath, setNotePath] = useState<string[]>([]);
-  const [noteList, setNoteList] = useState<Note[] | []>([]);
+  const [treeView, setTreeView] = useState<TreeViewDirectory[] | []>(
+    initialTreeView
+  );
+  const [noteList, setNoteList] = useState<Note[] | []>(notes);
+  const [notePath, setNotePath] = useState<string>('');
 
-  const combineDirectoriesAndNotes = (
-    directories: Directory[] | null,
-    notes: Note[] | null
-  ) => {
-    const treeView: TreeViewDirectory[] = [...directories!];
-    const findDir = (fullPath: string) => {
-      const path = fullPath.split('/').slice(0, -1).join('/');
-      if (path === '') return;
-      return treeView?.find((d) => d.full_path === path);
-    };
-
-    notes?.forEach((n) => {
-      const foundDir = findDir(n.full_path);
-      if (foundDir) {
-        if (!foundDir.children) foundDir.children = [];
-        foundDir.children.push(n);
-      }
-    });
-
-    treeView?.forEach((d) => {
-      if (!d.children) d.children = [];
-
-      const foundDir = findDir(d.full_path);
-      if (foundDir) {
-        if (!foundDir.children) foundDir.children = [];
-        //@ts-ignore
-        foundDir.children.push(d);
-        const currIdx = treeView.findIndex((dd) => dd.id === d.id);
-        if (currIdx !== -1) treeView.splice(currIdx, 1);
-      }
-    });
-    return directories;
+  // TODO: Offline backup. If this component loads with no notes or directories,
+  // try getting them from indexeddb
+  const getData = async () => {
+    console.log('getData shouldnt run');
+    const notes = await getAll('notes', 'user_id', user.id);
+    const directories = await getAll('directories', 'user_id', user.id);
+    const treeView = combineDirectoriesAndNotes(notes, directories);
+    //@ts-ignore
+    setNoteList(notes);
+    //@ts-ignore
+    setTreeView(treeView);
   };
 
   useEffect(() => {
-    // const syncDb = async () => {
-    //   console.log('synced', synced);
-    // };
-    // syncDb();
-
-    const getData = async () => {
-      const notes = await getAll('notes', 'user_id', user.id);
-      const directories = await getAll('directories', 'user_id', user.id);
-
-      console.log('sidebar notes', notes);
-      console.log('sidebar directories', directories);
-
-      const treeView = combineDirectoriesAndNotes(directories, notes);
-      //   setDirectories(directories);
-      setNoteList(notes || []);
-      setTreeView(treeView || []);
-
-      //@ts-ignore - fix later
-      const synced = (await indexDb).sync(directories, notes, { id: user.id });
-    };
-
-    getData();
+    console.log('FTW UE notes, dir', { notes, directories });
+    if (!directories?.length && (!noteList?.length || !treeView?.length))
+      getData();
   }, []);
 
   const addResource = (path: string, listCopy: any) => {
@@ -181,6 +144,8 @@ function FileTree({
     setTreeView(treeViewCopy);
   };
 
+  const { isMobile, setOpenMobile } = useSidebar();
+
   const renderDirectory = (item: any) => {
     if (item.children) {
       return (
@@ -200,7 +165,11 @@ function FileTree({
       );
     } else {
       return (
-        <Link href={'/notes/' + item.full_path} key={item.id}>
+        <Link
+          href={'/notes/' + item.full_path}
+          key={item.id}
+          onClick={() => isMobile && setOpenMobile(false)}
+        >
           <File value={item.id} isSelect={item.id === initialSelectedId}>
             <p>{item.label}</p>
           </File>
@@ -210,35 +179,32 @@ function FileTree({
   };
 
   useEffect(() => {
-    console.log('====UE=====')
-    console.log('params', params);
-    console.log('router', router);
-    if(noteList?.length && notePath !== params.notePath){
     if (
-    
       params.notePath &&
       params.notePath.length &&
       Array.isArray(params.notePath)
     ) {
+      const np = params.notePath.join('/');
 
-      const np: string[] = params.notePath;
-      const found = noteList.find(
-        (note: any) => note.full_path === np.join('/')
-      );
-      
-      found && found.id !== initialSelectedId && setInitialSelectedId(found.id);
-      setNotePath(params.notePath)
+      if (noteList?.length && notePath !== np) {
+        console.log('INSIDE FILE TREE UE IF()');
+        const found = noteList.find((note: any) => note.full_path === np);
+
+        found &&
+          found.id !== initialSelectedId &&
+          setInitialSelectedId(found.id);
+        setNotePath(np);
+      }
     }
-}
   }, [params, router, noteList]);
 
-  if (!treeView) return null;
+  if (!treeView?.length) return null;
 
   return (
     <div className="relative flex flex-col items-center justify-center overflow-hidden bg-background">
       <div className="justify-end flex w-full mr-12">
         <PopoverView text="Directory" confirmCallback={addRootDirectory}>
-          <FolderPlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+          <FolderPlus className="h-5 w-5 md:h-4 md:w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
         </PopoverView>
       </div>
       <Tree
@@ -251,5 +217,3 @@ function FileTree({
     </div>
   );
 }
-
-export default memo(FileTree)

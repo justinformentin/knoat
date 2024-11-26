@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import { forwardRef, useRef } from 'react';
 import { type MDXEditorMethods, type MDXEditorProps } from '@mdxeditor/editor';
+import { Note } from '@/server/types';
 // This is the only place InitializedMDXEditor is imported directly.
 const MDXE = dynamic(() => import('./initialized-editor'), {
   // Make sure we turn SSR off
@@ -10,7 +11,7 @@ const MDXE = dynamic(() => import('./initialized-editor'), {
 
 // This is what is imported by other components. Pre-initialized with plugins, and ready
 // to accept other props, including a ref.
-export const ForwardRefEditor = forwardRef<{ notePath: string[] | string, userId: string}>((props, ref) => {
+export const ForwardRefEditor = forwardRef<{ note: Note, userId: string}>((props, ref) => {
     console.log('forward ref editor', props);
   const mdxEditorRef = useRef<MDXEditorMethods>(null);
   //@ts-ignore - Will be fixed when changing the location of data loading and subsequent prop passing is fixed

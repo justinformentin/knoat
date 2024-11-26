@@ -51,7 +51,7 @@ export type Database = {
         };
         Update: {
             created_at?: string;
-            id?: string;
+            id: string;
             user_id?: string;
             full_path?: string;
             label?: string;
@@ -88,7 +88,7 @@ export type Database = {
         Update: {
             created_at?: string;
             updated_at?: string;
-            id?: string;
+            id: string;
             user_id?: string;
             full_path?: string;
             label?: string;

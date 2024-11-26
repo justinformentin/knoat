@@ -257,9 +257,9 @@ const Folder = forwardRef<
         value={value}
         className="relative overflow-hidden h-full "
       >
-        <div className="flex">
+        <div className="flex py-1 md:py-0">
           <AccordionPrimitive.Trigger
-            className={cn(`flex  gap-1 text-sm rounded-md`, className, {
+            className={cn(`flex  gap-1 text-lg md:text-sm rounded-md`, className, {
               'bg-muted rounded-md': isSelect && isSelectable,
               'cursor-pointer': isSelectable,
               'cursor-not-allowed opacity-50': !isSelectable,
@@ -271,15 +271,15 @@ const Folder = forwardRef<
               {expandedItems?.includes(value)
                 ? (openIcon ?? <FolderOpenIcon className="size-4" />)
                 : (closeIcon ?? <FolderIcon className="size-4" />)}
-              <span>{element}</span>
+              <span className="truncate">{element}</span>
             </div>
           </AccordionPrimitive.Trigger>
           <div className="self-center ml-4 flex space-x-2">
             <PopoverView text="Directory" confirmCallback={newFolderCallback}>
-              <FolderPlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+              <FolderPlus className="h-5 w-5 md:h-4 md:w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
             </PopoverView>
             <PopoverView text="Note" confirmCallback={newNoteCallback}>
-              <FilePlus className="h-4 w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
+              <FilePlus className="h-5 w-5 md:h-4 md:w-4 opacity-60 hover:opacity-100 hover:cursor-pointer" />
             </PopoverView>
           </div>
         </div>
@@ -337,7 +337,7 @@ const File = forwardRef<
           disabled={!isSelectable}
           aria-label="File"
           className={cn(
-            'flex items-center gap-1 cursor-pointer text-sm pr-1 rtl:pl-1 rtl:pr-0 rounded-md  duration-200 ease-in-out',
+            'flex items-center gap-1 cursor-pointer text-lg md:text-sm pr-1 rtl:pl-1 rtl:pr-0 rounded-md  duration-200 ease-in-out',
             {
               'bg-muted': isSelected && isSelectable,
             },

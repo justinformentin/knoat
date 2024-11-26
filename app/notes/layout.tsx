@@ -3,6 +3,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import AppHeader from '@/components/app-header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  
   return (
     <SidebarProvider defaultOpen={true}>
       <AppSidebar />

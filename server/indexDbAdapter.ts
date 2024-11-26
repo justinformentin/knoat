@@ -28,13 +28,16 @@ async function createStoresInDB() {
       if (!db.objectStoreNames.contains('directories')) {
         const dirStore = db.createObjectStore('directories', { keyPath: 'id' });
         //@ts-ignore
+        dirStore.createIndex('user_id', 'user_id');
         // dirStore.createIndex('user_id', 'user_id');
       }
 
       if (!db.objectStoreNames.contains('notes')) {
         const noteStore = db.createObjectStore('notes', { keyPath: 'id' });
         //@ts-ignore
-        // noteStore.createIndex('user_id', 'user_id');
+        noteStore.createIndex('user_id', 'user_id');
+        //@ts-ignore
+        noteStore.createIndex('user_note', ['user_id', 'full_path']);
       }
     },
   });
@@ -44,16 +47,35 @@ async function createStoresInDB() {
 const indexDbBase = async () => {
   const db = await createStoresInDB();
 
-  const getOne = async (tableName: Tables, query: string) => {
-    const one = await db.get(tableName, query);
-    // console.log('one', one);
-    return one;
+  const getOneUserNote = async (userId: string, fullPath: string) => {
+    const store = db.transaction('notes').objectStore('notes');
+    //@ts-ignore
+    const index = store.index('user_note');
+    console.log('getOneNote index', index);
+    const note = index.get(IDBKeyRange.only([userId, fullPath]));
+    console.log('getOneNote note', note);
+    return note;
   };
-  const getAll = async (tableName: Tables, query?: string) => {
-    const all = await db.getAll(tableName);
-    // const all = await db.getAllFromIndex('directories', 'user_id');
-    return all;
+  const getAllUserNotes = async (userId: string) => {
+    //@ts-ignore
+    const notes = await db.getAllFromIndex('notes', 'user_id', userId);
+    console.log('getallUserNote', notes);
+    return notes;
   };
+
+  const getAllUserDirectories = async (userId: string) => {
+    //@ts-ignore
+    const dirs = await db.getAllFromIndex('directories', 'user_id', userId);
+    console.log('getallUserDirs', dirs);
+    return dirs;
+  };
+
+  const insertNote = async (data: KnoatDB['notes']['value']) => {
+    const insertedNote = await db.add('notes', data);
+    console.log('insertedNote', insertedNote);
+    return insertedNote;
+  };
+
   const update = async (tableName: Tables, data: KnoatDB[Tables]['value']) => {
     const updated = await db.put(tableName, data);
     console.log('updated', updated);
@@ -66,36 +88,53 @@ const indexDbBase = async () => {
     return data;
   };
 
-  const sync = async (
+  let lockUpdate = false;
+  const syncToIdb = async (
     directories: Directory[],
     notes: Note[],
     user: { id: string }
   ) => {
-    const promises: Promise<string>[] = [];
-    const addOrUpdate = async (
-      tableName: Tables,
-      resource: Directory | Note
-    ) => {
-      const res = await getOne(tableName, resource.id);
-      return res
-        ? await db.put(tableName, resource)
-        : await db.add(tableName, resource);
-    };
-    directories.forEach((directory) => {
-      promises.push(addOrUpdate('directories', directory));
-    });
-    notes.forEach((notes) => {
-      promises.push(addOrUpdate('notes', notes));
-    });
+    if (!lockUpdate) {
+      lockUpdate = true;
+      const addOrUpdate = async (
+        tableName: Tables,
+        resource: Directory | Note | { id: string }
+      ) => {
+        const res = await db.get(tableName, resource.id);
+        console.log('sync to db res', res);
+        return res
+          ? await db.put(tableName, resource)
+          : await db.add(tableName, resource);
+      };
+      const promises: Promise<string>[] = [addOrUpdate('users', user)];
 
-    return Promise.all(promises);
+      directories.forEach((directory) => {
+        promises.push(addOrUpdate('directories', directory));
+      });
+      notes.forEach((notes) => {
+        promises.push(addOrUpdate('notes', notes));
+      });
+
+      const all = await Promise.all(promises);
+      lockUpdate = false;
+      return all;
+    }
   };
 
   const desync = () => {
     // const notes = getAll('note')
   };
 
-  return { getOne, getAll, update, insert, sync, desync };
+  return {
+    update,
+    insert,
+    syncToIdb,
+    desync,
+    getOneUserNote,
+    getAllUserNotes,
+    getAllUserDirectories,
+    insertNote,
+  };
 };
 
 export const indexDb = indexDbBase();

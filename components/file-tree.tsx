@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { FolderPlus } from 'lucide-react';
 import PopoverView from './popover-view';
 import { Directory, Note } from '@/server/types';
-import { getAll, insert } from '@/server/dbAdapter';
+import { useDbAdapter } from '@/server/dbAdapter';
 import { useSidebar } from './ui/sidebar';
 import { combineDirectoriesAndNotes } from '@/lib/combine-note-dir';
+import { indexDb } from '@/server/indexDbAdapter';
 
 export interface ListItem {
   id: string;
@@ -53,8 +54,9 @@ export default function FileTree({
   // try getting them from indexeddb
   const getData = async () => {
     console.log('getData shouldnt run');
-    const notes = await getAll('notes', 'user_id', user.id);
-    const directories = await getAll('directories', 'user_id', user.id);
+    const notes = await (await indexDb).getAllUserNotes(user.id);
+    const directories = await (await indexDb).getAllUserDirectories(user.id);
+    // const directories = await getAll('directories', 'user_id', user.id);
     const treeView = combineDirectoriesAndNotes(notes, directories);
     //@ts-ignore
     setNoteList(notes);
@@ -62,10 +64,16 @@ export default function FileTree({
     setTreeView(treeView);
   };
 
+  const syncData = async({notes, directories, user}:any) => {
+    (await indexDb).syncToIdb(directories, notes, user);
+  }
   useEffect(() => {
     console.log('FTW UE notes, dir', { notes, directories });
-    if (!directories?.length && (!noteList?.length || !treeView?.length))
+    if (!navigator.onLine && !directories?.length && (!noteList?.length || !treeView?.length)) {
       getData();
+    } else {
+      syncData({notes, directories, user})
+    }
   }, []);
 
   const addResource = (path: string, listCopy: any) => {
@@ -84,6 +92,8 @@ export default function FileTree({
     return findPath(pathSplit, listCopy);
   };
 
+  const dbAdapter = useDbAdapter();
+
   const createNote = async (fileName: string, fullPath: string) => {
     // We only need the user_id, label, and full_path for postgres, as everything else is auto generated
     // but for indexdb we need to pass everything else
@@ -96,7 +106,7 @@ export default function FileTree({
       updated_at: now,
       content: '',
     };
-    const note = await insert('notes', data);
+    const note = await dbAdapter.insert('notes', data);
     console.log('create note', note);
     return note;
   };
@@ -118,7 +128,7 @@ export default function FileTree({
 
   const createDirectory = async (fileName: string, fullPath: string) => {
     const now = new Date().toISOString();
-    const dir = await insert('directories', {
+    const dir = await dbAdapter.insert('directories', {
       user_id: user.id,
       label: fileName,
       full_path: fullPath,

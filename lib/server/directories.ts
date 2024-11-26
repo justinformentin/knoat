@@ -1,6 +1,6 @@
 import { serverClient } from '@/utils/supabase/server';
 import { cache } from 'react';
-import { createDirectoriesService } from './directories.service';
+import { createDirectoriesService } from '../services/directories.supabase.service';
 
 export const loadUserDirectories = cache(async (userId: string) => {
   const client = await serverClient();

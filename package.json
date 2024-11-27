@@ -8,6 +8,7 @@
     "supabase:start": "supabase status || supabase start"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@mdxeditor/editor": "^3.19.2",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -42,6 +43,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "3.4.14",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "webpack": "^5.96.1"
   }
 }

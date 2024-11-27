@@ -1,59 +1,38 @@
 export const Logo = () => (
-    <svg
-   width="30"
-   height="30"
-   viewBox="0 0 512 512"
-   version="1.1"
-   id="svg1"
-   xmlns="http://www.w3.org/2000/svg"
-   >
-  <defs
-     id="defs1" />
-  <g
-     id="layer1">
-    <ellipse
-       style={{fill:"#000000",fillOpacity:"1",stroke:"none",strokeWidth:"30",strokeLinecap:"round"}}
-
-       id="path1"
-       cx="303.42313"
-       cy="249.98726"
-       rx="61.287613"
-       ry="62.169559" />
-    <path
-           style={{fill:"none",stroke:"#022662",strokeWidth:"50",strokeLinecap:"butt", strokeDasharray: "none",strokeOpacity:"1"}}
-
-       d="M 415.96269,65.220703 203.84712,255.93978"
-       id="path2-1" />
-    <path
-           style={{fill:"none",stroke:"#022662",strokeWidth:"50",strokeLinecap:"butt", strokeDasharray: "none",strokeOpacity:"1"}}
-
-       d="M 395.84849,441.1159 206.3559,227.90394"
-       id="path2-1-3" />
-    <path
-           style={{fill:"none",stroke:"#000000",strokeWidth:"20",strokeLinecap:"butt", strokeLinejoin: 'bevel', strokeDasharray: "none",strokeOpacity:"1"}}
-           d="m 172.20644,128.81048 -57.39052,29.27923"
-       id="path2-1-3-1-7-9-2" />
-    <path
-           style={{fill:"none",stroke:"#000000",strokeWidth:"20",strokeLinecap:"butt", strokeLinejoin: 'bevel', strokeDasharray: "none",strokeOpacity:"1"}}
-           d="M 170.93502,172.90772 113.5445,202.18695"
-       id="path2-1-3-1-7-9-2-60" />
-    <path
-           style={{fill:"none",stroke:"#000000",strokeWidth:"20",strokeLinecap:"butt", strokeLinejoin: 'bevel', strokeDasharray: "none",strokeOpacity:"1"}}
-
-       d="M 170.93502,216.90772 113.5445,246.18695"
-       id="path2-1-3-1-7-9-2-34" />
-    <rect
-       style={{fill:"none",fillOpacity: "1", stroke:"#000000",strokeWidth:"22",strokeLinecap:"round", strokeLinejoin: 'miter', strokeDasharray: "none",strokeOpacity:"1"}}
-
-       id="rect2"
-       width="117.20157"
-       height="330.10269"
-       x="102.26098"
-       y="170.62645"
-       transform="matrix(0.89220392,-0.45163277,0,1,0,0)" />
-  </g>
-</svg>
-
-
-   
-)
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 380.000000 380.000000"
+    version="1.1"
+    id="svg1"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g
+      transform="translate(0.000000,380.000000) scale(0.100000,-0.100000)"
+      fill="#000000"
+      stroke="none"
+    >
+      <path
+        d="M740 1915 l0 -1145 1145 0 1145 0 0 1145 0 1145 -1145 0 -1145 0 0
+-1145z m355 0 l0 -1010 -107 -3 -108 -3 0 1016 0 1016 108 -3 107 -3 0 -1010z
+m360 0 l0 -1010 -107 -3 -108 -3 0 1016 0 1016 108 -3 107 -3 0 -1010z m602
+999 c8 -20 -22 -199 -57 -344 -75 -306 -182 -490 -322 -555 -29 -14 -59 -25
+-65 -25 -10 0 -13 101 -13 470 l0 470 225 0 c196 0 226 -2 232 -16z m389 2 c8
+-20 -42 -252 -77 -364 -77 -240 -185 -386 -348 -471 -44 -23 -84 -41 -90 -41
+-6 0 4 24 23 53 101 158 167 357 222 673 14 82 28 152 30 156 3 5 57 8 120 8
+87 0 116 -3 120 -14z m428 5 c7 -11 -34 -165 -73 -269 -77 -212 -201 -378
+-356 -478 -67 -42 -165 -87 -173 -79 -3 3 8 20 25 38 74 79 138 200 193 366
+37 112 90 337 90 384 0 42 16 47 156 47 73 0 135 -4 138 -9z m24 -1309 l-3
+-297 -50 90 c-87 155 -184 264 -318 354 -67 45 -219 116 -294 137 l-62 17 87
+29 c272 92 444 232 583 477 l54 95 3 -303 c1 -166 1 -436 0 -599z m-1199 190
+c122 -69 218 -231 286 -485 29 -106 75 -344 75 -388 l0 -29 -230 0 -230 0 0
+470 0 470 28 -6 c15 -3 47 -18 71 -32z m322 -52 c154 -78 265 -226 343 -461
+38 -113 90 -353 82 -375 -4 -11 -33 -14 -120 -14 -63 0 -117 4 -120 9 -3 5
+-17 75 -31 157 -54 316 -135 552 -242 703 -17 23 -17 24 7 16 14 -4 50 -20 81
+-35z m306 -31 c74 -32 203 -122 259 -181 100 -106 181 -251 237 -423 36 -109
+57 -197 51 -207 -3 -4 -68 -8 -144 -8 -137 0 -140 0 -144 23 -83 436 -159 637
+-294 780 -41 42 -34 46 35 16z"
+      />
+    </g>
+  </svg>
+);

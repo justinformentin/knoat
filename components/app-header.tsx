@@ -9,10 +9,10 @@ export default function AppHeader({ children }: any) {
       {children || null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
-          <div className="h-8 w-8">
+          <Link href="/" className="flex space-x-1">
             <Logo />
-          </div>
-          <Link href={'/'}>Knoat</Link>
+            <span className="self-center font-semibold">Knoat</span>
+          </Link>
         </div>
         <ThemeSwitcher />
         <HeaderAuth />

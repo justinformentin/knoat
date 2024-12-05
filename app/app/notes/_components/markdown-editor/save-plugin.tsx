@@ -1,5 +1,7 @@
+'use client'
 import { Save } from 'lucide-react';
 import { useDbAdapter } from '@/server/dbAdapter';
+import { toast } from 'sonner';
 
 export default function SavePlugin({
   editorRef,
@@ -8,6 +10,7 @@ export default function SavePlugin({
   editorRef: any;
   note: any;
 }): JSX.Element {
+
   const dbAdapter = useDbAdapter();
   const saveFile = async () => {
     const content = editorRef.current?.getMarkdown();
@@ -15,12 +18,12 @@ export default function SavePlugin({
       // await client.from('notes').update({ content }).eq('id', note.id);
       // const updated = (await indexDb).update('notes', {...note, content})
       const updated = await dbAdapter.update('notes', { ...note, content });
-      console.log('updated', updated);
+      toast('Note saved!')
     }
   };
 
   return (
-    <div className="flex space-x-2">
+    <div className="relative flex space-x-2">
       <button
         className="action-button export"
         onClick={saveFile}

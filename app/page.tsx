@@ -6,7 +6,7 @@ export default async function HomePage() {
   return (
     <div className="w-full h-full">
       <AppHeader>
-        <Link href="/notes" className="self-center ml-4">
+        <Link href="/app/notes" className="self-center ml-4">
           <Button size="sm" variant="outline">
             Go to Notes
           </Button>

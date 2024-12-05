@@ -7,9 +7,10 @@ import { FolderPlus } from 'lucide-react';
 import PopoverView from './popover-view';
 import { Directory, Note } from '@/server/types';
 import { useDbAdapter } from '@/server/dbAdapter';
-import { useSidebar } from './ui/sidebar';
+import { useSidebarStore } from '@/lib/use-sidebar';
 import { combineDirectoriesAndNotes } from '@/lib/combine-note-dir';
 import { useIdb } from '@/server/indexDbAdapter';
+import { useIsMobile } from '@/lib/use-is-mobile';
 
 export interface ListItem {
   id: string;
@@ -113,7 +114,9 @@ export default function FileTree({
     return note;
   };
 
-  const { isMobile, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
+
+  const setOpenMobile = useSidebarStore((state) => state.setOpenMobile);
 
   const addFile = async (path: string, itemName: string) => {
     const noteListCopy = [...noteList];
@@ -127,7 +130,7 @@ export default function FileTree({
     setTreeView(treeViewCopy);
     noteListCopy.push(note);
     setNoteList(noteListCopy);
-    router.push('/notes/' + fullPath);
+    router.push('/app/notes/' + fullPath);
     isMobile && setOpenMobile(false)
   };
 
@@ -180,7 +183,7 @@ export default function FileTree({
     } else {
       return (
         <Link
-          href={'/notes/' + item.full_path}
+          href={'/app/notes/' + item.full_path}
           key={item.id}
           onClick={() => isMobile && setOpenMobile(false)}
         >

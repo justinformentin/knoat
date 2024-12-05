@@ -214,3 +214,46 @@ update
     ) with check (
       (user_id = ( SELECT auth.uid() AS uid))
     );
+
+-- Todos
+create table if not exists public.todos (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id),
+  list jsonb,
+  created_at varchar default date_display_tz(now()) not null,
+  updated_at varchar default date_display_tz(now()) not null
+);
+
+-- Revoke all on accounts table from authenticated and service_role
+revoke all on public.todos
+from
+  authenticated,
+  service_role;
+
+-- Open up access to accounts
+grant select, insert, update, delete 
+on table public.todos 
+to authenticated, service_role;
+
+alter table public.todos enable row level security;
+
+create policy todos_read on public.todos for
+select
+  to authenticated using (
+    user_id = ( select auth.uid ())
+  );
+
+create policy todos_insert on public.todos for
+insert
+  to authenticated with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );
+
+create policy todos_update on public.todos for
+update
+  to authenticated
+    using (
+      (user_id = ( SELECT auth.uid() AS uid))
+    ) with check (
+      (user_id = ( SELECT auth.uid() AS uid))
+    );

@@ -8,10 +8,10 @@ import {
 } from '../ui/accordion';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { ListItem } from './list-item';
-import { TodosList } from '@/lib/database.types';
+import { Todo } from '@/lib/database.types';
 
 type CompletedAccordionProps = {
-  completed: TodosList;
+  completed: Todo[];
   listIdx: number;
   deleteItem: any;
   handleCheck: any;
@@ -31,6 +31,7 @@ export const CompletedAccordion = ({
         </AccordionTrigger>
         <AccordionContent>
           {completed.map((item) => {
+            console.log('ITEM::', item)
             return (
               <ListItem
                 key={item.id}
@@ -39,9 +40,9 @@ export const CompletedAccordion = ({
                 className="border-0"
                 inputClass="disabled:cursor-default disabled:opacity-100"
                 onCheckedChange={(e: CheckedState) =>
-                  handleCheck(e, listIdx, item.index!)
+                  handleCheck(e, listIdx, item.id)
                 }
-                onDelete={() => deleteItem(listIdx, item.index!)}
+                onDelete={() => deleteItem(listIdx, item.id)}
               />
             );
           })}

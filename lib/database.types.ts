@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 export type Todo = {id: string; content: string, completed: boolean, index?: number}
-export type TodosList = Todo[];
+export type TodosList = {title: string; items: Todo[]};
 export type Todos = TodosList[];
 
 export type Database = {

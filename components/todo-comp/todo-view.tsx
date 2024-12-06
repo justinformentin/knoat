@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -15,6 +15,7 @@ import { ListItem } from './list-item';
 import { CompletedAccordion } from './completed-accordion';
 import { SaveTodo } from './save-todo';
 import { AddTodo } from './add-todo';
+import { Input } from '../ui/input';
 
 type DBTodo = Database['public']['Tables']['todos']['Row'];
 
@@ -34,7 +35,7 @@ type DragEndResult = {
 
 const reorder = (list: TodosList, startIndex: number, endIndex: number) => {
   console.log('REORDER list', list);
-  const result = Array.from(list);
+  const result = Array.from(list.items);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
@@ -50,8 +51,8 @@ const move = (
   droppableSource: DroppableType,
   droppableDestination: DroppableType
 ) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
+  const sourceClone = Array.from(source.items);
+  const destClone = Array.from(destination.items);
 
   const [removed] = sourceClone.splice(droppableSource.index, 1);
 
@@ -85,7 +86,9 @@ export default function TodoView({
   userId: string;
 }) {
   const initialTodos = !!todos?.list;
-  const [state, setState] = useState<Todos | [[]]>(todos?.list || [[]]);
+  const [state, setState] = useState<Todos>(
+    todos?.list || [{ title: '', items: [] }]
+  );
 
   const [canDragElement, setCanDragElement] = useState('');
 
@@ -102,14 +105,13 @@ export default function TodoView({
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
       const newState: any = [...state];
-      newState[sInd] = items;
+      newState[sInd] = { ...newState[sInd], items };
       setState(newState);
     } else {
       const result = move(state[sInd], state[dInd], source, destination);
       const newState = [...state];
-      newState[sInd] = result[sInd];
-      newState[dInd] = result[dInd];
-
+      newState[sInd] = { ...newState[sInd], items: result[sInd] };
+      newState[dInd] = { ...newState[dInd], items: result[dInd] };
       setState(newState);
     }
   }
@@ -127,22 +129,36 @@ export default function TodoView({
     setState(copy);
   };
 
-  const handleContentChange = (evt: any, listIdx: number, itemIdx: number) =>
-    updateState((copy) => (copy[listIdx][itemIdx].content = evt.target.value));
+  const handleContentChange = (evt: any, listIdx: number, itemId: string) =>
+    updateState((copy) => {
+      const found = copy[listIdx].items.find((item) => item.id === itemId);
+      if (found) found.content = evt.target.value;
+    });
 
-  const handleCheck = (evt: any, listIdx: number, itemIdx: number) =>
-    updateState((copy) => (copy[listIdx][itemIdx].completed = evt));
+  const handleCheck = (evt: any, listIdx: number, itemId: string) =>
+    updateState((copy) => {
+      const found = copy[listIdx].items.find((item) => item.id === itemId);
+      if (found) found.completed = evt;
+    });
 
   const addItem = (listIdx: number) => {
     const id = uuidv4();
     updateState((copy) =>
-      copy[listIdx].splice(0, 0, { id, content: '', completed: false })
+      copy[listIdx].items.splice(0, 0, { id, content: '', completed: false })
     );
     setTimeout(() => handleInputFocus(id), 150);
   };
 
-  const deleteItem = (listIdx: number, itemIdx: number) =>
-    updateState((copy) => copy[listIdx].splice(itemIdx, 1));
+  const deleteItem = (listIdx: number, itemId: string) =>
+    updateState((copy) => {
+      const foundIdx = copy[listIdx].items.findIndex(
+        (item) => item.id === itemId
+      );
+      if (foundIdx !== -1) copy[listIdx].items.splice(foundIdx, 1);
+    });
+
+  const changeColumnTitle = (evt: any, listIdx: number) =>
+    updateState((copy) => (copy[listIdx].title = evt.target.value));
 
   return (
     <>
@@ -150,7 +166,7 @@ export default function TodoView({
         <AddTodo
           text="Add new group"
           className="bg-white"
-          onClick={() => setState([...state, []])}
+          onClick={() => setState([...state, { title: '', items: [] }])}
         >
           <CheckPlus className="self-center ml-2" />
         </AddTodo>
@@ -159,17 +175,7 @@ export default function TodoView({
 
       <div className="w-full h-full flex overflow-x-auto space-x-4 p-4">
         <DragDropContext onDragEnd={onDragEnd}>
-          {state.map((el, ind) => {
-
-            const { active, completed }: ReducedList = el.reduce(
-              (curr: ReducedList, acc: Todo, currIdx: number) => {
-                const key = acc.completed ? 'completed' : 'active';
-                curr[key].push({ ...acc, index: currIdx });
-                return curr;
-              },
-              { active: [], completed: [] }
-            );
-
+          {state.map((column, ind) => {
             return (
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
@@ -180,6 +186,12 @@ export default function TodoView({
                     className={`border h-[calc(100%-42px)] rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
                     {...provided.droppableProps}
                   >
+                    <Input
+                      className="border-0 pl-2 text-base font-semibold"
+                      value={column.title}
+                      placeholder="Enter list name..."
+                      onChange={(e) => changeColumnTitle(e, ind)}
+                    />
                     <AddTodo
                       text="Add new task"
                       onClick={() => addItem(ind)}
@@ -188,45 +200,49 @@ export default function TodoView({
                       <CheckPlus className="self-center ml-2" />
                     </AddTodo>
                     <ScrollArea className="h-[calc(100%-42px)] pb-2">
-                      {active.map((item, index) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={index}
-                          disableInteractiveElementBlocking={
-                            item.id !== canDragElement
-                          }
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={getItemStyle(
-                                snapshot.isDragging,
-                                provided.draggableProps.style
-                              )}
-                            >
-                              <ListItem
-                                item={item}
-                                className="border"
-                                onClick={() => handleInputFocus(item.id)}
-                                onBlur={() => setCanDragElement('')}
-                                onDelete={() => deleteItem(ind, index)}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                  handleContentChange(e, ind, index)
-                                }
-                                onCheckedChange={(e: CheckedState) =>
-                                  handleCheck(e, ind, index)
-                                }
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
+                      {column.items.map((item, index) =>
+                        !item.completed ? (
+                          <Draggable
+                            key={item.id}
+                            draggableId={item.id}
+                            index={index}
+                            disableInteractiveElementBlocking={
+                              item.id !== canDragElement
+                            }
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                <ListItem
+                                  item={item}
+                                  className="border"
+                                  onClick={() => handleInputFocus(item.id)}
+                                  onBlur={() => setCanDragElement('')}
+                                  onDelete={() => deleteItem(ind, item.id)}
+                                  onChange={(
+                                    e: ChangeEvent<HTMLInputElement>
+                                  ) => handleContentChange(e, ind, item.id)}
+                                  onCheckedChange={(e: CheckedState) =>
+                                    handleCheck(e, ind, item.id)
+                                  }
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ) : null
+                      )}
 
                       <CompletedAccordion
-                        completed={completed}
+                        completed={column.items.filter(
+                          (item) => item.completed === true
+                        )}
                         listIdx={ind}
                         deleteItem={deleteItem}
                         handleCheck={handleCheck}

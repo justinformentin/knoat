@@ -87,7 +87,7 @@ export default function TodoView({
   todos: DBTodo | null;
   userId: string;
 }) {
-  const initialTodos = !!todos?.list;
+  const [initialTodos, setInitialTodos] = useState(!!todos?.list);
   const [state, setState] = useState<Todos>(
     todos?.list || [{ title: '', items: [] }]
   );
@@ -105,6 +105,7 @@ export default function TodoView({
     } else {
       await client.from('todos').insert({ user_id: userId, list: state });
     }
+    setInitialTodos(true);
     setStatus('saved');
     setTimeout(() => setStatus(''), 2000);
   }, 3000);
@@ -118,7 +119,7 @@ export default function TodoView({
 
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
-    console.log('onDragEnd', {...result, sInd, dInd})
+    console.log('onDragEnd', { ...result, sInd, dInd });
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
@@ -180,9 +181,9 @@ export default function TodoView({
   const changeColumnTitle = (evt: any, listIdx: number) =>
     updateState((copy) => (copy[listIdx].title = evt.target.value));
 
-  const deleteColumn = (listIdx:number) => 
-    updateState((copy) => (copy.splice(listIdx, 1)));
-  
+  const deleteColumn = (listIdx: number) =>
+    updateState((copy) => copy.splice(listIdx, 1));
+
   return (
     <>
       <div className="absolute top-2 left-1/2 text-sm">
@@ -198,7 +199,12 @@ export default function TodoView({
           <CheckPlus className="self-center ml-2" />
         </AddTodo>
       </div>
-      <div className="w-full h-full flex overflow-x-auto space-x-4 p-4">
+      <div
+        className="w-full h-full grid overflow-x-auto gap-4 p-4"
+        style={{
+          gridTemplateColumns: `repeat(${state.length}, minmax(300px, 1fr))`,
+        }}
+      >
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((column, ind) => {
             return (
@@ -206,12 +212,14 @@ export default function TodoView({
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
-                    style={{ width: `calc(100% / ${state.length})` }}
                     // style={getListStyle(snapshot.isDraggingOver)}
-                    className={`relative border h-[calc(100%-42px)] rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
+                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
                     {...provided.droppableProps}
                   >
-                    <X className="absolute top-2 right-2 h-3 w-3" onClick={()=>deleteColumn(ind)} />
+                    <X
+                      className="absolute top-2 right-2 h-3 w-3"
+                      onClick={() => deleteColumn(ind)}
+                    />
                     <Input
                       className="border-0 pl-2 text-base font-semibold"
                       value={column.title}

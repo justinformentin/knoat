@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 
 export default function AppHeader({ userId, children }: any) {
   return (
-    <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed md:relative">
+    <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed relative">
       {/* {children || null} */}
       <SidebarTrigger className="self-center ml-2" />
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
@@ -19,10 +19,10 @@ export default function AppHeader({ userId, children }: any) {
         </div>
         {userId ? (
           <div className="flex justify-between space-x-4">
-            <Button asChild size="sm" variant={'outline'}>
+            <Button asChild size="sm" variant={'outline'} className="h-8">
               <Link href="/app/notes">Notes</Link>
             </Button>
-            <Button asChild size="sm" variant={'outline'}>
+            <Button asChild size="sm" variant={'outline'} className="h-8">
               <Link href="/app/todo">Todo</Link>
             </Button>
           </div>

@@ -17,6 +17,7 @@ import { AddTodo } from './add-todo';
 import { Input } from '../ui/input';
 import { browserClient } from '@/utils/supabase/client';
 import { debounce } from '@/lib/debounce';
+import { X } from 'lucide-react';
 
 type DBTodo = Database['public']['Tables']['todos']['Row'];
 
@@ -117,6 +118,7 @@ export default function TodoView({
 
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
+    console.log('onDragEnd', {...result, sInd, dInd})
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
@@ -178,6 +180,9 @@ export default function TodoView({
   const changeColumnTitle = (evt: any, listIdx: number) =>
     updateState((copy) => (copy[listIdx].title = evt.target.value));
 
+  const deleteColumn = (listIdx:number) => 
+    updateState((copy) => (copy.splice(listIdx, 1)));
+  
   return (
     <>
       <div className="absolute top-2 left-1/2 text-sm">
@@ -203,9 +208,10 @@ export default function TodoView({
                     ref={provided.innerRef}
                     style={{ width: `calc(100% / ${state.length})` }}
                     // style={getListStyle(snapshot.isDraggingOver)}
-                    className={`border h-[calc(100%-42px)] rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
+                    className={`relative border h-[calc(100%-42px)] rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
                     {...provided.droppableProps}
                   >
+                    <X className="absolute top-2 right-2 h-3 w-3" onClick={()=>deleteColumn(ind)} />
                     <Input
                       className="border-0 pl-2 text-base font-semibold"
                       value={column.title}

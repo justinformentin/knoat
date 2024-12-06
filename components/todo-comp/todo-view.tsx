@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, useMemo, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -13,9 +13,10 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { ListItem } from './list-item';
 import { CompletedAccordion } from './completed-accordion';
-import { SaveTodo } from './save-todo';
 import { AddTodo } from './add-todo';
 import { Input } from '../ui/input';
+import { browserClient } from '@/utils/supabase/client';
+import { debounce } from '@/lib/debounce';
 
 type DBTodo = Database['public']['Tables']['todos']['Row'];
 
@@ -91,6 +92,21 @@ export default function TodoView({
   );
 
   const [canDragElement, setCanDragElement] = useState('');
+  const [status, setStatus] = useState('');
+
+  const client = browserClient();
+  const saveData = debounce(async () => {
+    if (initialTodos) {
+      await client
+        .from('todos')
+        .update({ list: state, user_id: userId })
+        .eq('user_id', userId);
+    } else {
+      await client.from('todos').insert({ user_id: userId, list: state });
+    }
+    setStatus('saved');
+    setTimeout(() => setStatus(''), 2000);
+  }, 3000);
 
   function onDragEnd(result: any | DragEndResult) {
     setCanDragElement('');
@@ -114,6 +130,7 @@ export default function TodoView({
       newState[dInd] = { ...newState[dInd], items: result[dInd] };
       setState(newState);
     }
+    saveData();
   }
 
   const handleInputFocus = (itemId: string) => {
@@ -127,6 +144,7 @@ export default function TodoView({
     const copy = [...state];
     callback(copy);
     setState(copy);
+    saveData();
   };
 
   const handleContentChange = (evt: any, listIdx: number, itemId: string) =>
@@ -162,6 +180,10 @@ export default function TodoView({
 
   return (
     <>
+      <div className="absolute top-2 left-1/2 text-sm">
+        {status === 'saved' ? 'Saved...' : ''}
+      </div>
+
       <div className="flex space-x-2 mt-2 ml-4">
         <AddTodo
           text="Add new group"
@@ -170,9 +192,7 @@ export default function TodoView({
         >
           <CheckPlus className="self-center ml-2" />
         </AddTodo>
-        <SaveTodo list={state} initialTodos={initialTodos} userId={userId} />
       </div>
-
       <div className="w-full h-full flex overflow-x-auto space-x-4 p-4">
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((column, ind) => {

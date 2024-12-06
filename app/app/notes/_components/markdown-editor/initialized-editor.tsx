@@ -18,16 +18,17 @@ import {
   sandpackPlugin,
   toolbarPlugin,
   type MDXEditorMethods,
-  type MDXEditorProps,
+  // type MDXEditorProps,
   tablePlugin,
   codeBlockPlugin,
   linkDialogPlugin,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
-import SavePlugin from './save-plugin';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
 import { Note } from '@/server/types';
+import { useDbAdapter } from '@/server/dbAdapter';
+import { debounce } from '@/lib/debounce';
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
@@ -74,22 +75,32 @@ export default function App() {
     ],
   };
 
+  const dbAdapter = useDbAdapter();
 
+  const saveFile = debounce(async (markdown: string) => {
+    if (props.note.id) {
+      await dbAdapter.update('notes', { ...props.note, content: markdown });
+    }
+  }, 3000);
+  const handleOnChange = (markdown: string) => {
+    saveFile(markdown);
+  };
 
-  console.log('note?.content', props.note?.content)
   return (
     <MDXEditor
       readOnly={!props.note?.id}
-      placeholder={!props.note?.id ? 'Open a note to start editing' : 'Enter text...'}
+      placeholder={
+        !props.note?.id ? 'Open a note to start editing' : 'Enter text...'
+      }
       markdown={props.note?.content || ''}
+      onChange={handleOnChange}
       className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
-      contentEditableClassName="custom-ce fixed top-[7.75rem] h-[calc(100%-8rem)] md:top-0 md:relative md:h-full overflow-auto w-full p-4 text-foreground"
+      contentEditableClassName="custom-ce fixed h-[calc(100%-8rem)] md:top-0 md:relative md:h-full overflow-auto w-full p-4 text-foreground"
       plugins={[
         toolbarPlugin({
           toolbarClassName: 'custom-toolbar fixed top-12 md:top-0 md:relative',
           toolbarContents: () => (
             <>
-              <SavePlugin editorRef={editorRef} note={props.note} />
               <CustomToolbar />
             </>
           ),

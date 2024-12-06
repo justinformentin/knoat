@@ -12,7 +12,7 @@ export default async function Todo() {
     .eq('user_id', user.id)
     .single();
   return (
-    <div className="w-full h-[calc(100%-56px)] bg-gray-50">
+    <div className="relative w-full h-[calc(100%-56px)] bg-gray-50">
       <TodoComp todos={todos} userId={user.id} />
     </div>
   );

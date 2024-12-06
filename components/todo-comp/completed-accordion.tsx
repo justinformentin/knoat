@@ -31,7 +31,6 @@ export const CompletedAccordion = ({
         </AccordionTrigger>
         <AccordionContent>
           {completed.map((item) => {
-            console.log('ITEM::', item)
             return (
               <ListItem
                 key={item.id}

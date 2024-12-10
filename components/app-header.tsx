@@ -1,14 +1,34 @@
+'use client'
 import Link from 'next/link';
 import HeaderAuth from '@/components/header-auth';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Logo } from './logo';
 import { SidebarTrigger } from './ui/sidebar';
 import { Button } from './ui/button';
+import { useDataStore } from '@/lib/use-data';
+import { useEffect } from 'react';
+import { combineDirectoriesAndNotes } from '@/lib/combine-note-dir';
 
-export default function AppHeader({ userId, children }: any) {
+
+export default function AppHeader({ userId, data }: any) {
+
+  if (userId) {
+    const { setTreeView, setNotes, setTodos, setUser } = useDataStore(store => store);
+
+    useEffect(() => {
+      if (userId) setUser({ id: userId })
+      if (data.notes) {
+        setNotes(data.notes);
+        if (data.directories) {
+          setTreeView(combineDirectoriesAndNotes(data.notes, data.directories))
+        }
+      }
+      if (data.todos) setTodos(data.todos);
+    }, [])
+  }
+
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed relative">
-      {/* {children || null} */}
       <SidebarTrigger className="self-center ml-2" />
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">

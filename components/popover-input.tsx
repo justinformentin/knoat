@@ -8,22 +8,23 @@ import {
 } from '@/components/ui/popover';
 import { Button } from './ui/button';
 
-export default function PopoverView({ text, confirmCallback, children }: any) {
+export default function PopoverInput({ text, confirmCallback, children }: any) {
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
-  const itemNameChange = (e:any) => setItemName(e.target.value);
+  const itemNameChange = (e: any) => setItemName(e.target.value);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="grid gap-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Set {text} name:</h4>
+            <h4 className="font-medium leading-none">Create new {text}</h4>
           </div>
 
           <div className="grid grid-cols-3 items-center gap-4">
             <Input
               id="name"
+              placeholder={`Enter ${text} name`}
               value={itemName}
               onChange={itemNameChange}
               className="col-span-2 h-8"

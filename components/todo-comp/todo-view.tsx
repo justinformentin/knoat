@@ -8,7 +8,7 @@ import {
 } from '@hello-pangea/dnd';
 import { CheckPlus } from '../ui/checkbox';
 import { v4 as uuidv4 } from 'uuid';
-import { Database, Todo, Todos, TodosList } from '@/lib/database.types';
+import { Database, Todos, TodosList } from '@/lib/database.types';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { ListItem } from './list-item';
@@ -213,7 +213,7 @@ export default function TodoView({
                   <div
                     ref={provided.innerRef}
                     // style={getListStyle(snapshot.isDraggingOver)}
-                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
+                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 pb-12 bg-white shadow-md`}
                     {...provided.droppableProps}
                   >
                     <X
@@ -257,6 +257,9 @@ export default function TodoView({
                                 <ListItem
                                   item={item}
                                   className="border"
+                                  onKeyDownCapture={(e: any) =>
+                                    e.key === 'Enter' && addItem(ind)
+                                  }
                                   onClick={() => handleInputFocus(item.id)}
                                   onBlur={() => setCanDragElement('')}
                                   onDelete={() => deleteItem(ind, item.id)}

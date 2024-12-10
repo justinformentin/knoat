@@ -1,36 +1,46 @@
-import { Directory, Note } from "@/server/types";
-type TreeViewDirectory = Directory & { children?: Directory[] | Note[] };
+import {
+  Directory,
+  GeneratedDir,
+  Note,
+  TreeViewDirectory,
+} from '@/server/types';
+// type TreeViewDirectory = Directory & { children?: Directory[] | Note[] };
 
-export   const combineDirectoriesAndNotes = (
-    notes: Note[] | null,
-    directories: Directory[] | null,
-  ) => {
-    const treeView: TreeViewDirectory[] = [...directories!];
-    const findDir = (fullPath: string) => {
-      const path = fullPath.split('/').slice(0, -1).join('/');
-      if (path === '') return;
-      return treeView?.find((d) => d.full_path === path);
-    };
+type Item = Note | GeneratedDir;
 
-    notes?.forEach((n) => {
-      const foundDir = findDir(n.full_path);
-      if (foundDir) {
-        if (!foundDir.children) foundDir.children = [];
-        foundDir.children.push(n);
-      }
-    });
+type AddNoteArgs = {
+  tree: TreeViewDirectory;
+  item: Item;
+  segments: string[];
+};
+export function combineDirectoriesAndNotes(
+  notes: Note[] | null,
+  directories: Directory[]
+) {
+  const root: TreeViewDirectory = [];
 
-    treeView?.forEach((d) => {
-      if (!d.children) d.children = [];
+  function addNode({ tree, item, segments }: AddNoteArgs) {
+    const [current, ...rest] = segments;
 
-      const foundDir = findDir(d.full_path);
-      if (foundDir) {
-        if (!foundDir.children) foundDir.children = [];
-        // @ts-ignore
-        foundDir.children.push(d);
-        const currIdx = treeView.findIndex((dd) => dd.id === d.id);
-        if (currIdx !== -1) treeView.splice(currIdx, 1);
-      }
-    });
-    return directories;
-  };
+    // Find or create the current node
+    let node = tree.find((n) => n.label === current);
+    if (!node) {
+      node = { ...item, label: current };
+      // @ts-ignore Type error will be fixed when changing the note/dir error
+      if (!node.content && !node.children) node.children = [];
+      tree.push(node);
+    }
+
+    // If there are more segments, recurse into children
+    // @ts-ignore Type error will be fixed when changing the note/dir error
+    if (rest.length > 0) addNode({ tree: node.children, item, segments: rest });
+  }
+
+  const initialItem = (item: Directory | Note) =>
+    addNode({ tree: root, item, segments: item.full_path.split('/') });
+  // Add directories and notes to the unified tree
+  directories.forEach(initialItem);
+  notes?.forEach(initialItem);
+
+  return root;
+}

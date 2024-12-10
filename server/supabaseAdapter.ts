@@ -6,9 +6,11 @@ export const supabaseAdapterFunc = (supabaseClient?: SupabaseClient) => {
   const client = supabaseClient || browserClient();
 
   const update = async (tableName: Tables, data: Note | Directory) => {
+    //@ts-ignore
+    const {fts, ...fixedData} = data; 
     const updated = await client
       .from(tableName)
-      .update(data)
+      .update(fixedData)
       .eq('id', data.id)
       .select()
       .single();

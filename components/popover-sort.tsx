@@ -11,6 +11,7 @@ import {
 import { Button } from './ui/button';
 import { ArrowDownNarrowWide } from 'lucide-react';
 import { useState } from 'react';
+import { TooltipWrap } from './tooltip-wrap';
 
 export enum SortKeys {
   Alphabetically = 'Alphabetically',
@@ -30,9 +31,11 @@ export default function SortDropdown({ sortList }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="iconsm">
-          <ArrowDownNarrowWide className="h-4 w-4" />
-        </Button>
+        <TooltipWrap side="bottom" text="Sort">
+          <Button variant="outline" size="iconsm">
+            <ArrowDownNarrowWide className="h-4 w-4" />
+          </Button>
+        </TooltipWrap>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Sort Notes By:</DropdownMenuLabel>

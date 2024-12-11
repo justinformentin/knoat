@@ -17,6 +17,8 @@ export default async function Layout({
     .eq('id', user.id)
     .single();
 
+    // TODO - returns user id. Not necessary to use user.id
+    // Maybe fetch data after getting the user and return that as the "app data"
   return (
     <>
       <AppHeader userId={user.id} data={data} />

@@ -69,11 +69,11 @@ const Sidebar = React.forwardRef<
     const mobileSidebar = (
       <>
         <div
-          className={`z-50 fixed top-0 left-0 h-full bg-background text-sidebar-foreground transition-transform duration-300
+          className={`z-50 fixed top-0 left-0 h-full bg-background text-sidebar-foreground transition-transform duration-300 w-[85%]
           ${isMobile && openMobile ? 'translate-x-0' : '-translate-x-full'}
           `}
         >
-          <div className="p-4">{children}</div>
+          <div className="p-2 ">{children}</div>
         </div>
         {isMobile && openMobile && (
           <div

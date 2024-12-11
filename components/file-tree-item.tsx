@@ -11,7 +11,7 @@ export default function FileTreeItem({
   handler,
   collapseIcon,
 }: FileTreeItemProps) {
-  
+
   const { setSelectedItem, selectedItem } = useSelectedItemStore(
     (state) => state
   );
@@ -21,7 +21,7 @@ export default function FileTreeItem({
   const selectedClass =
     selectedItem?.id === item.id ? 'bg-[#e2ecfd] rounded-md pr-2' : '';
   return (
-    <div className={`relative cursor-pointer`} onClick={handleSelect}>
+    <div className={`relative cursor-pointer text-lg md:text-sm`} onClick={handleSelect}>
       {handler}
       <div className={`flex ${selectedClass}`}>
         <div className="self-center mr-1 flex [&>span]:flex">

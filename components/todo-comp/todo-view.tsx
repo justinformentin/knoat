@@ -8,7 +8,7 @@ import {
 } from '@hello-pangea/dnd';
 import { CheckPlus } from '../ui/checkbox';
 import { v4 as uuidv4 } from 'uuid';
-import { Database, Todo, Todos, TodosList } from '@/lib/database.types';
+import { Database, Todos, TodosList } from '@/lib/database.types';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { ListItem } from './list-item';
@@ -18,12 +18,11 @@ import { Input } from '../ui/input';
 import { browserClient } from '@/utils/supabase/client';
 import { debounce } from '@/lib/debounce';
 import { X } from 'lucide-react';
+import { useDataStore } from '@/lib/use-data';
 
 type DBTodo = Database['public']['Tables']['todos']['Row'];
 
 type DroppableType = { index: number; droppableId: string };
-
-type ReducedList = { active: TodosList; completed: TodosList };
 
 type DragEndResult = {
   // combine: string | null
@@ -80,16 +79,11 @@ const getItemStyle = (
 //   background: isDraggingOver ? "lightblue" : "lightgrey",
 // });
 
-export default function TodoView({
-  todos,
-  userId,
-}: {
-  todos: DBTodo | null;
-  userId: string;
-}) {
-  const [initialTodos, setInitialTodos] = useState(!!todos?.list);
+export default function TodoView() {
+  const { user, todos, setTodos } = useDataStore((state) => state);
+
   const [state, setState] = useState<Todos>(
-    todos?.list || [{ title: '', items: [] }]
+    todos || [{ title: '', items: [] }]
   );
 
   const [canDragElement, setCanDragElement] = useState('');
@@ -97,15 +91,8 @@ export default function TodoView({
 
   const client = browserClient();
   const saveData = debounce(async () => {
-    if (initialTodos) {
-      await client
-        .from('todos')
-        .update({ list: state, user_id: userId })
-        .eq('user_id', userId);
-    } else {
-      await client.from('todos').insert({ user_id: userId, list: state });
-    }
-    setInitialTodos(true);
+    await client.from('todos').update({ list: state }).eq('user_id', user.id);
+    setTodos(state);
     setStatus('saved');
     setTimeout(() => setStatus(''), 2000);
   }, 3000);
@@ -213,7 +200,7 @@ export default function TodoView({
                   <div
                     ref={provided.innerRef}
                     // style={getListStyle(snapshot.isDraggingOver)}
-                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 bg-white shadow-md`}
+                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 pb-12 bg-white shadow-md`}
                     {...provided.droppableProps}
                   >
                     <X
@@ -234,7 +221,7 @@ export default function TodoView({
                       <CheckPlus className="self-center ml-2" />
                     </AddTodo>
                     <ScrollArea className="h-[calc(100%-42px)] pb-2">
-                      {column.items.map((item, index) =>
+                      {column?.items?.map((item, index) =>
                         !item.completed ? (
                           <Draggable
                             key={item.id}
@@ -257,6 +244,9 @@ export default function TodoView({
                                 <ListItem
                                   item={item}
                                   className="border"
+                                  onKeyDownCapture={(e: any) =>
+                                    e.key === 'Enter' && addItem(ind)
+                                  }
                                   onClick={() => handleInputFocus(item.id)}
                                   onBlur={() => setCanDragElement('')}
                                   onDelete={() => deleteItem(ind, item.id)}

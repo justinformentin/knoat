@@ -14,6 +14,7 @@ type ListItemProps = {
   className?: string;
   inputDisabled?: boolean;
   inputClass?: string;
+  onKeyDownCapture?: any;
 };
 
 export const ListItem = ({
@@ -25,7 +26,8 @@ export const ListItem = ({
   onDelete,
   className,
   inputDisabled,
-  inputClass
+  inputClass,
+  onKeyDownCapture
 }: ListItemProps) => {
   return (
     <div
@@ -48,6 +50,7 @@ export const ListItem = ({
         onClick={onClick && onClick}
         onBlur={onBlur && onBlur}
         onChange={onChange && onChange}
+        onKeyDownCapture={onKeyDownCapture && onKeyDownCapture}
       />
       <button type="button" onClick={onDelete}>
         <X className="h-4 w-4 mr-2" />

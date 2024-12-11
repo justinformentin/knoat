@@ -139,6 +139,38 @@ export type Database = {
           },
         ];
       };
+      users: {
+        Row: {
+          created_at: string;
+          updated_at: string;
+          id: string;
+          name: string;
+          email: string;
+          slug: string;
+          picture_url: string;
+          public_data: JSON;
+        };
+        Insert: {
+          created_at?: string;
+          updated_at?: string;
+          id: string;
+          name?: string;
+          email: string;
+          slug?: string;
+          picture_url?: string;
+          public_data?: JSON;
+        };
+        Update: {
+          created_at?: string;
+          updated_at?: string;
+          id?: string;
+          name?: string;
+          email: string;
+          slug?: string;
+          picture_url?: string;
+          public_data?: JSON;
+        };
+      };
     };
     Views: { };
     Functions: { };

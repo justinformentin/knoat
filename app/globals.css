@@ -85,3 +85,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+.nestable .nestable-list {
+  padding: 0 0 0 30px !important;
+}
+.nestable-item .nestable-list, .nestable-item-copy .nestable-list {
+  margin-top: 6px !important;
+}
+.nestable > .nestable-list {
+  padding: 0 !important;
+}

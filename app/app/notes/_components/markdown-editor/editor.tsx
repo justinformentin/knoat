@@ -1,7 +1,9 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { forwardRef, useRef } from 'react';
-import { type MDXEditorMethods, type MDXEditorProps } from '@mdxeditor/editor';
+import { type MDXEditorMethods, 
+  // type MDXEditorProps
+ } from '@mdxeditor/editor';
 import { Note } from '@/server/types';
 // This is the only place InitializedMDXEditor is imported directly.
 const MDXE = dynamic(() => import('./initialized-editor'), {

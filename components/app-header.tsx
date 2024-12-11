@@ -1,14 +1,30 @@
+'use client';
 import Link from 'next/link';
 import HeaderAuth from '@/components/header-auth';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Logo } from './logo';
 import { SidebarTrigger } from './ui/sidebar';
-import { Button } from './ui/button';
+import { useDataStore } from '@/lib/use-data';
+import { useEffect } from 'react';
+import AppHeaderLinks from './app-header-links';
 
-export default function AppHeader({ userId, children }: any) {
+export default function AppHeader({ userId, data }: any) {
+  const { setDirectory, setNotes, setTodos, setUser } = useDataStore(
+    (store) => store
+  );
+
+  console.log('data', data)
+  useEffect(() => {
+    if (userId) {
+      if (userId) setUser({ id: userId });
+      if (data.notes) setNotes(data.notes);
+      if (data.directories) setDirectory(data.directories[0]);
+      if (data.todos) setTodos(data.todos[0].list);
+    }
+  }, []);
+
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed relative">
-      {/* {children || null} */}
       <SidebarTrigger className="self-center ml-2" />
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
@@ -18,14 +34,7 @@ export default function AppHeader({ userId, children }: any) {
           </Link>
         </div>
         {userId ? (
-          <div className="flex justify-between space-x-4">
-            <Button asChild size="sm" variant={'outline'} className="h-8">
-              <Link href="/app/notes">Notes</Link>
-            </Button>
-            <Button asChild size="sm" variant={'outline'} className="h-8">
-              <Link href="/app/todo">Todo</Link>
-            </Button>
-          </div>
+          <AppHeaderLinks />
         ) : null}
         <div className="flex justify-between">
           <ThemeSwitcher />

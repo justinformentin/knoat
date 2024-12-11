@@ -6,9 +6,14 @@ import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 import FilterDropdown, { SortKeys } from './popover-sort';
 import { FuzzySearch } from './fuzzy-search';
 import FileTreeHeaderOptions from './file-tree-header-options';
+import PopoverDelete from './popover-delete';
+import { useSelectedItemStore } from '@/lib/use-selected-item';
 
 export default function FileTree() {
   const { notes, directory, updateDirectory } = useDataStore((state) => state);
+  const clearSelectedItem = useSelectedItemStore(
+    (state) => state.clearSelectedItem
+  );
 
   const sortFunc = (a: TreeItem, b: TreeItem, sortKey: SortKeys) => {
     // if (sortKey === SortKeys.Alphabetically)
@@ -45,6 +50,11 @@ export default function FileTree() {
     updateDirectory(sortedList);
   };
 
+  // Clicking inside the tree container, but not a tree-item
+  // will clear the selected item selection
+  const handleOutsideClick = (e: any) =>
+    !e.target.closest('#tree-item') && clearSelectedItem();
+
   return (
     <>
       <SidebarHeader>
@@ -54,9 +64,13 @@ export default function FileTree() {
         <div className="flex justify-center w-full space-x-2">
           <FileTreeHeaderOptions />
           <FilterDropdown sortList={updateSorting} />
+          <PopoverDelete
+            directory={directory}
+            updateDirectory={updateDirectory}
+          />
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent onClick={handleOutsideClick}>
         <div className="relative flex flex-col items-center justify-center overflow-hidden bg-background">
           <FileTreeView
             directory={directory}

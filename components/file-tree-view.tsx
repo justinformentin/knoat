@@ -44,8 +44,10 @@ export default function FileTreeView({
   // Right now we're just using the existance of the content property
   // but we might want to change that in the future since we don't
   // need the content property to exist in the tree
-  const confirmChange = (dragItem: any) =>
-    !dragItem?.destinationParent?.hasOwnProperty('content');
+  const confirmChange = (dragItem: any) => {
+    const dp = dragItem?.destinationParent;
+    return !dp?.type || dp?.type !== 'note';
+  };
 
   return (
     <div className="w-full h-full px-2">

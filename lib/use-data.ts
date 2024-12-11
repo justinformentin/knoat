@@ -1,9 +1,4 @@
-import {
-  Directory,
-  GeneratedDir,
-  Note,
-  TreeViewDirectory,
-} from '@/server/types';
+import { Directory, Note, Tree } from '@/server/types';
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand/';
 import { persist } from 'zustand/middleware';
@@ -12,53 +7,48 @@ import { Todos } from './database.types';
 interface DataStore {
   user: { id: string };
   notes: Note[];
-  // directories: Directory[];
-  treeView: TreeViewDirectory;
+  directory: { id: string; label?: string; created_at?: string; tree: Tree };
   todos: Todos;
   setUser: (user: { id: string }) => void;
   setNotes: (notes: Note[]) => void;
-  // setDirectories: (directories: Directory[]) => void;
   setTodos: (todos: Todos) => void;
-  setTreeView: (treeView: TreeViewDirectory) => void;
+  setDirectory: (directory: Directory) => void;
   updateNotes: (note: Note) => void;
   addNote: (note: Note) => void;
-  addDirectory: (directory: Directory) => void;
-  // addRootDirectory: (directory: Directory) => void;
+  updateDirectory: (tree: Tree) => void;
 }
 
-const addResource = (path: string, listCopy: TreeViewDirectory) => {
-  console.log('ADD RESOURCE STARTING=============');
-  const findPath = (
-    paths: string[],
-    dir: TreeViewDirectory
-  ): GeneratedDir | undefined => {
-    const remainingPaths = [...paths];
-    const nextPath = remainingPaths.shift();
+// const addResource = (path: string, listCopy: TreeViewDirectory) => {
+//   console.log('ADD RESOURCE STARTING=============');
+//   const findPath = (
+//     paths: string[],
+//     dir: TreeViewDirectory
+//   ): GeneratedDir | undefined => {
+//     const remainingPaths = [...paths];
+//     const nextPath = remainingPaths.shift();
 
-    const foundDir = dir.find((item: any) => item.label === nextPath);
-    if (foundDir) {
-      return remainingPaths.length > 1 && foundDir.children
-        ? findPath(remainingPaths, foundDir.children)
-        : foundDir;
-    }
-  };
+//     const foundDir = dir.find((item: any) => item.label === nextPath);
+//     if (foundDir) {
+//       return remainingPaths.length > 1 && foundDir.children
+//         ? findPath(remainingPaths, foundDir.children)
+//         : foundDir;
+//     }
+//   };
 
-  const pathSplit = path.split('/');
-  return findPath(pathSplit, listCopy);
-};
+//   const pathSplit = path.split('/');
+//   return findPath(pathSplit, listCopy);
+// };
 
 export const dataStore: UseBoundStore<StoreApi<DataStore>> = create(
   persist(
     (set) => ({
       user: { id: '' },
       notes: [],
-      // directories: [],
-      treeView: [],
+      directory: { id: '', label: '', created_at: '', tree: [] },
       todos: [{ title: '', items: [] }],
       setUser: (user: { id: string }) => set({ user }),
       setNotes: (notes: Note[]) => set({ notes }),
-      // setDirectories: (directories: Directory[]) => set({ directories }),
-      setTreeView: (treeView: TreeViewDirectory) => set({ treeView }),
+      setDirectory: (directory: Directory) => set({ directory }),
       setTodos: (todos: Todos) => set({ todos }),
       updateNotes: (note: Note) =>
         set((state) => {
@@ -69,41 +59,27 @@ export const dataStore: UseBoundStore<StoreApi<DataStore>> = create(
         }),
       addNote: (note: Note) =>
         set((state) => {
-          const treeViewCopy = [...state.treeView];
-          const foundDir = addResource(note.full_path, treeViewCopy);
-          console.log('ADDUNIG NOTE foundDir', foundDir);
-          if (foundDir) {
-            foundDir.children?.push(note);
-            console.log('ADDING NOTE', treeViewCopy);
-            return { notes: [...state.notes, note], treeView: treeViewCopy };
-          } else {
-            return {
-              notes: [...state.notes, note],
-              treeView: [...state.treeView, note],
-            };
-          }
+          return {
+            notes: [...state.notes, note],
+            directory: {
+              ...state.directory,
+              tree: [
+                ...state.directory.tree,
+                {
+                  id: note.id,
+                  label: note.label,
+                  created_at: note.created_at,
+                  updated_at: note.updated_at,
+                  type: 'note'
+                },
+              ],
+            },
+          };
         }),
-      addDirectory: (directory: Directory) =>
-        set((state) => {
-          const treeViewCopy = [...state.treeView];
-          const foundDir = addResource(directory.full_path, treeViewCopy);
-          if (foundDir && foundDir.children) {
-            //@ts-ignore
-            foundDir.children.push({ ...directory, children: [] });
-            return {
-              treeView: treeViewCopy,
-            };
-          } else {
-            return {
-              treeView: [...state.treeView, { ...directory, children: [] }],
-            };
-          }
-        }),
-      // addRootDirectory: (directory: Directory) =>
-      //   set((state) => ({
-      //     // directories: [...state.directories, directory],
-      //     treeView: [...state.treeView, { ...directory, children: [] }],
-      //   })),
+      updateDirectory: (tree: Tree) =>
+        set((state) => ({
+          directory: { ...state.directory, tree },
+        })),
     }),
     { name: 'knoat-state' }
   )

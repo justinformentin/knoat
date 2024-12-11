@@ -1,87 +1,67 @@
 'use client';
-import { File, Folder, Tree } from '@/components/ui/file-tree';
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { useIsMobile } from '@/lib/use-is-mobile';
-import { useSidebarStore } from '@/lib/use-sidebar';
-import { GeneratedDir, Note } from '@/server/types';
+import { useRef } from 'react';
+import Nestable, { NestableProps } from 'react-nestable';
+import FileTreeItem from './file-tree-item';
+import { ChevronRight } from 'lucide-react';
+import { useDbAdapter } from '@/server/dbAdapter';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import 'react-nestable/dist/styles/index.css';
 
 export default function FileTreeView({
-  notes,
-  treeView,
+  updateDirectory,
+  directory,
 }: {
-  notes: any;
-  treeView: any;
+  updateDirectory: any;
+  directory: any;
 }) {
-  const params = useParams();
+  const refNestable = useRef(null);
 
-  const [initialSelectedId, setInitialSelectedId] = useState<
-    string | undefined
-  >();
+  // const isMobile = useIsMobile();
+  // const setOpenMobile = useSidebarStore((state) => state.setOpenMobile);
+  // const [tree, setTree] = useState(treeView);
 
-  const isMobile = useIsMobile();
+  const dbAdapter = useDbAdapter();
 
-  const setOpenMobile = useSidebarStore((state) => state.setOpenMobile);
+  if (!directory.tree?.length) return null;
 
-  useEffect(() => {
-    if (
-      params.notePath &&
-      params.notePath.length &&
-      Array.isArray(params.notePath)
-    ) {
-      const np = params.notePath.join('/');
-
-      if (
-        notes?.length
-        // && notePath !== np
-      ) {
-        const found = notes.find((note: any) => note.full_path === np);
-        found &&
-          found.id !== initialSelectedId &&
-          setInitialSelectedId(found.id);
-        // setNotePath(np);
-      }
-    }
-  }, [params, notes, treeView]);
-
-  if (!treeView?.length) return null;
-
-  const renderDirectory = (item: Note | GeneratedDir) => {
-    if (item.label.slice(-3) === '.md') {
-      return (
-        <Link
-          href={'/app/notes/' + item.full_path}
-          key={item.id}
-          onClick={() => isMobile && setOpenMobile(false)}
-        >
-          <File
-            item={item}
-            value={item.id}
-            isSelect={item.id === initialSelectedId}
-            className="ml-[15px]"
-          >
-            <p>{item.label}</p>
-          </File>
-        </Link>
-      );
-      // @ts-ignore Type error will be fixed when note/dir types change
-    } else if (item.children) {
-      return (
-        <Folder key={item.id} value={item.id} element={item.label} item={item}>
-          {/* @ts-ignore Type error will be fixed when note/dir types change */}
-          {item.children.map(renderDirectory)}
-        </Folder>
-      );
-    }
+  const onChange = (e: any) => {
+    updateDirectory(e.items);
+    dbAdapter.update('directories', { id: directory.id, tree: e.items });
   };
+
+  const renderItem: NestableProps['renderItem'] = (props) => (
+    // @ts-ignore
+    <FileTreeItem {...props} />
+  );
+
+  const renderCollapseIcon = ({ isCollapsed }: { isCollapsed: boolean }) => (
+    <ChevronRight
+      className={`inline-block self-center size-4 opacity-50 transition-all ${isCollapsed ? '' : 'rotate-90'}`}
+    />
+  );
+
+  // Don't allow items to be nested under files
+  // Right now we're just using the existance of the content property
+  // but we might want to change that in the future since we don't
+  // need the content property to exist in the tree
+  const confirmChange = (dragItem: any) =>
+    !dragItem?.destinationParent?.hasOwnProperty('content');
+
   return (
-    <Tree
-      className="p-2 overflow-hidden rounded-md bg-background"
-      initialSelectedId={initialSelectedId}
-      elements={treeView}
-    >
-      {treeView.map(renderDirectory)}
-    </Tree>
+    <div className="w-full h-full px-2">
+      <ScrollArea>
+        <Nestable
+          items={directory.tree}
+          collapsed={false}
+          disableCollapse={false}
+          renderCollapseIcon={renderCollapseIcon}
+          disableDrag={false}
+          renderItem={renderItem}
+          ref={refNestable}
+          onChange={onChange}
+          confirmChange={confirmChange}
+        />
+      </ScrollArea>
+    </div>
   );
 }

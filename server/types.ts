@@ -4,6 +4,7 @@ export interface NoteInsert {
   user_id: string;
   full_path: string;
   label: string;
+  content?: string;
 }
 export interface Note extends NoteInsert {
   user_id: string;
@@ -15,19 +16,23 @@ export interface Note extends NoteInsert {
   updated_at: string;
 }
 
-export interface DirectoryInsert {
-  user_id: string;
-  full_path: string;
+export type TreeItem = {
   label: string;
+  id: string;
   created_at: string;
   updated_at?: string;
+  type?: 'note' | undefined;
+  children?: TreeItem[];
+};
+export type Tree = TreeItem[];
 
+export interface DirectoryInsert {
+  user_id?: string;
+  created_at?: string;
+  updated_at?: string;
+  tree: Tree;
 }
+
 export interface Directory extends DirectoryInsert {
   id: string;
 }
-
-// export type TreeViewDirectory = Directory & { children?: Directory[] | Note[] };
-export type GeneratedDir = Directory & {children?: GeneratedDir[] | Note[] };
-// export type TreeViewDirectory = GeneratedDir & { children?: GeneratedDir[] | Note[] };
-export type TreeViewDirectory = Array<Note | GeneratedDir>;

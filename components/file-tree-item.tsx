@@ -19,9 +19,9 @@ export default function FileTreeItem({
   const handleSelect = () => setSelectedItem(item);
 
   const selectedClass =
-    selectedItem?.id === item.id ? 'bg-[#e2ecfd] rounded-md pr-2' : '';
+    selectedItem?.id === item.id ? 'bg-[#e2ecfd] rounded-[2px] pr-2' : '';
   return (
-    <div className={`relative cursor-pointer text-lg md:text-sm`} onClick={handleSelect}>
+    <div id="tree-item" className={`relative cursor-pointer text-lg md:text-sm`} onClick={handleSelect}>
       {handler}
       <div className={`flex ${selectedClass}`}>
         <div className="self-center mr-1 flex [&>span]:flex">

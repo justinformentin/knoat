@@ -1,20 +1,18 @@
+'use client';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import React from 'react';
+import { ReactNode } from 'react';
 
-export function TooltipWrap({
-  children,
-  text,
-  side,
-}: {
-  children: React.ReactNode;
+type TooltipWrapProps = {
+  children: ReactNode;
   text: string;
   side?: 'top' | 'bottom';
-}) {
+};
+export function TooltipWrap({ children, text, side }: TooltipWrapProps) {
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>

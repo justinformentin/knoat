@@ -1,11 +1,8 @@
 'use client';
-import { FolderPlus, SquarePen } from 'lucide-react';
 import PopoverInput from './popover-input';
 import { useDbAdapter } from '@/server/dbAdapter';
 import { useDataStore } from '@/lib/use-data';
-import { Button } from './ui/button';
 import { v4 as uuidv4 } from 'uuid';
-import { TooltipWrap } from './tooltip-wrap';
 
 type DirectoryDbType = {
   id: string;
@@ -58,20 +55,9 @@ export default function FileTreeHeaderOptions() {
 
   return (
     <>
-      <PopoverInput text="Note" confirmCallback={addFile}>
-        <TooltipWrap text="New Note" side="bottom">
-          <Button variant="outline" size="iconsm">
-            <SquarePen className="size-4" />
-          </Button>
-        </TooltipWrap>
-      </PopoverInput>
-      <PopoverInput text="Directory" confirmCallback={updateTree}>
-        <TooltipWrap text="New Directory" side="bottom">
-          <Button variant="outline" size="iconsm">
-            <FolderPlus className="size w-4" />
-          </Button>
-        </TooltipWrap>
-      </PopoverInput>
+      <PopoverInput text="Note" confirmCallback={addFile} />
+
+      <PopoverInput text="Directory" confirmCallback={updateTree} />
     </>
   );
 }

@@ -22,21 +22,22 @@ export enum SortKeys {
   UpdatedReversed = 'UpdatedReversed',
 }
 export default function SortDropdown({ sortList }: any) {
+  const [open, setOpen] = useState(false);
   const [sortKey, setSortKey] = useState(SortKeys.Alphabetically);
 
   const onValueChange = (key: string) => {
     setSortKey(key as SortKeys);
     sortList(key);
   };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <TooltipWrap side="bottom" text="Sort">
-          <Button variant="outline" size="iconsm">
-            <ArrowDownNarrowWide className="h-4 w-4" />
-          </Button>
-        </TooltipWrap>
-      </DropdownMenuTrigger>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <TooltipWrap side="bottom" text="Sort">
+        <Button variant="outline" size="iconsm" onClick={() => setOpen(true)}>
+          <ArrowDownNarrowWide className="h-4 w-4" />
+        </Button>
+      </TooltipWrap>
+      <DropdownMenuTrigger />
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Sort Notes By:</DropdownMenuLabel>
         <DropdownMenuSeparator />

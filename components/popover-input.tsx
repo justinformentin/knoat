@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { KeyboardEvent, useCallback, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import {
   Popover,
@@ -7,14 +7,37 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from './ui/button';
+import { TooltipWrap } from './tooltip-wrap';
+import { FolderPlus, SquarePen } from 'lucide-react';
 
-export default function PopoverInput({ text, confirmCallback, children }: any) {
+export default function PopoverInput({ text, confirmCallback }: any) {
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
   const itemNameChange = (e: any) => setItemName(e.target.value);
+
+  const confirmInput = () => {
+      confirmCallback(itemName);
+      setItemName('');
+      setOpen(false);
+  }
+
+  const onKeyDownCapture = (e:KeyboardEvent)=>{
+      e.key === 'Enter' && confirmInput()
+  }
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <TooltipWrap side="bottom" text={'New ' + text}>
+        <Button variant="outline" size="iconsm" onClick={() => setOpen(true)}>
+          {text === 'Note' ? (
+            <SquarePen className="size-4" />
+          ) : (
+            <FolderPlus className="size-4" />
+          )}
+        </Button>
+      </TooltipWrap>
+      <PopoverTrigger />
+
       <PopoverContent className="w-80">
         <div className="grid gap-4">
           <div className="space-y-2">
@@ -28,13 +51,10 @@ export default function PopoverInput({ text, confirmCallback, children }: any) {
               value={itemName}
               onChange={itemNameChange}
               className="col-span-2 h-8"
+              onKeyDownCapture={onKeyDownCapture}
             />
             <Button
-              onClick={() => {
-                confirmCallback(itemName);
-                setItemName('');
-                setOpen(false);
-              }}
+              onClick={confirmInput}
               size="sm"
               variant="outline"
             >

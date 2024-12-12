@@ -14,7 +14,7 @@ export default function AppHeader({ data }: any) {
   );
 
   useEffect(() => {
-    if (data.id) {
+    if (data && data.id) {
       if (data.id) setUser({ id: data.id });
       if (data.notes) setNotes(data.notes);
       if (data.directories) setDirectory(data.directories);
@@ -32,12 +32,10 @@ export default function AppHeader({ data }: any) {
             <span className="self-center font-semibold">Knoat</span>
           </Link>
         </div>
-        {data.id ? (
-          <AppHeaderLinks />
-        ) : null}
+        {data && data?.id ? <AppHeaderLinks /> : null}
         <div className="flex justify-between">
           <ThemeSwitcher />
-          <HeaderAuth userId={data.id} />
+          <HeaderAuth userId={(data && data?.id) || null} />
         </div>
       </div>
     </nav>

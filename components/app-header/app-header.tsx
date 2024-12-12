@@ -1,25 +1,24 @@
 'use client';
 import Link from 'next/link';
-import HeaderAuth from '@/components/header-auth';
-import { ThemeSwitcher } from '@/components/theme-switcher';
+import HeaderAuth from '@/components/app-header/header-auth';
+import { ThemeSwitcher } from '@/components/app-header/theme-switcher';
 import { Logo } from './logo';
-import { SidebarTrigger } from './ui/sidebar';
+import { SidebarTrigger } from '../ui/sidebar';
 import { useDataStore } from '@/lib/use-data';
 import { useEffect } from 'react';
 import AppHeaderLinks from './app-header-links';
 
-export default function AppHeader({ userId, data }: any) {
+export default function AppHeader({ data }: any) {
   const { setDirectory, setNotes, setTodos, setUser } = useDataStore(
     (store) => store
   );
 
-  console.log('data', data)
   useEffect(() => {
-    if (userId) {
-      if (userId) setUser({ id: userId });
+    if (data.id) {
+      if (data.id) setUser({ id: data.id });
       if (data.notes) setNotes(data.notes);
-      if (data.directories) setDirectory(data.directories[0]);
-      if (data.todos) setTodos(data.todos[0].list);
+      if (data.directories) setDirectory(data.directories);
+      if (data.todos) setTodos(data.todos.list);
     }
   }, []);
 
@@ -33,12 +32,12 @@ export default function AppHeader({ userId, data }: any) {
             <span className="self-center font-semibold">Knoat</span>
           </Link>
         </div>
-        {userId ? (
+        {data.id ? (
           <AppHeaderLinks />
         ) : null}
         <div className="flex justify-between">
           <ThemeSwitcher />
-          <HeaderAuth userId={userId} />
+          <HeaderAuth userId={data.id} />
         </div>
       </div>
     </nav>

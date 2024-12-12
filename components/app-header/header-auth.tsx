@@ -1,6 +1,6 @@
 import { signOutAction } from "@/app/actions";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export default function AuthButton({userId}: {userId: string}) {
 

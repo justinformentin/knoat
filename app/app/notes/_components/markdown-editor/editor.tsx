@@ -14,7 +14,6 @@ const MDXE = dynamic(() => import('./initialized-editor'), {
 // This is what is imported by other components. Pre-initialized with plugins, and ready
 // to accept other props, including a ref.
 export const ForwardRefEditor = forwardRef<{ note: Note, userId: string}>((props, ref) => {
-    console.log('forward ref editor', props);
   const mdxEditorRef = useRef<MDXEditorMethods>(null);
   //@ts-ignore - Will be fixed when changing the location of data loading and subsequent prop passing is fixed
   return <MDXE {...props} editorRef={mdxEditorRef} />;

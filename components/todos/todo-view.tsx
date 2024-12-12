@@ -8,7 +8,7 @@ import {
 } from '@hello-pangea/dnd';
 import { CheckPlus } from '../ui/checkbox';
 import { v4 as uuidv4 } from 'uuid';
-import { Database, Todos, TodosList } from '@/lib/database.types';
+import { Todos, TodosList } from '@/lib/database.types';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { ListItem } from './list-item';
@@ -19,8 +19,6 @@ import { browserClient } from '@/utils/supabase/client';
 import { debounce } from '@/lib/debounce';
 import { X } from 'lucide-react';
 import { useDataStore } from '@/lib/use-data';
-
-type DBTodo = Database['public']['Tables']['todos']['Row'];
 
 type DroppableType = { index: number; droppableId: string };
 
@@ -35,7 +33,6 @@ type DragEndResult = {
 };
 
 const reorder = (list: TodosList, startIndex: number, endIndex: number) => {
-  console.log('REORDER list', list);
   const result = Array.from(list.items);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -106,7 +103,6 @@ export default function TodoView() {
 
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
-    console.log('onDragEnd', { ...result, sInd, dInd });
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);

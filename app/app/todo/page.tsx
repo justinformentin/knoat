@@ -1,4 +1,4 @@
-import TodoView from '@/components/todo-comp/todo-view';
+import TodoView from '@/components/todos/todo-view';
 
 export default async function Todo() {
   return (

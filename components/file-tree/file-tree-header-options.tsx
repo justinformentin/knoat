@@ -56,7 +56,6 @@ export default function FileTreeHeaderOptions() {
   return (
     <>
       <PopoverInput text="Note" confirmCallback={addFile} />
-
       <PopoverInput text="Directory" confirmCallback={updateTree} />
     </>
   );

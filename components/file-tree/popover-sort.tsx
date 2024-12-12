@@ -8,10 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ArrowDownNarrowWide } from 'lucide-react';
 import { useState } from 'react';
-import { TooltipWrap } from './tooltip-wrap';
+import { TooltipWrap } from '../tooltip-wrap';
 
 export enum SortKeys {
   Alphabetically = 'Alphabetically',

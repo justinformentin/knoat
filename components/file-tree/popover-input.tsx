@@ -6,8 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from './ui/button';
-import { TooltipWrap } from './tooltip-wrap';
+import { Button } from '../ui/button';
+import { TooltipWrap } from '../tooltip-wrap';
 import { FolderPlus, SquarePen } from 'lucide-react';
 
 export default function PopoverInput({ text, confirmCallback }: any) {

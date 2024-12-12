@@ -5,8 +5,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from './ui/button';
-import { TooltipWrap } from './tooltip-wrap';
+import { Button } from '../ui/button';
+import { TooltipWrap } from '../tooltip-wrap';
 import { useSelectedItemStore } from '@/lib/use-selected-item';
 import { FileX, FolderX } from 'lucide-react';
 import { Tree } from '@/server/types';

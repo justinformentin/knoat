@@ -1,4 +1,4 @@
-import AppHeader from '@/components/app-header';
+import AppHeader from '@/components/app-header/app-header';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 

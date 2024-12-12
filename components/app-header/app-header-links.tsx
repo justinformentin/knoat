@@ -1,9 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ListTodo, NotebookPen } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { TooltipWrap } from './tooltip-wrap';
+import { TooltipWrap } from '../tooltip-wrap';
 
 export default function AppHeaderLinks() {
   const pathname = usePathname();

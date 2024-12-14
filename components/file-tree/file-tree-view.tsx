@@ -1,11 +1,10 @@
 'use client';
-import { useRef } from 'react';
-import Nestable, { NestableProps } from 'react-nestable';
-import FileTreeItem from './file-tree-item';
-import { ChevronRight } from 'lucide-react';
 import { useDbAdapter } from '@/server/dbAdapter';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import 'react-nestable/dist/styles/index.css';
+// import 'react-nestable/dist/styles/index.css';
+import { SortableTree } from './sortable/components/SortableTree';
+// import { useSelectedItemStore } from '@/lib/use-selected-item';
+import { Tree } from '@/server/types';
 
 export default function FileTreeView({
   updateDirectory,
@@ -14,7 +13,9 @@ export default function FileTreeView({
   updateDirectory: any;
   directory: any;
 }) {
-  const refNestable = useRef(null);
+  // const { selectedItem, setSelectedItem } = useSelectedItemStore(
+  //   (state) => state
+  // );
 
   // const isMobile = useIsMobile();
   // const setOpenMobile = useSidebarStore((state) => state.setOpenMobile);
@@ -22,46 +23,22 @@ export default function FileTreeView({
 
   const dbAdapter = useDbAdapter();
 
+  // if (!directory.tree?.length) return null;
+
+  const onTreeUpdate = (tree: Tree) => {
+    updateDirectory(tree);
+    dbAdapter.update('directories', { id: directory.id, tree });
+  };
+
   if (!directory.tree?.length) return null;
 
-  const onChange = (e: any) => {
-    updateDirectory(e.items);
-    dbAdapter.update('directories', { id: directory.id, tree: e.items });
-  };
-
-  const renderItem: NestableProps['renderItem'] = (props) => (
-    // @ts-ignore
-    <FileTreeItem {...props} />
-  );
-
-  const renderCollapseIcon = ({ isCollapsed }: { isCollapsed: boolean }) => (
-    <ChevronRight
-      className={`inline-block self-center size-4 opacity-50 transition-all ${isCollapsed ? '' : 'rotate-90'}`}
-    />
-  );
-
-  // Don't allow items to be nested under files
-  // Right now we're just using the existance of the content property
-  // but we might want to change that in the future since we don't
-  // need the content property to exist in the tree
-  const confirmChange = (dragItem: any) => {
-    const dp = dragItem?.destinationParent;
-    return !dp?.type || dp?.type !== 'note';
-  };
-
   return (
-    <div className="w-full h-full px-2">
+    <div className="w-full h-full px-2 pb-8">
       <ScrollArea>
-        <Nestable
-          items={directory.tree}
-          collapsed={false}
-          disableCollapse={false}
-          renderCollapseIcon={renderCollapseIcon}
-          disableDrag={false}
-          renderItem={renderItem}
-          ref={refNestable}
-          onChange={onChange}
-          confirmChange={confirmChange}
+        <SortableTree
+          collapsible
+          defaultItems={directory.tree?.length ? directory.tree : []}
+          onTreeUpdate={onTreeUpdate}
         />
       </ScrollArea>
     </div>

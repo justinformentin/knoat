@@ -9,10 +9,12 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Note } from '@/server/types';
 import Link from 'next/link';
+import { useDataStore } from '@/lib/use-data';
 
-export function FuzzySearch({ notes }: { notes: Note[] }) {
+export function FuzzySearch() {
+  const notes = useDataStore((state) => state.notes);
+
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

@@ -4,15 +4,25 @@ import type { StoreApi, UseBoundStore } from 'zustand/';
 import { persist } from 'zustand/middleware';
 import { Todos } from './database.types';
 
-interface DataStore {
-  user: { id: string };
+type User = { id: string };
+
+type InitializeArgs = {
+  user: User;
   notes: Note[];
-  directory: { id: string; label?: string; created_at?: string; tree: Tree };
+  directory: Directory;
   todos: Todos;
-  setUser: (user: { id: string }) => void;
+};
+
+interface DataStore {
+  user: User;
+  notes: Note[];
+  directory: Directory;
+  todos: Todos;
+  setUser: (user: User) => void;
   setNotes: (notes: Note[]) => void;
   setTodos: (todos: Todos) => void;
   setDirectory: (directory: Directory) => void;
+  initialize: (args: InitializeArgs) => void;
   updateNotes: (note: Note) => void;
   addNote: (note: Note) => void;
   updateDirectory: (tree: Tree) => void;
@@ -50,6 +60,8 @@ export const dataStore: UseBoundStore<StoreApi<DataStore>> = create(
       setNotes: (notes: Note[]) => set({ notes }),
       setDirectory: (directory: Directory) => set({ directory }),
       setTodos: (todos: Todos) => set({ todos }),
+      initialize: ({ user, notes, directory, todos }: InitializeArgs) =>
+        set({ user, notes, directory, todos }),
       updateNotes: (note: Note) =>
         set((state) => {
           const notes = state.notes?.length
@@ -70,7 +82,7 @@ export const dataStore: UseBoundStore<StoreApi<DataStore>> = create(
                   label: note.label,
                   created_at: note.created_at,
                   updated_at: note.updated_at,
-                  type: 'note'
+                  type: 'note',
                 },
               ],
             },

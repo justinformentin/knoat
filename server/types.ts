@@ -21,7 +21,7 @@ export type TreeItem = {
   id: string;
   created_at: string;
   updated_at?: string;
-  type?: 'note' | undefined;
+  type: 'note' | 'directory';
   children?: TreeItem[];
 };
 export type Tree = TreeItem[];

@@ -26,11 +26,11 @@ import {
 import '@mdxeditor/editor/style.css';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
-import { Note, Tree, TreeItem } from '@/server/types';
+import { Note, Tree } from '@/server/types';
 import { useDbAdapter } from '@/server/dbAdapter';
 import { debounce } from '@/lib/debounce';
 import { useDataStore } from '@/lib/use-data';
-import { useSelectedItemStore } from '@/lib/use-selected-item';
+import { SelectedItem, useSelectedItemStore } from '@/lib/use-selected-item';
 
 function findPathById(data: Tree, targetId: string, path = ''): string | null {
   for (const item of data) {
@@ -91,10 +91,12 @@ export default function App() {
     ],
   };
 
-  const { notes, directory } = useDataStore((state) => state);
+  const notes = useDataStore((state) => state.notes);
+  const directory = useDataStore((state) => state.directory);
+  const updateNotes = useDataStore((state) => state.updateNotes);
   const selectedItem = useSelectedItemStore((state) => state.selectedItem);
 
-  const getNote = (n: Note[], sel: TreeItem | null) =>
+  const getNote = (n: Note[], sel: SelectedItem | null) =>
     n.find((ni) => ni.id === sel?.id && sel?.type === 'note');
 
   const [note, setNote] = useState(getNote(notes, selectedItem));
@@ -103,30 +105,32 @@ export default function App() {
     if (selectedItem?.type === 'note') {
       setNote(getNote(notes, selectedItem));
       const fullPath = findPathById(directory?.tree, selectedItem?.id!);
-      //@ts-ignore Need to type the ref correct;y
-      editorRef?.current?.setMarkdown(note?.content || '');
       window.location.hash = '#' + fullPath;
     }
-  }, [notes, selectedItem, directory.tree]);
+  }, [notes, selectedItem]);
 
+  useEffect(() => {
+    // Need to react to note state update because setMarkdown doesn't work in the other useEffect.
+    //@ts-ignore Need to type the ref correctly
+    editorRef?.current?.setMarkdown(note?.content || '');
+  }, [note]);
 
   const dbAdapter = useDbAdapter();
 
   const saveFile = debounce(async (markdown: string) => {
     if (note?.id) {
-      await dbAdapter.update('notes', { ...note, content: markdown });
+      const newNote = { ...note, content: markdown };
+      updateNotes(newNote);
+      await dbAdapter.update('notes', newNote);
     }
-  }, 3000);
-  const handleOnChange = (markdown: string) => {
-    saveFile(markdown);
-  };
+  }, 2000);
 
   return (
     <MDXEditor
       readOnly={!note?.id}
       placeholder={!note?.id ? 'Open a note to start editing' : 'Enter text...'}
       markdown={note?.content || ''}
-      onChange={handleOnChange}
+      onChange={saveFile}
       className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
       contentEditableClassName="custom-ce fixed h-[calc(100%-8rem)] md:top-0 md:relative md:h-full overflow-auto w-full p-4 text-foreground"
       plugins={[

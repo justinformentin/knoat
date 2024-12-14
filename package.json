@@ -8,6 +8,9 @@
     "supabase:start": "supabase status || supabase start"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hello-pangea/dnd": "^17.0.0",
     "@mdxeditor/editor": "^3.19.2",
@@ -35,7 +38,6 @@
     "prettier": "^3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-nestable": "^3.0.2",
     "sonner": "^1.7.0",
     "uuid": "^11.0.3",
     "zustand": "^5.0.2"

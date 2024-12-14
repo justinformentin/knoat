@@ -9,16 +9,16 @@ import { useEffect } from 'react';
 import AppHeaderLinks from './app-header-links';
 
 export default function AppHeader({ data }: any) {
-  const { setDirectory, setNotes, setTodos, setUser } = useDataStore(
-    (store) => store
-  );
+  const initialize = useDataStore((store) => store.initialize);
 
   useEffect(() => {
     if (data && data.id) {
-      if (data.id) setUser({ id: data.id });
-      if (data.notes) setNotes(data.notes);
-      if (data.directories) setDirectory(data.directories);
-      if (data.todos) setTodos(data.todos.list);
+      initialize({
+        user: { id: data.id },
+        notes: data.notes,
+        directory: data.directories,
+        todos: data.todos?.list,
+      });
     }
   }, []);
 

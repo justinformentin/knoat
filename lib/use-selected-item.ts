@@ -1,11 +1,15 @@
-import { TreeItem } from '@/server/types';
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand/';
 import { persist } from 'zustand/middleware';
 
+export type SelectedItem = {
+  id: string;
+  label: string;
+  type?: 'note' | 'directory';
+};
 interface SelectedItemStore {
-  selectedItem: TreeItem | null;
-  setSelectedItem: (item: TreeItem) => void;
+  selectedItem: SelectedItem | null;
+  setSelectedItem: (item: SelectedItem) => void;
   clearSelectedItem: () => void;
 }
 
@@ -14,10 +18,10 @@ export const selectedItemStore: UseBoundStore<StoreApi<SelectedItemStore>> =
     persist(
       (set) => ({
         selectedItem: null,
-        setSelectedItem: (selectedItem: TreeItem) => set({ selectedItem }),
+        setSelectedItem: (selectedItem: SelectedItem) => set({ selectedItem }),
         clearSelectedItem: () => set({ selectedItem: null }),
       }),
-      { name: 'knoat-selected-item' }
+      { name: 'knoat-selected-item-2' }
     )
   );
 

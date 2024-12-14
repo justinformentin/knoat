@@ -10,7 +10,8 @@ import PopoverDelete from './popover-delete';
 import { useSelectedItemStore } from '@/lib/use-selected-item';
 
 export default function FileTree() {
-  const { notes, directory, updateDirectory } = useDataStore((state) => state);
+  const updateDirectory = useDataStore((state) => state.updateDirectory);
+  const directory = useDataStore((state) => state.directory);
   const clearSelectedItem = useSelectedItemStore(
     (state) => state.clearSelectedItem
   );
@@ -59,7 +60,7 @@ export default function FileTree() {
     <>
       <SidebarHeader>
         <div className="w-full">
-          <FuzzySearch notes={notes} />
+          <FuzzySearch />
         </div>
         <div className="flex justify-center w-full space-x-2">
           <FileTreeHeaderOptions />

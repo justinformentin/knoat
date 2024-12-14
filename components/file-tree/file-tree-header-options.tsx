@@ -8,15 +8,17 @@ type DirectoryDbType = {
   id: string;
   label: string;
   created_at: string;
+  type: 'note' | 'directory';
   children?: [];
 };
 export default function FileTreeHeaderOptions() {
   const dbAdapter = useDbAdapter();
 
-  const { user, directory, updateDirectory, addNote } = useDataStore(
-    (state) => state
-  );
-
+  const user = useDataStore((state) => state.user);
+  const directory = useDataStore((state) => state.directory);
+  const updateDirectory = useDataStore((state) => state.updateDirectory);
+  const addNote = useDataStore((state) => state.addNote);
+  
   const updateDbDirectory = (item: DirectoryDbType) =>
     dbAdapter.update('directories', {
       id: directory.id,
@@ -39,6 +41,7 @@ export default function FileTreeHeaderOptions() {
       label: fileName,
       id: note.id,
       created_at: note.created_at,
+      type: 'note',
     });
     addNote(note);
   };
@@ -48,6 +51,7 @@ export default function FileTreeHeaderOptions() {
       label: fileName,
       id: uuidv4(),
       created_at: new Date().toISOString(),
+      type: 'directory',
       children: [],
     });
     updateDirectory(dir.tree);

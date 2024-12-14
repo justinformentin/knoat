@@ -77,7 +77,9 @@ const getItemStyle = (
 // });
 
 export default function TodoView() {
-  const { user, todos, setTodos } = useDataStore((state) => state);
+  const user = useDataStore((state) => state.user);
+  const todos = useDataStore((state) => state.todos);
+  const setTodos = useDataStore((state) => state.setTodos);
 
   const [state, setState] = useState<Todos>(
     todos || [{ title: '', items: [] }]

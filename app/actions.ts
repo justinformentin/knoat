@@ -20,8 +20,6 @@ export const signInWithOAuth = async (
       },
     },
   });
-  console.log('oauth data', data);
-  console.log('oauth error', error);
 
   if (data.url) {
     redirect(data.url);

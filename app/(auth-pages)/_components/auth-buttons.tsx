@@ -6,13 +6,14 @@ import { providerButtons, Provider } from './provider-buttons';
 import { useGoogleOneTap } from './use-google-one-tap';
 
 export default function AuthButton() {
-  const initializeGoogleOneTap = useGoogleOneTap();
+  const suppressedCb = () => signInWithOAuth('google');
 
-  const onClick = (provider: Provider) => {
+  const initializeGoogleOneTap = useGoogleOneTap(suppressedCb);
+
+  const onClick = (provider: Provider) =>
     provider === 'google'
       ? initializeGoogleOneTap()
       : signInWithOAuth(provider);
-  };
 
   return (
     <>

@@ -26,7 +26,7 @@ export const supabaseAdapterFunc = (supabaseClient?: SupabaseClient) => {
       .insert(data)
       .select()
       .single();
-    console.log('inserted', inserted);
+    // console.log('inserted', inserted);
     // Add error handling later
     return inserted?.data;
   };

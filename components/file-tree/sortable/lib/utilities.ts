@@ -97,7 +97,6 @@ export function flattenTree(items: TreeItems): FlattenedItem[] {
 
 export function buildTree(flattenedItems: FlattenedItem[]): TreeItems {
   const root: TreeItem = { id: 'root', label: '', type: 'directory', children: [] };
-  console.log('BUILD TREE ROOT')
   const nodes: Record<string, TreeItem> = { [root.id]: root };
   const items = flattenedItems.map((item) => ({ ...item, children: [] }));
 
@@ -110,7 +109,6 @@ export function buildTree(flattenedItems: FlattenedItem[]): TreeItems {
     parent.children.push(item);
   }
 
-  console.log('build tree root', root);
   return root.children;
 }
 

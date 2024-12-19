@@ -60,40 +60,40 @@ export const useIdb = () => {
     const store = db?.transaction('notes').objectStore('notes');
     //@ts-ignore
     const index = store.index('user_note');
-    console.log('getOneNote index', index);
+    // console.log('getOneNote index', index);
     const note = index.get(IDBKeyRange.only([userId, fullPath]));
-    console.log('getOneNote note', note);
+    // console.log('getOneNote note', note);
     return note;
   };
   const getAllUserNotes = async (userId: string) => {
     //@ts-ignore
     const notes = await db?.getAllFromIndex('notes', 'user_id', userId);
-    console.log('getallUserNote', notes);
+    // console.log('getallUserNote', notes);
     return notes;
   };
 
   const getAllUserDirectories = async (userId: string) => {
     //@ts-ignore
     const dirs = await db?.getAllFromIndex('directories', 'user_id', userId);
-    console.log('getallUserDirs', dirs);
+    // console.log('getallUserDirs', dirs);
     return dirs;
   };
 
   const insertNote = async (data: KnoatDB['notes']['value']) => {
     const insertedNote = await db?.add('notes', data);
-    console.log('insertedNote', insertedNote);
+    // console.log('insertedNote', insertedNote);
     return insertedNote;
   };
 
   const update = async (tableName: Tables, data: KnoatDB[Tables]['value']) => {
     const updated = await db?.put(tableName, data);
-    console.log('updated', updated);
+    // console.log('updated', updated);
     return updated;
   };
 
   const insert = async (tableName: Tables, data: KnoatDB[Tables]['value']) => {
     const inserted = await db?.add(tableName, data);
-    console.log('inserted', inserted);
+    // console.log('inserted', inserted);
     return data;
   };
 
@@ -110,7 +110,7 @@ export const useIdb = () => {
         resource: Directory | Note | { id: string }
       ) => {
         const res = await db?.get(tableName, resource.id);
-        console.log('sync to db res', res);
+        // console.log('sync to db res', res);
         return res
           ? await db?.put(tableName, resource)
           : await db?.add(tableName, resource);

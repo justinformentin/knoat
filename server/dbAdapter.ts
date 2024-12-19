@@ -34,7 +34,7 @@ export const useDbAdapter = () => {
   };
 
   const handleUpdateSupabaseWithOfflineCache = async () => {
-    console.log('handle sync');
+    // console.log('handle sync');
 
     let cache;
     if (offlineCache.size) {
@@ -46,7 +46,7 @@ export const useDbAdapter = () => {
       }
     }
 
-    console.log('updateSupabaseWithCache cache', cache);
+    // console.log('updateSupabaseWithCache cache', cache);
     if (!cache?.size) return;
 
     const promises: Promise<any>[] = [];
@@ -61,7 +61,7 @@ export const useDbAdapter = () => {
     const p = await Promise.all(promises);
     setOfflineCache(new Map());
     localStorage.setItem('knoat-map', '{}');
-    console.log('p', p);
+    // console.log('p', p);
     return p;
   };
 
@@ -126,14 +126,14 @@ export const useDbAdapter = () => {
 
     if (navigator.onLine) {
       const idbReturn = await idbUpdate();
-      console.log('online idbReturn update', idbReturn);
+      // console.log('online idbReturn update', idbReturn);
       const updated = await supabaseAdapter.update(tableName, data);
-      console.log('supabae updated', updated);
+      // console.log('supabae updated', updated);
       return updated;
     } else {
       updateOfflineCache(tableName, 'update', data);
       const idbReturn = await idbUpdate();
-      console.log('offline idbReturn update', idbReturn);
+      // console.log('offline idbReturn update', idbReturn);
       return data;
     }
   };
@@ -152,16 +152,16 @@ export const useDbAdapter = () => {
     if (navigator.onLine) {
       // Fix types - right now everything is conditional and doesn't have definitive typing
       const inserted: any = await supabaseAdapter.insert(tableName, data);
-      console.log('online inserted', inserted);
+      // console.log('online inserted', inserted);
       const idbReturn = await idbInsert(inserted);
-      console.log('online idbReturn insert', idbReturn);
+      // console.log('online idbReturn insert', idbReturn);
       return inserted;
     } else {
       const appendedIdData = { ...data, id: uuidv4() };
       updateOfflineCache(tableName, 'update', appendedIdData);
 
       const idbReturn = await idbInsert(appendedIdData);
-      console.log('offline idbReturn insert', idbReturn);
+      // console.log('offline idbReturn insert', idbReturn);
       return idbReturn;
     }
   };

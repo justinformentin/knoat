@@ -22,12 +22,12 @@ export const providerButtons: ProviderButtonProps = [
   //   buttonBg: 'bg-[#3c5a9a]',
   //   icon: facebookIcon,
   // },
-  {
-    authKey: 'twitter',
-    label: 'Twitter',
-    buttonBg: 'bg-[#000]',
-    icon: twitterIcon,
-  },
+  // {
+  //   authKey: 'twitter',
+  //   label: 'Twitter',
+  //   buttonBg: 'bg-[#000]',
+  //   icon: twitterIcon,
+  // },
   // {
   //   authKey: 'linkedin_oidc',
   //   label: 'LinkedIn',

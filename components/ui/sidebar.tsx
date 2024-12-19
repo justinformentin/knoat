@@ -259,7 +259,6 @@ const SidebarContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'>
 >(({ className, ...props }, ref) => {
-  console.log('SIDEBAR CONTENT RENDER');
   return (
     <div
       ref={ref}

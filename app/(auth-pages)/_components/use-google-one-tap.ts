@@ -3,7 +3,7 @@ import { CredentialResponse } from 'google-one-tap';
 import { useRouter } from 'next/navigation';
 import { browserClient } from '@/utils/supabase/client';
 
-export const useGoogleOneTap = () => {
+export const useGoogleOneTap = (suppressedCb:any) => {
   const supabase = browserClient();
   const router = useRouter();
 
@@ -40,8 +40,9 @@ export const useGoogleOneTap = () => {
     //@ts-ignore
     google.accounts.id.initialize({
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      cancel_on_tap_outside: true,
+      promptParentId: 'oneTap',
       callback: async (response: CredentialResponse) => {
-        console.log('GOOGLE RESPONSE', response);
         try {
           // send id token returned in response.credential to supabase
           const { data, error } = await supabase.auth.signInWithIdToken({
@@ -51,9 +52,6 @@ export const useGoogleOneTap = () => {
           });
 
           if (error) throw error;
-          console.log('Session data: ', data);
-          console.log('Successfully logged in with Google One Tap');
-
           // redirect to protected page
           router.push('/app/notes');
         } catch (error) {
@@ -65,6 +63,13 @@ export const useGoogleOneTap = () => {
       use_fedcm_for_prompt: true,
     });
     //@ts-ignore
-    google.accounts.id.prompt(); // Display the One Tap UI
+    google.accounts.id.prompt(notification => {
+      if(typeof notification === 'object'){
+        const keys = Object.keys(notification);
+        if(keys && keys.length > 0){
+          keys.forEach(k => notification[k] && notification[k].includes('suppressed') && suppressedCb())
+        }
+      }
+    }); // Display the One Tap UI
   };
 };

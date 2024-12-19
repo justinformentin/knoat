@@ -24,6 +24,5 @@ export const loadAppData = async () => {
   const user = await loadUser(client);
   if(!user) return null;
   const res = await loadUserData(client, user.id);
-  console.log('RES', res);
   return res?.data || null
 }

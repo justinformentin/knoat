@@ -29,7 +29,7 @@ export function SortableTreeItem({ id, depth, type, ...props }: Props) {
     id,
     animateLayoutChanges,
     data: {
-      type: type || 'directory',
+      type,
     },
   });
   const style: CSSProperties = {
@@ -45,6 +45,7 @@ export function SortableTreeItem({ id, depth, type, ...props }: Props) {
       depth={depth}
       ghost={isDragging}
       id={id}
+      type={type}
       disableSelection={iOS()}
       disableInteraction={isSorting}
       handleProps={{

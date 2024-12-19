@@ -76,7 +76,7 @@ export default async function RootLayout({
         >
           <main className="min-h-screen h-full flex flex-col items-center">
             <AppHeader data={data} />
-            <div className="w-full h-full overflow-auto">{children}</div>
+            {children}
           </main>
         </ThemeProvider>
       </body>

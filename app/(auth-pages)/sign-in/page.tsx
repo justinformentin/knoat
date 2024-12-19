@@ -19,9 +19,6 @@ export default async function SignUp(props: {
 
         <div className="py-2 text-center text-sm">
           <p className="mt-2 text-gray-500 dark:text-gray-400">
-            To combat spam, we require signing in through a third party.
-          </p>
-          <p className="mt-2 text-gray-500 dark:text-gray-400">
             We do not collect or share any personal information with anyone.
           </p>
           <p className="mt-2 text-gray-500 dark:text-gray-400">

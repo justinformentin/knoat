@@ -20,7 +20,7 @@ export default function AuthButton() {
       <Script src="https://accounts.google.com/gsi/client" />
 
       <div className="my-2 border-b pt-2 pb-8">
-        <div className="grid grid-cols-2 items-center justify-center gap-4">
+        <div className="grid items-center justify-center gap-4">
           {providerButtons.map((provider) => {
             return (
               <button

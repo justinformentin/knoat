@@ -1,16 +1,21 @@
-import AppHeader from '@/components/app-header/app-header';
+import { serverClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 import { Toaster } from 'sonner';
-import { loadAppData } from '@/lib/server/load-app-data';
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const data = await loadAppData();
+  const client = await serverClient();
+
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+  if (!user) return redirect('/sign-in');
+  
   return (
     <>
-      <AppHeader data={data} />
       {children}
       <Toaster />
     </>

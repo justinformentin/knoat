@@ -24,7 +24,7 @@ export default function AppHeader({ data }: any) {
 
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed relative">
-      <SidebarTrigger className="self-center ml-2" />
+      {data?.id ? <SidebarTrigger className="self-center ml-2" /> : null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
           <Link href="/" className="flex space-x-1">

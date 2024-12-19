@@ -31,6 +31,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "geist": "^1.2.1",
+    "google-one-tap": "^1.0.6",
     "idb": "^8.0.0",
     "lucide-react": "^0.456.0",
     "next": "latest",

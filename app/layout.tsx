@@ -2,6 +2,8 @@ import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import Head from 'next/head';
+import AppHeader from '@/components/app-header/app-header';
+import { loadAppData } from '@/lib/server/load-app-data';
 
 export const metadata = {
   metadataBase: new URL('https://knoat.com'),
@@ -9,11 +11,13 @@ export const metadata = {
   description: 'Note App',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const data = await loadAppData();
+
   return (
     <html
       lang="en"
@@ -71,7 +75,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="min-h-screen h-full flex flex-col items-center">
-            {children}
+            <AppHeader data={data} />
+            <div className="w-full h-full overflow-auto">{children}</div>
           </main>
         </ThemeProvider>
       </body>

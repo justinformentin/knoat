@@ -2,7 +2,6 @@ import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import Head from 'next/head';
-import AppHeader from '@/components/app-header/app-header';
 import { loadAppData } from '@/lib/server/load-app-data';
 
 export const metadata = {

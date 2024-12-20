@@ -75,7 +75,6 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <main className="min-h-screen h-full flex flex-col items-center">
-            <AppHeader data={data} />
             {children}
           </main>
         </ThemeProvider>

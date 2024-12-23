@@ -11,10 +11,15 @@ import {
 } from '@/components/ui/command';
 import Link from 'next/link';
 import { useDataStore } from '@/lib/use-data';
+import { findPathById } from '@/lib/find-note-path-by-id';
+import { useSelectedItemStore } from '@/lib/use-selected-item';
 
 export function FuzzySearch() {
   const notes = useDataStore((state) => state.notes);
-
+  const directory = useDataStore((state) => state.directory);
+  const setSelectedItem = useSelectedItemStore(
+    (state) => state.setSelectedItem
+  );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -67,8 +72,11 @@ export function FuzzySearch() {
             {notes.map((note) => (
               <CommandItem key={note.id}>
                 <Link
-                  href={'/app/notes/' + note.full_path}
-                  onClick={() => setOpen(false)}
+                  href={'/app/notes/#' + findPathById(directory.tree, note.id)}
+                  onClick={() => {
+                    setSelectedItem({ ...note, type: 'note' });
+                    setOpen(false);
+                  }}
                 >
                   <span>{note.label}</span>
                   {/* Adding the content as hidden so Command will filter results based on content instead of just title */}

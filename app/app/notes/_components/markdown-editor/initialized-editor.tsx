@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, type ForwardedRef } from 'react';
+import { useEffect, type ForwardedRef } from 'react';
 import {
   headingsPlugin,
   listsPlugin,
@@ -26,25 +26,10 @@ import {
 import '@mdxeditor/editor/style.css';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
-import { Note, Tree } from '@/server/types';
+import { Note } from '@/server/types';
 import { debounce } from '@/lib/debounce';
-import { useDataStore } from '@/lib/use-data';
-import { SelectedItem, useSelectedItemStore } from '@/lib/use-selected-item';
 import { useUpdateNote } from '@/lib/db-adapter';
-
-function findPathById(data: Tree, targetId: string, path = ''): string | null {
-  for (const item of data) {
-    const currentPath = path ? `${path}/${item.label}` : item.label;
-
-    if (item.id === targetId) return currentPath;
-
-    if (item.children) {
-      const result = findPathById(item.children, targetId, currentPath);
-      if (result) return result;
-    }
-  }
-  return null; // Return null if the targetId is not found
-}
+import { useGetNote } from './use-get-note';
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
@@ -91,22 +76,7 @@ export default function App() {
     ],
   };
 
-  const notes = useDataStore((state) => state.notes);
-  const directory = useDataStore((state) => state.directory);
-  const selectedItem = useSelectedItemStore((state) => state.selectedItem);
-
-  const getNote = (n: Note[], sel: SelectedItem | null) =>
-    n.find((ni) => ni.id === sel?.id && sel?.type === 'note');
-
-  const [note, setNote] = useState(getNote(notes, selectedItem));
-
-  useEffect(() => {
-    if (selectedItem?.type === 'note') {
-      setNote(getNote(notes, selectedItem));
-      const fullPath = findPathById(directory?.tree, selectedItem?.id!);
-      window.location.hash = '#' + fullPath;
-    }
-  }, [notes, selectedItem]);
+  const note = useGetNote();
 
   useEffect(() => {
     // Need to react to note state update because setMarkdown doesn't work in the other useEffect.
@@ -122,6 +92,7 @@ export default function App() {
     }
   }, 2000);
 
+  console.log('EDITOR RENDER');
   return (
     <MDXEditor
       readOnly={!note?.id}

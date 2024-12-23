@@ -1,35 +1,14 @@
 'use client';
-import { useDbAdapter } from '@/server/dbAdapter';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-// import 'react-nestable/dist/styles/index.css';
 import { SortableTree } from './sortable/components/SortableTree';
-// import { useSelectedItemStore } from '@/lib/use-selected-item';
 import { Tree } from '@/server/types';
+import { useUpdateDirectory } from '@/lib/db-adapter';
 
-export default function FileTreeView({
-  updateDirectory,
-  directory,
-}: {
-  updateDirectory: any;
-  directory: any;
-}) {
-  // const { selectedItem, setSelectedItem } = useSelectedItemStore(
-  //   (state) => state
-  // );
-
-  // const isMobile = useIsMobile();
-  // const setOpenMobile = useSidebarStore((state) => state.setOpenMobile);
-  // const [tree, setTree] = useState(treeView);
-
-  const dbAdapter = useDbAdapter();
-
-  // if (!directory.tree?.length) return null;
-
-  const onTreeUpdate = (tree: Tree) => {
-    updateDirectory(tree);
-    dbAdapter.update('directories', { id: directory.id, tree });
-  };
-
+export default function FileTreeView({ directory }: { directory: any }) {
+  const updateDirectory = useUpdateDirectory();
+  // Just updates the structures of the tree
+  const onTreeUpdate = (tree: Tree) => updateDirectory({  tree });
+  
   if (!directory.tree?.length) return null;
 
   return (

@@ -33,7 +33,7 @@ export const useGoogleOneTap = (suppressedCb:any) => {
       console.error('Error getting session', error);
     }
     if (data.session) {
-      router.push('/');
+      router.push('/app/notes');
       return;
     }
 

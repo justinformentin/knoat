@@ -17,7 +17,7 @@ export const AddTodo = ({
       type="button"
       onClick={onClick && onClick}
       className={
-        'flex justify-around rounded-md border hover:bg-sky-50 ' +
+        'flex justify-around rounded-md border hover:bg-muted ' +
         (className || '')
       }
     >

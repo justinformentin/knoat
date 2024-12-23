@@ -65,18 +65,12 @@ export default function FileTree() {
         <div className="flex justify-center w-full space-x-2">
           <FileTreeHeaderOptions />
           <FilterDropdown sortList={updateSorting} />
-          <PopoverDelete
-            directory={directory}
-            updateDirectory={updateDirectory}
-          />
+          <PopoverDelete directory={directory} />
         </div>
       </SidebarHeader>
       <SidebarContent onClick={handleOutsideClick}>
         <div className="relative flex flex-col items-center justify-center overflow-hidden bg-background">
-          <FileTreeView
-            directory={directory}
-            updateDirectory={updateDirectory}
-          />
+          <FileTreeView directory={directory} />
         </div>
       </SidebarContent>
     </>

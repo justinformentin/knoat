@@ -32,7 +32,7 @@ export const ListItem = ({
   return (
     <div
       className={
-        'flex justify-around rounded-md border focus-within:bg-sky-50 hover:bg-sky-50 ' +
+        'flex justify-around rounded-md border focus-within:bg-muted hover:bg-muted ' +
         className
       }
     >

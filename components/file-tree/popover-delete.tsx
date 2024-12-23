@@ -10,13 +10,12 @@ import { TooltipWrap } from '../tooltip-wrap';
 import { useSelectedItemStore } from '@/lib/use-selected-item';
 import { FileX, FolderX } from 'lucide-react';
 import { Tree } from '@/server/types';
-// import { useDbAdapter } from '@/server/dbAdapter';
-import { browserClient } from '@/utils/supabase/client';
+import { useDeleteNote, useUpdateDirectory } from '@/lib/db-adapter';
 
 function removeByIdAndCollectIds(
   data: Tree,
   targetId: string
-): { idsToDelete: string[]; data: Tree | null } {
+): { idsToDelete: string[]; data: Tree } {
   let idsToDelete: string[] = [];
 
   const collectIds = (children: Tree): string[] =>
@@ -46,21 +45,14 @@ function removeByIdAndCollectIds(
   return { idsToDelete, data: updatedData };
 }
 
-export default function PopoverDelete({
-  directory,
-  updateDirectory,
-}: {
-  updateDirectory: any;
-  directory: any;
-}) {
-  // const dbAdapter = useDbAdapter();
-
+export default function PopoverDelete({ directory }: { directory: any }) {
   const [open, setOpen] = useState(false);
   const { selectedItem, clearSelectedItem } = useSelectedItemStore(
     (state) => state
   );
 
-  const client = browserClient();
+  const updateDirectory = useUpdateDirectory();
+  const deleteNotes = useDeleteNote();
 
   const handleDelete = async () => {
     setOpen(false);
@@ -70,13 +62,11 @@ export default function PopoverDelete({
       selectedItem!.id
     );
 
-    updateDirectory(data);
-    await client
-      .from('directories')
-      .update({ tree: data })
-      .eq('id', directory.id);
+    updateDirectory({tree: data });
+
     const ids = idsToDelete?.length ? idsToDelete : [selectedItem!.id];
-    await client.from('notes').delete().in('id', ids);
+    deleteNotes(ids);
+
     clearSelectedItem();
   };
 

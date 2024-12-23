@@ -1,7 +1,7 @@
 import AppHeader from '@/components/app-header/app-header';
 import Footer from '@/components/footer';
 import HomeHero from '@/components/home-hero';
-import { loadUserData } from '@/lib/server/load-app-data';
+import { loadUserDataSSR } from '@/lib/server/load-app-data';
 import { serverClient } from '@/utils/supabase/server';
 
 export default async function HomePage() {
@@ -12,12 +12,12 @@ export default async function HomePage() {
 
   let data;
   if (user) {
-    data = await loadUserData(client, user.id);
+    data = await loadUserDataSSR(user.id);
   }
   return (
     <>
-      <AppHeader data={data} />
-      <div className="w-full h-full overflow-auto">
+      <AppHeader ssrData={data} />
+      <div className="w-full h-full">
         <HomeHero />
       </div>
       <Footer />

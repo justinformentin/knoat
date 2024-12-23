@@ -27,10 +27,10 @@ import '@mdxeditor/editor/style.css';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
 import { Note, Tree } from '@/server/types';
-import { useDbAdapter } from '@/server/dbAdapter';
 import { debounce } from '@/lib/debounce';
 import { useDataStore } from '@/lib/use-data';
 import { SelectedItem, useSelectedItemStore } from '@/lib/use-selected-item';
+import { useUpdateNote } from '@/lib/db-adapter';
 
 function findPathById(data: Tree, targetId: string, path = ''): string | null {
   for (const item of data) {
@@ -93,7 +93,6 @@ export default function App() {
 
   const notes = useDataStore((state) => state.notes);
   const directory = useDataStore((state) => state.directory);
-  const updateNotes = useDataStore((state) => state.updateNotes);
   const selectedItem = useSelectedItemStore((state) => state.selectedItem);
 
   const getNote = (n: Note[], sel: SelectedItem | null) =>
@@ -115,13 +114,11 @@ export default function App() {
     editorRef?.current?.setMarkdown(note?.content || '');
   }, [note]);
 
-  const dbAdapter = useDbAdapter();
+  const updateNote = useUpdateNote();
 
   const saveFile = debounce(async (markdown: string) => {
     if (note?.id) {
-      const newNote = { ...note, content: markdown };
-      updateNotes(newNote);
-      await dbAdapter.update('notes', newNote);
+      updateNote({ ...note, content: markdown });
     }
   }, 2000);
 
@@ -132,7 +129,7 @@ export default function App() {
       markdown={note?.content || ''}
       onChange={saveFile}
       className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
-      contentEditableClassName="custom-ce fixed h-[calc(100%-8rem)] md:top-0 md:relative md:h-full overflow-auto w-full p-4 text-foreground"
+      contentEditableClassName="custom-ce fixed h-[calc(100%-6rem)] sm:h-[calc(100%-5rem)] md:h-full relative md:h-full md:top-12 overflow-auto w-full p-4 text-foreground"
       plugins={[
         toolbarPlugin({
           toolbarClassName: 'custom-toolbar fixed top-12 md:top-0 md:relative',

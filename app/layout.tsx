@@ -2,7 +2,6 @@ import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import Head from 'next/head';
-import { loadAppData } from '@/lib/server/load-app-data';
 
 export const metadata = {
   metadataBase: new URL('https://knoat.com'),
@@ -15,7 +14,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await loadAppData();
 
   return (
     <html

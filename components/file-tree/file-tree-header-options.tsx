@@ -1,66 +1,43 @@
 'use client';
+import { useAddNote, useUpdateDirectory } from '@/lib/db-adapter';
 import PopoverInput from './popover-input';
-import { useDbAdapter } from '@/server/dbAdapter';
 import { useDataStore } from '@/lib/use-data';
 import { v4 as uuidv4 } from 'uuid';
+import { TreeItem } from '@/server/types';
 
-type DirectoryDbType = {
-  id: string;
-  label: string;
-  created_at: string;
-  type: 'note' | 'directory';
-  children?: [];
-};
 export default function FileTreeHeaderOptions() {
-  const dbAdapter = useDbAdapter();
+  const updateDirectory = useUpdateDirectory();
+  const addNote = useAddNote();
 
   const user = useDataStore((state) => state.user);
-  const directory = useDataStore((state) => state.directory);
-  const updateDirectory = useDataStore((state) => state.updateDirectory);
-  const addNote = useDataStore((state) => state.addNote);
-  
-  const updateDbDirectory = (item: DirectoryDbType) =>
-    dbAdapter.update('directories', {
-      id: directory.id,
-      tree: [...directory.tree, item],
-    });
 
-  const createNote = (fileName: string) =>
-    // We only need the user_id, label, and full_path for postgres, as everything else is auto generated
-    // but for indexdb we need to pass everything else
-    dbAdapter.insert('notes', {
+  const addNewNote = async (fileName: string) => {
+    const note = {
       user_id: user.id,
       label: fileName,
-      full_path: fileName,
       content: '',
-    });
-
-  const addFile = async (fileName: string) => {
-    const note = await createNote(fileName);
-    await updateDbDirectory({
-      label: fileName,
-      id: note.id,
-      created_at: note.created_at,
-      type: 'note',
-    });
+      id: uuidv4(),
+      created_at: new Date().toISOString(),
+    };
     addNote(note);
+    updateDirectory({treeItem: { ...note, type: 'note' }});
   };
 
-  const updateTree = async (fileName: string) => {
-    const dir = await updateDbDirectory({
+  const addNewTreeItem = async (fileName: string) => {
+    const newDirItem: TreeItem = {
       label: fileName,
       id: uuidv4(),
       created_at: new Date().toISOString(),
       type: 'directory',
       children: [],
-    });
-    updateDirectory(dir.tree);
+    };
+    updateDirectory({treeItem: newDirItem});
   };
 
   return (
     <>
-      <PopoverInput text="Note" confirmCallback={addFile} />
-      <PopoverInput text="Directory" confirmCallback={updateTree} />
+      <PopoverInput text="Note" confirmCallback={addNewNote} />
+      <PopoverInput text="Directory" confirmCallback={addNewTreeItem} />
     </>
   );
 }

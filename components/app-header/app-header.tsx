@@ -4,41 +4,42 @@ import HeaderAuth from '@/components/app-header/header-auth';
 import { ThemeSwitcher } from '@/components/app-header/theme-switcher';
 import { Logo } from './logo';
 import { SidebarTrigger } from '../ui/sidebar';
-import { useDataStore } from '@/lib/use-data';
 import { useEffect, useState } from 'react';
 import AppHeaderLinks from './app-header-links';
-import { browserClient } from '@/utils/supabase/client';
+// import { browserClient } from '@/utils/supabase/client';
+import { useDbAdapter } from '@/lib/db-adapter';
 
-export default function AppHeader({ data }: any) {
-  const client = browserClient();
+export default function AppHeader({ ssrData }: any) {
+  // console.log('SSR DATA', ssrData);
 
-  const initialize = useDataStore((store) => store.initialize);
+  // const client = browserClient();
+  const dbAdapter = useDbAdapter();
 
-  const [user, setUser] = useState(data?.id);
+  const [userId, setUserId] = useState(ssrData?.id);
 
   const init = async () => {
-    if (data && data.id) {
-      initialize({
-        user: { id: data.id },
-        notes: data.notes,
-        directory: data.directories,
-        todos: data.todos?.list,
-      });
+    if (ssrData && ssrData.id) {
+      localStorage.setItem('knoat-user-id', ssrData.id);
+      dbAdapter.syncFromDb(ssrData)
     } else {
-      const {
-        data: { user },
-        error,
-      } = await client.auth.getUser();
-      if (user) setUser(user.id);
+      // const { data: { user },  error} = await client.auth.getUser();
+      // if (user) {
+      //   localStorage.setItem('knoat-user-id', ssrData.id);
+      //   setUserId(user.id);
+      // } else {
+      //   dbAdapter.syncFromIdb()
+      // }
+      
     }
   };
+
   useEffect(() => {
     init();
   }, []);
 
   return (
-    <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed relative">
-      {user ? <SidebarTrigger className="self-center ml-2" /> : null}
+    <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed z-50">
+      {ssrData?.id || userId ? <SidebarTrigger className="self-center ml-2" /> : null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
           <Link href="/" className="flex space-x-1">
@@ -46,10 +47,10 @@ export default function AppHeader({ data }: any) {
             <span className="self-center font-semibold">Knoat</span>
           </Link>
         </div>
-        {user && user ? <AppHeaderLinks /> : null}
+        {ssrData?.id || userId ? <AppHeaderLinks /> : null}
         <div className="flex justify-between">
           <ThemeSwitcher />
-          <HeaderAuth userId={user || null} />
+          <HeaderAuth userId={ssrData?.id || userId || null} />
         </div>
       </div>
     </nav>

@@ -1,9 +1,9 @@
-import TodoView from '@/components/todos/todo-view';
+import TodoWrap from './todo-wrap';
 
 export default async function Todo() {
   return (
-    <div className="relative w-full h-[calc(100%-56px)] bg-gray-50">
-      <TodoView />
+    <div className="relative w-full h-[calc(100%-48px)] top-12 bg-background">
+      <TodoWrap />
     </div>
   );
 }

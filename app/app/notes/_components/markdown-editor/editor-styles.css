@@ -5,7 +5,8 @@
     height: 100%
 }
 .mdxeditor-root-contenteditable {
-    height: calc(100% - 41px);
+    height: calc(100% - 46px);
+    /* top: 48px; */
 }
 .mdxeditor-root-contenteditable > div {
     height: 100%;
@@ -31,8 +32,8 @@
 .mdxeditor .custom-toolbar {
     position: sticky;
     top: 3rem;
-    background-color: hsl(var(--muted)) !important;
-    background: hsl(var(--muted)) !important;
+    background-color: hsl(var(--editor-header)) !important;
+    background: hsl(var(--editor-header)) !important;
  }
 .mdxeditor .custom-toolbar svg {
    color: hsl(var(--foreground)) !important;

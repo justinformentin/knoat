@@ -6,7 +6,10 @@ export default function AuthButton({ userId }: { userId: string }) {
   return (
     <div className="flex items-center gap-4">
       {userId ? (
-        <form action={signOutAction}>
+        <form action={()=>{
+          localStorage.clearItem('knoat-user-id')
+          signOutAction();
+        }}>
           <Button type="submit" variant={'outline'} size="sm" className="h-8">
             Sign out
           </Button>

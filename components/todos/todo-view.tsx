@@ -15,10 +15,10 @@ import { ListItem } from './list-item';
 import { CompletedAccordion } from './completed-accordion';
 import { AddTodo } from './add-todo';
 import { Input } from '../ui/input';
-import { browserClient } from '@/utils/supabase/client';
 import { debounce } from '@/lib/debounce';
 import { X } from 'lucide-react';
 import { useDataStore } from '@/lib/use-data';
+import { useUpdateTodos } from '@/lib/db-adapter';
 
 type DroppableType = { index: number; droppableId: string };
 
@@ -76,22 +76,16 @@ const getItemStyle = (
 //   background: isDraggingOver ? "lightblue" : "lightgrey",
 // });
 
-export default function TodoView() {
-  const user = useDataStore((state) => state.user);
-  const todos = useDataStore((state) => state.todos);
-  const setTodos = useDataStore((state) => state.setTodos);
+export default function TodoView({ initialTodos }: { initialTodos: Todos }) {
+  const updateTodos = useUpdateTodos();
 
-  const [state, setState] = useState<Todos>(
-    todos || [{ title: '', items: [] }]
-  );
+  const [state, setState] = useState<TodosList[]>(initialTodos.list);
 
   const [canDragElement, setCanDragElement] = useState('');
   const [status, setStatus] = useState('');
 
-  const client = browserClient();
   const saveData = debounce(async () => {
-    await client.from('todos').update({ list: state }).eq('user_id', user.id);
-    setTodos(state);
+    updateTodos({ id: initialTodos.id, list: state });
     setStatus('saved');
     setTimeout(() => setStatus(''), 2000);
   }, 3000);
@@ -128,7 +122,7 @@ export default function TodoView() {
     el.focus();
   };
 
-  const updateState = (callback: (copy: Todos) => any) => {
+  const updateState = (callback: (copy: TodosList[]) => any) => {
     const copy = [...state];
     callback(copy);
     setState(copy);
@@ -178,14 +172,14 @@ export default function TodoView() {
       <div className="flex space-x-2 mt-2 ml-4">
         <AddTodo
           text="Add new group"
-          className="bg-white"
+          className="bg-card"
           onClick={() => setState([...state, { title: '', items: [] }])}
         >
           <CheckPlus className="self-center ml-2" />
         </AddTodo>
       </div>
       <div
-        className="w-full h-full grid overflow-x-auto gap-4 p-4"
+        className="w-full h-[calc(100%-42px)] grid overflow-x-auto gap-4 p-4"
         style={{
           gridTemplateColumns: `repeat(${state.length}, minmax(300px, 1fr))`,
         }}
@@ -198,7 +192,7 @@ export default function TodoView() {
                   <div
                     ref={provided.innerRef}
                     // style={getListStyle(snapshot.isDraggingOver)}
-                    className={`relative border max-h-[calc(100%-42px)] h-fit rounded-lg min-w-[300px] px-2 pt-2 pb-12 bg-white shadow-md`}
+                    className={`relative border max-h-full h-fit rounded-lg min-w-[300px] px-2 pt-2 pb-12 bg-card shadow-md`}
                     {...provided.droppableProps}
                   >
                     <X
@@ -206,7 +200,7 @@ export default function TodoView() {
                       onClick={() => deleteColumn(ind)}
                     />
                     <Input
-                      className="border-0 pl-2 text-base font-semibold"
+                      className="border-0 pl-2 text-base font-semibold bg-card hover:bg-muted"
                       value={column.title}
                       placeholder="Enter list name..."
                       onChange={(e) => changeColumnTitle(e, ind)}
@@ -261,18 +255,16 @@ export default function TodoView() {
                         ) : null
                       )}
 
-                      <CompletedAccordion
-                        completed={column.items.filter(
-                          (item) => item.completed === true
-                        )}
-                        listIdx={ind}
-                        deleteItem={deleteItem}
-                        handleCheck={handleCheck}
-                      />
-
                       <ScrollBar forceMount />
                     </ScrollArea>
-
+                    <CompletedAccordion
+                      completed={column.items.filter(
+                        (item) => item.completed === true
+                      )}
+                      listIdx={ind}
+                      deleteItem={deleteItem}
+                      handleCheck={handleCheck}
+                    />
                     {provided.placeholder}
                   </div>
                 )}

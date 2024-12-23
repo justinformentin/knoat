@@ -1,5 +1,5 @@
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Dot } from 'lucide-react';
 import { useSelectedItemStore } from '@/lib/use-selected-item';
 import { UniqueIdentifier } from '@dnd-kit/core';
 
@@ -66,21 +66,26 @@ export const TreeItem = forwardRef<HTMLDivElement, Props>(
         <div
           className={
             'relative flex items-center py-[2px] pr-1 text-lg box-border rounded-md md:text-sm ' +
-            (selectedItem?.id === id ? 'bg-muted ' : '') +
+            (selectedItem?.id === id && !ghost ? 'bg-muted ' : '') +
             (clone ? 'pr-6  shadow-xl ' : '') +
             (ghost ? 'bg-[#87ceeb] border border-[#4682b4] border-dashed ' : '')
           }
           ref={ref}
           style={style}
         >
-          {onCollapse && (
-            <ChevronDown
-              onClick={onCollapse}
-              className={`size-4 transition-transform ${collapsed ? '-rotate-90' : ''}`}
-            />
-          )}
+          {type === 'directory' ? (
+            onCollapse ? (
+              <ChevronDown
+                onClick={onCollapse}
+                className={`size-4 transition-transform ${collapsed ? '-rotate-90' : ''}`}
+              />
+            ) : (
+              <Dot className="size-4 " />
+            )
+          ) : null}
+
           <span
-            className={`grow pl-2 truncate ${disableSelection ? 'select-none' : ''}`}
+            className={`grow pl-1 truncate ${disableSelection ? 'select-none' : ''}`}
           >
             {value}
           </span>

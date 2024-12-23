@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 export type Todo = {id: string; content: string, completed: boolean, index?: number}
 export type TodosList = {title: string; items: Todo[]};
-export type Todos = TodosList[];
+export type Todos = {id: string; list: TodosList[]};
 
 export type Database = {
   graphql_public: {
@@ -113,21 +113,21 @@ export type Database = {
           updated_at: string;
           id: string;
           user_id: string;
-          list: Todos
+          list: TodosList[]
         };
         Insert: {
           created_at?: string;
           updated_at?: string;
           id?: string;
           user_id: string;
-          list: Todos
+          list: TodosList[]
         };
         Update: {
           created_at?: string;
           updated_at?: string;
           id?: string;
           user_id?: string;
-          list: Todos
+          list: TodosList[]
         };
         Relationships: [
           {

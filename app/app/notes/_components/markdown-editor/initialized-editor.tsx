@@ -92,7 +92,6 @@ export default function App() {
     }
   }, 2000);
 
-  console.log('EDITOR RENDER');
   return (
     <MDXEditor
       readOnly={!note?.id}

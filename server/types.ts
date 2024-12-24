@@ -1,4 +1,4 @@
-export type Tables = 'users' | 'directories' | 'notes' | 'todos';
+export type Tables = 'current_user' | 'directories' | 'notes' | 'todos';
 
 export interface NoteInsert {
   user_id: string;

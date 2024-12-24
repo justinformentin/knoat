@@ -6,30 +6,24 @@ import { Logo } from './logo';
 import { SidebarTrigger } from '../ui/sidebar';
 import { useEffect, useState } from 'react';
 import AppHeaderLinks from './app-header-links';
-// import { browserClient } from '@/utils/supabase/client';
 import { useDbAdapter } from '@/lib/db-adapter';
 
 export default function AppHeader({ ssrData }: any) {
-  // console.log('SSR DATA', ssrData);
-
-  // const client = browserClient();
   const dbAdapter = useDbAdapter();
 
   const [userId, setUserId] = useState(ssrData?.id);
 
   const init = async () => {
+    // Initialize store data with indexeddb data first
+    dbAdapter.syncFromIdb(ssrData?.id).then((userId) => {
+      // If there's no ssrData.id (the user id) try to get it from indexeddb
+      if (!ssrData?.id) setUserId(userId);
+    });
+
     if (ssrData && ssrData.id) {
-      localStorage.setItem('knoat-user-id', ssrData.id);
-      dbAdapter.syncFromDb(ssrData)
-    } else {
-      // const { data: { user },  error} = await client.auth.getUser();
-      // if (user) {
-      //   localStorage.setItem('knoat-user-id', ssrData.id);
-      //   setUserId(user.id);
-      // } else {
-      //   dbAdapter.syncFromIdb()
-      // }
-      
+      // If we're online and we get data from the server,
+      // sync the store and idb with fresh db data
+      dbAdapter.syncFromDb(ssrData);
     }
   };
 
@@ -39,7 +33,9 @@ export default function AppHeader({ ssrData }: any) {
 
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 fixed z-50">
-      {ssrData?.id || userId ? <SidebarTrigger className="self-center ml-2" /> : null}
+      {ssrData?.id || userId ? (
+        <SidebarTrigger className="self-center ml-2" />
+      ) : null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
           <Link href="/" className="flex space-x-1">

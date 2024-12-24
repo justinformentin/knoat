@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 export type Todo = {id: string; content: string, completed: boolean, index?: number}
 export type TodosList = {title: string; items: Todo[]};
-export type Todos = {id: string; list: TodosList[]};
+export type Todos = {id: string; user_id: string, list: TodosList[]};
 
 export type Database = {
   graphql_public: {

@@ -3,7 +3,7 @@ import { openDB, DBSchema, IDBPDatabase } from 'idb';
 import { Todos } from './database.types';
 
 interface KnoatDB extends DBSchema {
-  users: {
+  current_user: {
     key: string;
     value: {
       id: string;
@@ -28,8 +28,8 @@ let db: IDBPDatabase<KnoatDB>;
 async function initDb() {
   return await openDB<KnoatDB>('knoat-db', 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains('users')) {
-        db.createObjectStore('users', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('current_user')) {
+        db.createObjectStore('current_user', { keyPath: 'id' });
       }
 
       if (!db.objectStoreNames.contains('directories')) {
@@ -61,39 +61,39 @@ async function openIndexedDb() {
   }
 }
 
-export const getAllIndexDbData = async () => {
+const getCurrentUser = async (userId?: string) => {
+  if (userId) {
+    const user = await db?.get('current_user', userId);
+    if (user) return user;
+    await db?.clear('current_user');
+    await db?.add('current_user', { id: userId });
+    return { id: userId };
+  } else {
+    const users = await db?.getAll('current_user');
+    return users[0];
+  }
+};
+export const getAllIndexDbData = async (userId?: string) => {
   const db = await openIndexedDb();
-  const userId = localStorage.getItem('knoat-user-id');
-  if(!userId) return null;
+  const user = await getCurrentUser(userId);
+  if (!user?.id) return null;
   //@ts-ignore
-  const notes = await db?.getAllFromIndex('notes', 'user_id', userId);
+  const notes = await db?.getAllFromIndex('notes', 'user_id', user.id);
   //@ts-ignore
-  const directory = await db?.getFromIndex('directories', 'user_id', userId);
+  const directory = await db?.getFromIndex('directories', 'user_id', user.id);
   //@ts-ignore
-  const todos = await db?.getFromIndex('todos', 'user_id', userId);
-  return { user: {id: userId}, notes, directory: directory!, todos: todos! };
+  const todos = await db?.getFromIndex('todos', 'user_id', user.id);
+  return { user, notes, directory: directory!, todos: todos! };
 };
 
-export const insertNote = async (data: KnoatDB['notes']['value']) => {
-  const insertedNote = await db?.add('notes', data);
-  console.log('insertedNote', insertedNote);
-  return insertedNote;
-};
+export const insertNote = (data: KnoatDB['notes']['value']) =>
+  db?.add('notes', data);
 
-export const update = async (
-  tableName: Tables,
-  data: KnoatDB[Tables]['value']
-) => {
-  const updated = await db?.put(tableName, data);
-  console.log('updated', updated);
-  return updated;
-};
+export const update = (tableName: Tables, data: KnoatDB[Tables]['value']) =>
+  db?.put(tableName, data);
 
-export const deleteIdbNotes = async (ids: string[]) => {
-  const all = await Promise.all([...ids.map((id) => db.delete('notes', id))]);
-  console.log('delete notes all', all);
-  return all;
-};
+export const deleteIdbNotes = (ids: string[]) =>
+  Promise.all([...ids.map((id) => db.delete('notes', id))]);
 
 let lockUpdate = false;
 export const syncDbToIdb = async ({
@@ -108,7 +108,7 @@ export const syncDbToIdb = async ({
   user: { id: string };
 }) => {
   if (!lockUpdate) {
-  const db = await openIndexedDb();
+    const db = await openIndexedDb();
 
     lockUpdate = true;
     const addOrUpdate = async (
@@ -116,15 +116,13 @@ export const syncDbToIdb = async ({
       resource: Directory | Note | Todos | { id: string }
     ) => {
       const res = await db?.get(tableName, resource.id);
-      console.log('sync to db res', res);
       return res
         ? await db?.put(tableName, resource)
         : await db?.add(tableName, resource);
     };
 
-    console.log('SYNCING TO DB', {user, directory, notes})
     const all = await Promise.all([
-      addOrUpdate('users', user),
+      addOrUpdate('current_user', user),
       addOrUpdate('todos', todos),
       addOrUpdate('directories', directory),
       ...notes.map((note) => addOrUpdate('notes', note)),

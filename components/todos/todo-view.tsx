@@ -85,7 +85,7 @@ export default function TodoView({ initialTodos }: { initialTodos: Todos }) {
   const [status, setStatus] = useState('');
 
   const saveData = debounce(async () => {
-    updateTodos({ id: initialTodos.id, list: state });
+    updateTodos({ ...initialTodos, list: state });
     setStatus('saved');
     setTimeout(() => setStatus(''), 2000);
   }, 3000);

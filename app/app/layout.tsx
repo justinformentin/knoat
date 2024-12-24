@@ -1,5 +1,5 @@
 import AppHeader from '@/components/app-header/app-header';
-import { loadUserDataSSR } from '@/lib/server/load-app-data';
+import { loadUserDataSSR } from '@/lib/load-app-data';
 import { serverClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { Toaster } from 'sonner';

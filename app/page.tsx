@@ -1,7 +1,7 @@
 import AppHeader from '@/components/app-header/app-header';
 import Footer from '@/components/footer';
 import HomeHero from '@/components/home-hero';
-import { loadUserDataSSR } from '@/lib/server/load-app-data';
+import { loadUserDataSSR } from '@/lib/load-app-data';
 import { serverClient } from '@/utils/supabase/server';
 
 export default async function HomePage() {

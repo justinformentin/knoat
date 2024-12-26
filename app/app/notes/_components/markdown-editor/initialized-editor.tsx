@@ -30,12 +30,13 @@ import { Note } from '@/server/types';
 import { debounce } from '@/lib/debounce';
 import { useUpdateNote } from '@/lib/db-adapter';
 import { useGetNote } from './use-get-note';
+import AIPopup from './ai-popup';
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
   editorRef,
   ...props
-}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & {
+}: { editorRef: ForwardedRef<MDXEditorMethods> } & {
   note: Note;
   userId: string;
 }) {
@@ -75,7 +76,6 @@ export default function App() {
       },
     ],
   };
-
   const note = useGetNote();
 
   useEffect(() => {
@@ -93,57 +93,63 @@ export default function App() {
   }, 2000);
 
   return (
-    <MDXEditor
-      readOnly={!note?.id}
-      placeholder={!note?.id ? 'Open a note to start editing' : 'Enter text...'}
-      markdown={note?.content || ''}
-      onChange={saveFile}
-      className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
-      contentEditableClassName="custom-ce fixed h-[calc(100%-6rem)] sm:h-[calc(100%-5rem)] md:h-full relative md:h-full md:top-12 overflow-auto w-full p-4 text-foreground"
-      plugins={[
-        toolbarPlugin({
-          toolbarClassName: 'custom-toolbar fixed top-12 md:top-0 md:relative',
-          toolbarContents: () => (
-            <>
-              <CustomToolbar />
-            </>
-          ),
-        }),
-        listsPlugin(),
-        quotePlugin(),
-        headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
-        linkPlugin(),
-        linkDialogPlugin(),
-        imagePlugin({
-          imageAutocompleteSuggestions: [
-            'https://via.placeholder.com/150',
-            'https://via.placeholder.com/150',
-          ],
-          imageUploadHandler: async () =>
-            Promise.resolve('https://picsum.photos/200/300'),
-        }),
-        tablePlugin(),
-        thematicBreakPlugin(),
-        frontmatterPlugin(),
-        codeBlockPlugin({ defaultCodeBlockLanguage: '' }),
-        sandpackPlugin({ sandpackConfig: virtuosoSampleSandpackConfig }),
-        codeMirrorPlugin({
-          codeBlockLanguages: {
-            js: 'JavaScript',
-            css: 'CSS',
-            txt: 'Plain Text',
-            tsx: 'TypeScript',
-            '': 'Unspecified',
-          },
-        }),
-        directivesPlugin({
-          directiveDescriptors: [AdmonitionDirectiveDescriptor],
-        }),
-        diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'boo' }),
-        markdownShortcutPlugin(),
-      ]}
-      {...props}
-      ref={editorRef}
-    />
+    <>
+      <AIPopup />
+      <MDXEditor
+        readOnly={!note?.id}
+        placeholder={
+          !note?.id ? 'Open a note to start editing' : 'Enter text...'
+        }
+        markdown={note?.content || ''}
+        onChange={saveFile}
+        className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
+        contentEditableClassName="custom-ce prose h-[calc(100%-6rem)] sm:h-[calc(100%-5rem)] md:h-full relative md:h-full overflow-auto w-full p-4 text-foreground"
+        plugins={[
+          toolbarPlugin({
+            toolbarClassName:
+              'custom-toolbar fixed top-12 md:top-0 md:relative',
+            toolbarContents: () => (
+              <>
+                <CustomToolbar saveNote={saveFile} editorRef={editorRef} />
+              </>
+            ),
+          }),
+          listsPlugin(),
+          quotePlugin(),
+          headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
+          linkPlugin(),
+          linkDialogPlugin(),
+          imagePlugin({
+            imageAutocompleteSuggestions: [
+              'https://via.placeholder.com/150',
+              'https://via.placeholder.com/150',
+            ],
+            imageUploadHandler: async () =>
+              Promise.resolve('https://picsum.photos/200/300'),
+          }),
+          tablePlugin(),
+          thematicBreakPlugin(),
+          frontmatterPlugin(),
+          codeBlockPlugin({ defaultCodeBlockLanguage: '' }),
+          sandpackPlugin({ sandpackConfig: virtuosoSampleSandpackConfig }),
+          codeMirrorPlugin({
+            codeBlockLanguages: {
+              js: 'JavaScript',
+              css: 'CSS',
+              txt: 'Plain Text',
+              tsx: 'TypeScript',
+              '': 'Unspecified',
+            },
+          }),
+          directivesPlugin({
+            directiveDescriptors: [AdmonitionDirectiveDescriptor],
+          }),
+          diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'boo' }),
+          markdownShortcutPlugin(),
+        ]}
+        {...props}
+        ref={editorRef}
+      />
+    </>
   );
 }

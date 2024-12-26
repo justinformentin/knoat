@@ -26,6 +26,9 @@
 .mdxeditor li[role="checkbox"]::before {
     top: 6px;
 }
+.mdxeditor li[role="checkbox"]::after {
+    top: 9px;
+}
 .mdxeditor .custom-ce {
     color: hsl(var(--foreground)) !important;
 }
@@ -41,4 +44,19 @@
 .mdxeditor .custom-toolbar button[role="combobox"] {
     background-color: hsl(var(--popover)) !important;
     max-width: 6.5rem !important;
+}
+.prose {
+    max-width: unset !important;
+}
+.prose :where(ul):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-inline-start: 0 !important;
+}
+
+/* Need to add this so the placeholder doesn't overwrite the top style */
+@media (min-width: 768px) {
+    .custom-ce {
+        top: 3rem !important;
+    }
 }

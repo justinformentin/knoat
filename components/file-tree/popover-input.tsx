@@ -1,5 +1,5 @@
 'use client';
-import { KeyboardEvent, useCallback, useState } from 'react';
+import { KeyboardEvent, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import {
   Popover,
@@ -11,19 +11,18 @@ import { TooltipWrap } from '../tooltip-wrap';
 import { FolderPlus, SquarePen } from 'lucide-react';
 
 export default function PopoverInput({ text, confirmCallback }: any) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const itemNameChange = (e: any) => setItemName(e.target.value);
 
   const confirmInput = () => {
-      confirmCallback(itemName);
-      setItemName('');
-      setOpen(false);
-  }
+    confirmCallback(inputRef.current!.value);
+    setOpen(false);
+    inputRef.current!.value = '';
+  };
 
-  const onKeyDownCapture = (e:KeyboardEvent)=>{
-      e.key === 'Enter' && confirmInput()
-  }
+  const onKeyDownCapture = (e: KeyboardEvent) => {
+    e.key === 'Enter' && confirmInput();
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
@@ -47,17 +46,12 @@ export default function PopoverInput({ text, confirmCallback }: any) {
           <div className="grid grid-cols-3 items-center gap-4">
             <Input
               id="name"
+              ref={inputRef}
               placeholder={`Enter ${text} name`}
-              value={itemName}
-              onChange={itemNameChange}
               className="col-span-2 h-8"
               onKeyDownCapture={onKeyDownCapture}
             />
-            <Button
-              onClick={confirmInput}
-              size="sm"
-              variant="outline"
-            >
+            <Button onClick={confirmInput} size="sm" variant="outline">
               Confirm
             </Button>
           </div>

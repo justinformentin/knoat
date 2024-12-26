@@ -8,6 +8,7 @@
     "supabase:start": "supabase status || supabase start"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.0.11",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -26,6 +27,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "ai": "^4.0.22",
     "autoprefixer": "10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -44,6 +46,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "18.3.1",

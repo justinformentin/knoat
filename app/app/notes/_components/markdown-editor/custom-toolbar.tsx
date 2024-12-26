@@ -1,4 +1,4 @@
-import React from 'react';
+import { type ForwardedRef } from 'react';
 import {
   EditorInFocus,
   DirectiveNode,
@@ -20,9 +20,12 @@ import {
   ShowSandpackInfo,
   UndoRedo,
   CreateLink,
+  type MDXEditorMethods,
 } from '@mdxeditor/editor';
 import { SourceTogglePlugin } from './source-toggle-plugin';
 import { CustomListsToggle } from './list-toggle';
+import AIToolbarPrompt from './ai-toolbar-prompt';
+
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
   if (!node || node.getType() !== 'directive') {
@@ -40,7 +43,13 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
  * You'll probably want to create your own toolbar component that includes only the buttons that you need.
  * @group Toolbar Components
  */
-export const CustomToolbar: React.FC = () => {
+export const CustomToolbar = ({
+  editorRef,
+  saveNote,
+}: {
+  editorRef: ForwardedRef<MDXEditorMethods>;
+  saveNote: (md: string) => void;
+}) => {
   return (
     <ConditionalContents
       options={[
@@ -57,6 +66,8 @@ export const CustomToolbar: React.FC = () => {
             <div className="flex flex-col lg:flex-row">
               <div className="flex">
                 <UndoRedo />
+                <Separator />
+                <AIToolbarPrompt saveNote={saveNote} editorRef={editorRef} />
                 <Separator />
                 <BoldItalicUnderlineToggles />
                 <CodeToggle />

@@ -18,7 +18,6 @@ import {
   sandpackPlugin,
   toolbarPlugin,
   type MDXEditorMethods,
-  // type MDXEditorProps,
   tablePlugin,
   codeBlockPlugin,
   linkDialogPlugin,
@@ -30,7 +29,7 @@ import { Note } from '@/server/types';
 import { debounce } from '@/lib/debounce';
 import { useUpdateNote } from '@/lib/db-adapter';
 import { useGetNote } from './use-get-note';
-import AIPopup from './ai-popup';
+import { selectionPlugin } from './selection-plugin';
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
@@ -94,7 +93,6 @@ export default function App() {
 
   return (
     <>
-      <AIPopup />
       <MDXEditor
         readOnly={!note?.id}
         placeholder={
@@ -114,6 +112,7 @@ export default function App() {
               </>
             ),
           }),
+          selectionPlugin(),
           listsPlugin(),
           quotePlugin(),
           headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),

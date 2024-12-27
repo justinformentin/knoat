@@ -99,3 +99,6 @@
 .nestable > .nestable-list {
   padding: 0 !important;
 }
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: hsl(var(--foreground)) !important;
+}

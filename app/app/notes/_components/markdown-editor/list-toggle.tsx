@@ -30,6 +30,7 @@ export const CustomListsToggle = () => {
 
   return (
     <ButtonOrDropdownButton
+      title="Lists"
       value={currentListType || ''}
       //@ts-ignore
       items={items}

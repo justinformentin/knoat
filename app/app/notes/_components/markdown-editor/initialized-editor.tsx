@@ -26,10 +26,20 @@ import '@mdxeditor/editor/style.css';
 import './editor-styles.css';
 import { CustomToolbar } from './custom-toolbar';
 import { Note } from '@/server/types';
-import { debounce } from '@/lib/debounce';
 import { useUpdateNote } from '@/lib/db-adapter';
 import { useGetNote } from './use-get-note';
 import { selectionPlugin } from './selection-plugin';
+
+let timeoutId: NodeJS.Timeout;
+
+function debounce(cb: any, delay: number) {
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      cb(...args);
+    }, delay);
+  };
+}
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
@@ -100,7 +110,7 @@ export default function App() {
         }
         markdown={note?.content || ''}
         onChange={saveFile}
-        className="fixed top-12 w-full h-full md:h-[calc(100%-48px)] md:relative md:top-0"
+        className="fixed top-12 w-full h-full md:h-[calc(100%-49px)] md:relative md:top-0"
         contentEditableClassName="custom-ce prose h-[calc(100%-6rem)] sm:h-[calc(100%-5rem)] md:h-full relative md:h-full overflow-auto w-full p-4 text-foreground"
         plugins={[
           toolbarPlugin({
@@ -115,7 +125,7 @@ export default function App() {
           selectionPlugin(),
           listsPlugin(),
           quotePlugin(),
-          headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
+          headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4] }),
           linkPlugin(),
           linkDialogPlugin(),
           imagePlugin({

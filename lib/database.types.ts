@@ -78,6 +78,7 @@ export type Database = {
           full_path: string;
           label: string;
           content: string;
+          editor_state?: JSON;
         };
         Insert: {
             created_at?: string;
@@ -87,6 +88,7 @@ export type Database = {
             full_path?: string;
             label?: string;
             content?: string;
+            editor_state?: JSON;
         };
         Update: {
             created_at?: string;
@@ -96,6 +98,7 @@ export type Database = {
             full_path?: string;
             label?: string;
             content?: string;
+            editor_state?: JSON;
         };
         Relationships: [
           {

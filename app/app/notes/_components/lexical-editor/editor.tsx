@@ -9,7 +9,7 @@ import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { editorConfig } from './editor-config';
 import { useUpdateNote } from '@/lib/db-adapter';
 import { $convertToMarkdownString } from '@lexical/markdown';
-import { useGetNote } from '../markdown-editor/use-get-note';
+import { useGetNote } from './use-get-note';
 import { NoteUpdatePlugin } from './note-update-plugin';
 import { serializedDocumentFromEditorState } from '@lexical/file';
 import ToolbarPlugin from './plugins/toolbar/toolbar-plugin';

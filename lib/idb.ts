@@ -62,12 +62,21 @@ async function openIndexedDb() {
 }
 
 const getCurrentUser = async (userId?: string) => {
+  // Need multiple try catches in case the db keys dont exist
+  // Need to figure out how to get around the idb lib's error throwing
   if (userId) {
-    const user = await db?.get('current_user', userId);
-    if (user) return user;
-    await db?.clear('current_user');
-    await db?.add('current_user', { id: userId });
-    return { id: userId };
+    try {
+      const user = await db?.get('current_user', userId);
+      if (user) {
+        return user;
+      } else {
+        await db?.add('current_user', { id: userId });
+        return { id: userId };
+      }
+    } catch (error) {
+      await db?.add('current_user', { id: userId });
+      return { id: userId };
+    }
   } else {
     const users = await db?.getAll('current_user');
     return users[0];

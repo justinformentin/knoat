@@ -1,5 +1,5 @@
-import { ForwardRefEditor } from './_components/markdown-editor/editor';
+import Editor from './_components/lexical-editor/editor';
 
 export default async function NotePage() {
-  return <ForwardRefEditor />;
+  return <Editor />
 }

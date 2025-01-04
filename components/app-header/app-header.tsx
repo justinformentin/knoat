@@ -40,7 +40,7 @@ export default function AppHeader({ ssrData }: any) {
         <div className="flex gap-5 items-center font-semibold">
           <Link href="/" className="flex space-x-1">
             <Logo />
-            <span className="self-center font-semibold">Knoat</span>
+            <span className="self-center font-semibold hidden sm:block">Knoat</span>
           </Link>
         </div>
         {ssrData?.id || userId ? <AppHeaderLinks /> : null}

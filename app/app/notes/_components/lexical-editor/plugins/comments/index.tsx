@@ -111,10 +111,12 @@ function AddCommentBox({
   }, [anchorKey, editor]);
 
   useEffect(() => {
-    window.addEventListener('resize', updatePosition);
+    typeof window !== 'undefined' &&
+      window.addEventListener('resize', updatePosition);
 
     return () => {
-      window.removeEventListener('resize', updatePosition);
+      typeof window !== 'undefined' &&
+        window.removeEventListener('resize', updatePosition);
     };
   }, [editor, updatePosition]);
 
@@ -328,10 +330,12 @@ function CommentInputBox({
   }, [selectionState.container, updateLocation]);
 
   useEffect(() => {
-    window.addEventListener('resize', updateLocation);
+    typeof window !== 'undefined' &&
+      window.addEventListener('resize', updateLocation);
 
     return () => {
-      window.removeEventListener('resize', updateLocation);
+      typeof window !== 'undefined' &&
+        window.removeEventListener('resize', updateLocation);
     };
   }, [updateLocation]);
 

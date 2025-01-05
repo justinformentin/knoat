@@ -16,7 +16,6 @@ import {
   DragOverEvent,
   MeasuringStrategy,
   DropAnimation,
-  Modifier,
   defaultDropAnimation,
   UniqueIdentifier,
 } from '@dnd-kit/core';
@@ -31,7 +30,6 @@ import {
   flattenTree,
   getProjection,
   getChildCount,
-  removeItem,
   removeChildrenOf,
   setCollapsed,
 } from '../lib/utilities';
@@ -39,7 +37,6 @@ import type { FlattenedItem, SensorContext, TreeItems } from '../lib/types';
 import { sortableTreeKeyboardCoordinates } from '../lib/keyboardCoordinates';
 import { SortableTreeItem } from './SortableTreeItem';
 import { CSS } from '@dnd-kit/utilities';
-import { useSelectedItemStore } from '@/lib/use-selected-item';
 
 const measuring = {
   droppable: {

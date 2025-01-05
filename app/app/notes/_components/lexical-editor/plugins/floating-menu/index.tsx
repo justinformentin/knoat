@@ -200,13 +200,13 @@ function TextFormatFloatingToolbar({
       });
     };
 
-    window.addEventListener('resize', update);
+    typeof window !== 'undefined' && window.addEventListener('resize', update);
     if (scrollingEl) {
       scrollingEl.addEventListener('scroll', update);
     }
 
     return () => {
-      window.removeEventListener('resize', update);
+      typeof window !== 'undefined' && window.removeEventListener('resize', update);
       if (scrollingEl) {
         scrollingEl.removeEventListener('scroll', update);
       }

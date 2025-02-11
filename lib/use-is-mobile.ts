@@ -21,7 +21,7 @@ const useWindowSize = () => {
   return windowSize;
 };
 
-const useIsMobile = (breakpoint: number = 768): boolean => {
+export const useIsMobile = (breakpoint: number = 768): boolean => {
   const { width } = useWindowSize()!;
   const [isMobile, setMobile] = useState<boolean>(
     width! <= (breakpoint || 768)
@@ -34,4 +34,4 @@ const useIsMobile = (breakpoint: number = 768): boolean => {
   return isMobile;
 };
 
-export default useIsMobile;
+

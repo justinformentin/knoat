@@ -18,7 +18,7 @@ export function useGetNote() {
     if (typeof window !== 'undefined') {
       if (selectedItem?.id) {
         return getNoteFromSelectedItem(notes, selectedItem);
-      } else {
+      } else if (directory?.tree) {
         const noteId = findNoteIdByPath(
           directory.tree,
           window.location.hash.slice(1)

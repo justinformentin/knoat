@@ -5,6 +5,7 @@ export function findPathById(
   targetId: string,
   path = ''
 ): string | null {
+  if (!data || !data.length) return '';
   for (const item of data) {
     const currentPath = path ? `${path}/${item.label}` : item.label;
 

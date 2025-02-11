@@ -8,11 +8,13 @@ import { useEffect, useState } from 'react';
 import AppHeaderLinks from './app-header-links';
 import { browserClient } from '@/utils/supabase/client';
 import { usePathname, redirect } from 'next/navigation';
+import { useDataStore } from '@/lib/use-data';
 
 export default function AppHeader() {
   const client = browserClient();
   const pathname = usePathname();
   const [userId, setUserId] = useState('');
+  const initialize = useDataStore((state) => state.initialize);
 
   const init = async () => {
     const {
@@ -25,7 +27,13 @@ export default function AppHeader() {
         .select('id, directories (*), notes (*), todos (*)')
         .eq('id', user.id)
         .single();
-      if (data) setUserId(user.id);
+
+      if (data) {
+        setUserId(user.id);
+        // prettier-ignore
+        // @ts-ignore Typing is correct, the dir/notes/todos have a unique id fkey, so the output is an object instead of an array
+        initialize({ user, todos: data.todos, notes: data.notes, directory: data.directories});
+      }
     }
   };
 

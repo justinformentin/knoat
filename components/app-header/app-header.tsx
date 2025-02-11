@@ -32,7 +32,7 @@ export default function AppHeader({ ssrData }: any) {
   }, []);
 
   return (
-    <nav className="w-full flex justify-center border-b border-b-foreground/10">
+    <nav className="w-full flex justify-center border-b border-b-foreground/10 z-50">
       {ssrData?.id || userId ? (
         <SidebarTrigger className="self-center ml-2" />
       ) : null}

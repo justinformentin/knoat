@@ -6,7 +6,7 @@ export default function HomeHero(){
         <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          className="absolute inset-x-0 top-0 left-20 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-40 sm:left-80"
         >
           <div
             style={{
@@ -37,7 +37,7 @@ export default function HomeHero(){
             </div>
           </div>
         </div>
-        <div
+        {/* <div
           aria-hidden="true"
           className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
         >
@@ -48,7 +48,7 @@ export default function HomeHero(){
             }}
             className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#126aeb] to-[#0cbeff] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
           />
-        </div>
+        </div> */}
       </div>
     )
 }

@@ -1,21 +1,37 @@
-import * as React from 'react';
+'use client';
+import { useState, useEffect } from 'react';
 
-const MOBILE_BREAKPOINT = 768;
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window?.innerWidth : null,
+  });
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined,
-  );
+  useEffect(() => {
+    const handleResize = () =>
+      typeof window !== 'undefined' &&
+      setWindowSize({ width: window?.innerWidth });
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
-    mql.addEventListener('change', onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    return () => mql.removeEventListener('change', onChange);
+    window?.addEventListener('resize', handleResize);
+
+    handleResize();
+
+    return () => window?.removeEventListener('resize', handleResize);
   }, []);
 
+  return windowSize;
+};
+
+const useIsMobile = (breakpoint: number = 768): boolean => {
+  const { width } = useWindowSize()!;
+  const [isMobile, setMobile] = useState<boolean>(
+    width! <= (breakpoint || 768)
+  );
+
+  useEffect(() => {
+    setMobile(width! <= (breakpoint || 768));
+  }, [width, breakpoint]);
+
   return isMobile;
-}
+};
+
+export default useIsMobile;

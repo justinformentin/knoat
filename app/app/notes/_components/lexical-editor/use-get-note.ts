@@ -15,25 +15,29 @@ export function useGetNote() {
     n.find((ni) => ni.id === sel?.id && sel?.type === 'note');
 
   const getNote = (notes: Note[]) => {
-    if (selectedItem?.id) {
-      return getNoteFromSelectedItem(notes, selectedItem);
-    } else {
-      const noteId = findNoteIdByPath(
-        directory.tree,
-        window.location.hash.slice(1)
-      );
-      return notes.find((n) => n.id === noteId);
+    if (typeof window !== 'undefined') {
+      if (selectedItem?.id) {
+        return getNoteFromSelectedItem(notes, selectedItem);
+      } else {
+        const noteId = findNoteIdByPath(
+          directory.tree,
+          window.location.hash.slice(1)
+        );
+        return notes.find((n) => n.id === noteId);
+      }
     }
   };
 
   const [note, setNote] = useState(getNote(notes));
 
   useEffect(() => {
-    if (selectedItem?.type === 'note') {
-      setNote(getNoteFromSelectedItem(notes, selectedItem));
-      const fullPath = findPathById(directory?.tree, selectedItem?.id!);
-      if(fullPath){
-       window.location.hash = '#' + fullPath;
+    if (typeof window !== 'undefined') {
+      if (selectedItem?.type === 'note') {
+        setNote(getNoteFromSelectedItem(notes, selectedItem));
+        const fullPath = findPathById(directory?.tree, selectedItem?.id!);
+        if (fullPath) {
+          window.location.hash = '#' + fullPath;
+        }
       }
     }
   }, [notes, selectedItem]);

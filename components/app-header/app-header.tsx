@@ -33,7 +33,7 @@ export default function AppHeader({ ssrData }: any) {
 
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 z-50">
-      {ssrData?.id || userId ? (
+      {ssrData?.id ? (
         <SidebarTrigger className="self-center ml-2" />
       ) : null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
@@ -43,10 +43,10 @@ export default function AppHeader({ ssrData }: any) {
             <span className="self-center font-semibold hidden sm:block">Knoat</span>
           </Link>
         </div>
-        {ssrData?.id || userId ? <AppHeaderLinks /> : null}
+        {ssrData?.id ? <AppHeaderLinks /> : null}
         <div className="flex justify-between">
           <ThemeSwitcher />
-          <HeaderAuth userId={ssrData?.id || userId || null} />
+          <HeaderAuth userId={ssrData?.id || null} />
         </div>
       </div>
     </nav>

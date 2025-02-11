@@ -65,7 +65,9 @@ export default function Editor() {
   }, 2000);
 
   const decompUnpackUnmin = (str: string) => {
+    if(!str) return null;
     const decoded = LZUTF8_LIGHT.decodeStorageBinaryString(str);
+    if(!decoded) return null;
     const decomp = LZUTF8_LIGHT.decompress(decoded);
     const state = JSON.parse(decomp);
     const unpacked = fromArrayPack(state.editorState.root);
@@ -79,7 +81,7 @@ export default function Editor() {
   // TODO - Might need to do something like `createEmptyHistoryState` when changing notes
   // and `editor.setEditable(false)` when selecting directories
   return (
-    <LexicalComposer initialConfig={{ ...editorConfig, editorState }}>
+    <LexicalComposer initialConfig={{ ...editorConfig, editorState: editorState || null }}>
       <ToolbarContext>
         <div className="relative h-full">
           <ToolbarPlugin />

@@ -32,7 +32,9 @@ export function useGetNote() {
     if (selectedItem?.type === 'note') {
       setNote(getNoteFromSelectedItem(notes, selectedItem));
       const fullPath = findPathById(directory?.tree, selectedItem?.id!);
-      window.location.hash = '#' + fullPath;
+      if(fullPath){
+       window.location.hash = '#' + fullPath;
+      }
     }
   }, [notes, selectedItem]);
 

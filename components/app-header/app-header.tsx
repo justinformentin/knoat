@@ -6,47 +6,63 @@ import { Logo } from './logo';
 import { SidebarTrigger } from '../ui/sidebar';
 import { useEffect, useState } from 'react';
 import AppHeaderLinks from './app-header-links';
-import { useDbAdapter } from '@/lib/db-adapter';
+import { browserClient } from '@/utils/supabase/client';
+import { usePathname, redirect } from 'next/navigation';
 
-export default function AppHeader({ ssrData }: any) {
-  const dbAdapter = useDbAdapter();
-
-  const [userId, setUserId] = useState(ssrData?.id);
+export default function AppHeader() {
+  const client = browserClient();
+  const pathname = usePathname();
+  const [userId, setUserId] = useState('');
 
   const init = async () => {
-    // Initialize store data with indexeddb data first
-    dbAdapter.syncFromIdb(ssrData?.id).then((userId) => {
-      // If there's no ssrData.id (the user id) try to get it from indexeddb
-      if (!ssrData?.id) setUserId(userId);
-    });
-
-    if (ssrData && ssrData.id) {
-      // If we're online and we get data from the server,
-      // sync the store and idb with fresh db data
-      dbAdapter.syncFromDb(ssrData);
+    const {
+      data: { user },
+    } = await client.auth.getUser();
+    if (pathname !== '/sign-in' && !user) redirect('/sign-in');
+    if (user?.id) {
+      const { data } = await client
+        .from('users')
+        .select('id, directories (*), notes (*), todos (*)')
+        .eq('id', user.id)
+        .single();
+      if (data) setUserId(user.id);
     }
   };
 
+  // const dbAdapter = useDbAdapter();
+  // const dbSync = () => {
+  //   // Initialize store data with indexeddb data first
+  //   dbAdapter.syncFromIdb(ssrData?.id).then((userId) => {
+  //     // If there's no ssrData.id (the user id) try to get it from indexeddb
+  //     if (!ssrData?.id) setUserId(userId);
+  //   });
+
+  //   if (ssrData && ssrData.id) {
+  //     // If we're online and we get data from the server,
+  //     // sync the store and idb with fresh db data
+  //     dbAdapter.syncFromDb(ssrData);
+  //   }
+  // };
   useEffect(() => {
     init();
   }, []);
 
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 z-50">
-      {ssrData?.id ? (
-        <SidebarTrigger className="self-center ml-2" />
-      ) : null}
+      {userId ? <SidebarTrigger className="self-center ml-2" /> : null}
       <div className="w-full flex justify-between items-center p-2 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
           <Link href="/" className="flex space-x-1">
             <Logo />
-            <span className="self-center font-semibold hidden sm:block">Knoat</span>
+            <span className="self-center font-semibold hidden sm:block">
+              Knoat
+            </span>
           </Link>
         </div>
-        {ssrData?.id ? <AppHeaderLinks /> : null}
+        {userId ? <AppHeaderLinks /> : null}
         <div className="flex justify-between">
           <ThemeSwitcher />
-          <HeaderAuth userId={ssrData?.id || null} />
+          <HeaderAuth userId={userId} />
         </div>
       </div>
     </nav>

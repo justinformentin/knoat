@@ -3,7 +3,7 @@ import { CredentialResponse } from 'google-one-tap';
 import { useRouter } from 'next/navigation';
 import { browserClient } from '@/utils/supabase/client';
 
-export const useGoogleOneTap = (suppressedCb:any) => {
+export const useGoogleOneTap = (suppressedCb: any) => {
   const supabase = browserClient();
   const router = useRouter();
 
@@ -34,6 +34,10 @@ export const useGoogleOneTap = (suppressedCb:any) => {
     }
     if (data.session) {
       router.push('/app/notes');
+      setTimeout(() => {
+        router.refresh();
+      }, 2000);
+
       return;
     }
 
@@ -50,10 +54,12 @@ export const useGoogleOneTap = (suppressedCb:any) => {
             token: response.credential,
             nonce,
           });
-
           if (error) throw error;
           // redirect to protected page
           router.push('/app/notes');
+          setTimeout(() => {
+            router.refresh();
+          }, 2000);
         } catch (error) {
           console.error('Error logging in with Google One Tap', error);
         }
@@ -63,11 +69,16 @@ export const useGoogleOneTap = (suppressedCb:any) => {
       use_fedcm_for_prompt: true,
     });
     //@ts-ignore
-    google.accounts.id.prompt(notification => {
-      if(typeof notification === 'object'){
+    google.accounts.id.prompt((notification) => {
+      if (typeof notification === 'object') {
         const keys = Object.keys(notification);
-        if(keys && keys.length > 0){
-          keys.forEach(k => notification[k] && notification[k].includes('suppressed') && suppressedCb())
+        if (keys && keys.length > 0) {
+          keys.forEach(
+            (k) =>
+              notification[k] &&
+              notification[k].includes('suppressed') &&
+              suppressedCb()
+          );
         }
       }
     }); // Display the One Tap UI

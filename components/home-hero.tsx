@@ -18,13 +18,13 @@ export default function HomeHero(){
         </div>
         <div className="mx-auto max-w-2xl py-12 sm:py-48">
           <div className="text-center">
-            <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-300 sm:text-6xl">
               The <span className="font-extrabold bg-gradient-to-bl from-blue-500 to-blue-800 bg-clip-text text-transparent leading-normal">Note and Todo</span> app I've been waiting for
             </h1>
-            <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+            <p className="mt-8 text-pretty text-lg font-medium text-gray-500 dark:text-gray-400 sm:text-xl/8">
                 What is a note you wrote while afloat on a boat?
             </p>
-            <p className="mt-2 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+            <p className="mt-2 text-pretty text-lg font-medium text-gray-500 dark:text-gray-400 sm:text-xl/8">
               A Knoat.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">

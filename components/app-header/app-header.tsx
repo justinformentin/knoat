@@ -20,7 +20,8 @@ export default function AppHeader() {
     const {
       data: { user },
     } = await client.auth.getUser();
-    if (pathname !== '/sign-in' && !user) redirect('/sign-in');
+    console.log('user', user);
+    // if (pathname !== '/sign-in' && !user) redirect('/sign-in');
     if (user?.id) {
       const { data } = await client
         .from('users')
@@ -28,7 +29,7 @@ export default function AppHeader() {
         .eq('id', user.id)
         .single();
 
-      if (data) {
+      if (user.id) {
         setUserId(user.id);
         // prettier-ignore
         // @ts-ignore Typing is correct, the dir/notes/todos have a unique id fkey, so the output is an object instead of an array
@@ -37,6 +38,7 @@ export default function AppHeader() {
     }
   };
 
+  console.log('user', userId);
   // const dbAdapter = useDbAdapter();
   // const dbSync = () => {
   //   // Initialize store data with indexeddb data first
